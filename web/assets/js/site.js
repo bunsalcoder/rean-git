@@ -1,6 +1,7 @@
 (() => {
   const nav = document.querySelector("[data-nav]");
   const toggle = document.querySelector("[data-nav-toggle]");
+  const header = document.querySelector(".site-header-bar");
 
   if (toggle && nav) {
     toggle.addEventListener("click", () => {
@@ -15,6 +16,20 @@
         nav.classList.remove("is-open");
       });
     });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+      toggle.setAttribute("aria-expanded", "false");
+      nav.classList.remove("is-open");
+    });
+  }
+
+  if (header) {
+    const syncHeader = () => {
+      header.classList.toggle("is-scrolled", window.scrollY > 12);
+    };
+    syncHeader();
+    window.addEventListener("scroll", syncHeader, { passive: true });
   }
 
   const path = location.pathname.replace(/index\.html$/, "");
