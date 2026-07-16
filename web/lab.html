@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lab — rean-git</title>
+    <meta name="description" content="Hands-on Git lab instructions for rean-git." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,650&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body data-page="lab">
+    <header class="site-header site-header-bar">
+      <div class="wrap header-inner">
+        <a class="logo" href="./index.html">rean<span>-git</span></a>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+        <nav class="nav" data-nav>
+          <a href="./index.html">Home</a>
+          <a href="./learn.html">Learn</a>
+          <a href="./labs.html" aria-current="page">Labs</a>
+          <a href="./learn.html?c=14">Cheat sheet</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="backdrop" data-backdrop></div>
+
+    <div class="app-shell">
+      <aside class="sidebar" data-sidebar>
+        <h2>Labs</h2>
+        <ul class="side-nav" data-lab-nav>
+          <li class="status">Loading…</li>
+        </ul>
+        <p class="sidebar-foot">
+          <a href="./labs.html">All labs</a>
+        </p>
+      </aside>
+
+      <article class="content-pane">
+        <div class="toolbar">
+          <button class="btn btn-ghost side-toggle" type="button" data-side-toggle aria-expanded="false">
+            Labs menu
+          </button>
+          <p class="progress-pill" data-progress>Loading</p>
+        </div>
+        <p class="eyebrow">Hands-on</p>
+        <h1 data-lab-title>Loading…</h1>
+        <div class="md-body" data-lab-body>
+          <p class="status">Fetching lab…</p>
+        </div>
+        <nav class="pager" data-pager></nav>
+      </article>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="./assets/js/site.js"></script>
+    <script src="./assets/js/learn.js"></script>
+  </body>
+</html>

@@ -1,0 +1,441 @@
+/* Chapter & lab markdown reader — rean-git */
+const CHAPTERS = [
+  { id: "how-to-use", title: "How to use this guide", match: /^## How to use this guide$/m },
+  { id: "1", title: "What problem does Git solve?", match: /^## 1\. /m },
+  { id: "2", title: "Core mental model", match: /^## 2\. /m },
+  { id: "3", title: "Install & first config", match: /^## 3\. /m },
+  { id: "4", title: "Your first repository", match: /^## 4\. /m },
+  { id: "5", title: "Staging, commits, and history", match: /^## 5\. /m },
+  { id: "6", title: "Branching", match: /^## 6\. /m },
+  { id: "7", title: "Merging", match: /^## 7\. /m },
+  { id: "8", title: "Conflicts", match: /^## 8\. /m },
+  { id: "9", title: "Rebase (carefully)", match: /^## 9\. /m },
+  { id: "10", title: "Undoing mistakes", match: /^## 10\. /m },
+  { id: "11", title: "Remotes & GitHub", match: /^## 11\. /m },
+  { id: "12", title: "Pull requests", match: /^## 12\. /m },
+  { id: "13", title: "Team workflows", match: /^## 13\. /m },
+  { id: "14", title: "Cheat sheet", match: /^## 14\. /m },
+  { id: "15", title: "Learning path checklist", match: /^## 15\. /m },
+];
+
+const LABS = [
+  { id: "01-first-repo", title: "First repo", level: "Beginner" },
+  { id: "02-branch-merge", title: "Branch & merge", level: "Beginner" },
+  { id: "03-conflict", title: "Conflict", level: "Intermediate" },
+  { id: "04-rebase", title: "Rebase", level: "Intermediate" },
+  { id: "05-undo", title: "Undo", level: "Intermediate" },
+  { id: "06-remote-pr", title: "Remote & PR", level: "Intermediate" },
+  { id: "07-team-workflow", title: "Team workflow", level: "Advanced" },
+];
+
+function getParam(name) {
+  return new URLSearchParams(location.search).get(name);
+}
+
+function getRouteId(queryKey) {
+  const hash = location.hash.replace(/^#/, "").trim();
+  if (hash) return decodeURIComponent(hash);
+  return getParam(queryKey);
+}
+
+function chapterHref(id) {
+  return `./learn.html?c=${encodeURIComponent(id)}`;
+}
+
+function labHref(id) {
+  return `./lab.html?id=${encodeURIComponent(id)}`;
+}
+
+function splitGuide(markdown) {
+  const lines = markdown.split("\n");
+  const starts = [];
+
+  lines.forEach((line, index) => {
+    CHAPTERS.forEach((ch, ci) => {
+      if (ch.match.test(line)) {
+        starts.push({ ci, index, title: ch.title, id: ch.id });
+      }
+    });
+  });
+
+  starts.sort((a, b) => a.index - b.index);
+
+  return starts.map((s, i) => {
+    let end = i + 1 < starts.length ? starts[i + 1].index : lines.length;
+    if (CHAPTERS[s.ci].id === "how-to-use") {
+      const tocAt = lines.findIndex(
+        (line, idx) => idx > s.index && /^## Table of contents$/m.test(line)
+      );
+      if (tocAt !== -1) end = tocAt;
+    }
+    let body = lines.slice(s.index, end).join("\n").trim();
+    body = body.replace(/^##\s.+\n+/, "");
+    return { ...CHAPTERS[s.ci], body };
+  });
+}
+
+function enhanceCodeBlocks(root) {
+  root.querySelectorAll("pre").forEach((pre) => {
+    if (pre.closest(".code-block")) return;
+
+    const wrap = document.createElement("div");
+    wrap.className = "code-block";
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "copy-btn";
+    btn.textContent = "Copy";
+    btn.addEventListener("click", async () => {
+      const text = pre.querySelector("code")?.textContent || pre.textContent;
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.textContent = "Copied";
+        setTimeout(() => {
+          btn.textContent = "Copy";
+        }, 1400);
+      } catch {
+        btn.textContent = "Failed";
+      }
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+async function loadText(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Could not load ${url}`);
+  return res.text();
+}
+
+function renderMarkdown(target, md) {
+  if (window.marked) {
+    marked.setOptions({
+      gfm: true,
+      breaks: false,
+    });
+    target.innerHTML = marked.parse(md);
+  } else {
+    target.innerHTML = `<pre>${md.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]))}</pre>`;
+  }
+  enhanceCodeBlocks(target);
+}
+
+function setupSidebarToggle() {
+  const sidebar = document.querySelector("[data-sidebar]");
+  const toggle = document.querySelector("[data-side-toggle]");
+  const backdrop = document.querySelector("[data-backdrop]");
+  if (!sidebar || !toggle) return;
+
+  const close = () => {
+    sidebar.classList.remove("is-open");
+    backdrop?.classList.remove("is-on");
+    toggle.setAttribute("aria-expanded", "false");
+  };
+
+  const open = () => {
+    sidebar.classList.add("is-open");
+    backdrop?.classList.add("is-on");
+    toggle.setAttribute("aria-expanded", "true");
+  };
+
+  toggle.addEventListener("click", () => {
+    if (sidebar.classList.contains("is-open")) close();
+    else open();
+  });
+  backdrop?.addEventListener("click", close);
+  sidebar.addEventListener("click", (event) => {
+    if (event.target.closest("a")) close();
+  });
+}
+
+async function initLearnPage() {
+  const navEl = document.querySelector("[data-chapter-nav]");
+  const bodyEl = document.querySelector("[data-chapter-body]");
+  const titleEl = document.querySelector("[data-chapter-title]");
+  const progressEl = document.querySelector("[data-progress]");
+  const pagerEl = document.querySelector("[data-pager]");
+  if (!navEl || !bodyEl) return;
+
+  setupSidebarToggle();
+
+  try {
+    const raw = await loadText("./content/guide.md");
+    const chapters = splitGuide(raw);
+    if (!chapters.length) throw new Error("No chapters found");
+
+    let currentIndex = -1;
+    let transitionToken = 0;
+    const paneEl = bodyEl.closest(".content-pane");
+    const CHAPTER_OUT_MS = 280;
+    const prefersReducedMotion = () =>
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const resolveIndex = (id) => {
+      let index = chapters.findIndex((c) => c.id === id);
+      if (index < 0) index = 0;
+      return index;
+    };
+
+    const setActiveNav = (id) => {
+      navEl.querySelectorAll("a[data-chapter-id]").forEach((a) => {
+        a.classList.toggle("is-active", a.dataset.chapterId === id);
+      });
+    };
+
+    const renderPager = (index) => {
+      if (!pagerEl) return;
+      const prev = chapters[index - 1];
+      const next = chapters[index + 1];
+      pagerEl.innerHTML = `
+        ${prev ? `<a class="pager-prev" href="${chapterHref(prev.id)}" data-chapter-id="${prev.id}"><span>Previous</span>${prev.title}</a>` : ""}
+        ${next ? `<a class="pager-next" href="${chapterHref(next.id)}" data-chapter-id="${next.id}"><span>Next</span>${next.title}</a>` : ""}
+      `;
+    };
+
+    const clearChapterMotion = () => {
+      bodyEl.classList.remove("is-leaving", "is-switching");
+      paneEl?.classList.remove("is-chapter-leaving", "is-chapter-switching");
+    };
+
+    const playChapterIn = () => {
+      clearChapterMotion();
+      void bodyEl.offsetWidth;
+      bodyEl.classList.add("is-switching");
+      paneEl?.classList.add("is-chapter-switching");
+    };
+
+    const applyChapter = (chapter, index) => {
+      setActiveNav(chapter.id);
+      if (titleEl) titleEl.textContent = chapter.title;
+      if (progressEl) progressEl.textContent = `Chapter ${index + 1} of ${chapters.length}`;
+      document.title = `${chapter.title} — rean-git`;
+      renderMarkdown(bodyEl, chapter.body);
+      renderPager(index);
+    };
+
+    const showChapter = async (id, { push = false, animate = true } = {}) => {
+      const index = resolveIndex(id);
+      const chapter = chapters[index];
+
+      if (index === currentIndex) {
+        if (push) history.replaceState({ c: chapter.id }, "", chapterHref(chapter.id));
+        return;
+      }
+
+      const token = ++transitionToken;
+      const hadChapter = currentIndex >= 0;
+      currentIndex = index;
+
+      if (push) {
+        history.pushState({ c: chapter.id }, "", chapterHref(chapter.id));
+      }
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      const shouldAnimate = animate && !prefersReducedMotion();
+
+      if (shouldAnimate && hadChapter) {
+        clearChapterMotion();
+        bodyEl.classList.add("is-leaving");
+        paneEl?.classList.add("is-chapter-leaving");
+        await new Promise((resolve) => setTimeout(resolve, CHAPTER_OUT_MS));
+        if (token !== transitionToken) return;
+      }
+
+      applyChapter(chapter, index);
+
+      if (shouldAnimate) {
+        playChapterIn();
+      } else {
+        clearChapterMotion();
+      }
+    };
+
+    navEl.innerHTML = chapters
+      .map((c, i) => {
+        const n = String(i + 1).padStart(2, "0");
+        return `<li><a href="${chapterHref(c.id)}" data-chapter-id="${c.id}"><small>${n}</small>${c.title}</a></li>`;
+      })
+      .join("");
+
+    const goToChapter = (id, opts) => {
+      if (!id) return;
+      showChapter(id, opts);
+    };
+
+    navEl.addEventListener("click", (event) => {
+      const link = event.target.closest("a[data-chapter-id]");
+      if (!link) return;
+      event.preventDefault();
+      goToChapter(link.dataset.chapterId, { push: true, animate: true });
+    });
+
+    pagerEl?.addEventListener("click", (event) => {
+      const link = event.target.closest("a[data-chapter-id]");
+      if (!link) return;
+      event.preventDefault();
+      goToChapter(link.dataset.chapterId, { push: true, animate: true });
+    });
+
+    window.addEventListener("popstate", () => {
+      goToChapter(getRouteId("c") || chapters[0].id, { push: false, animate: true });
+    });
+
+    const initialId = getRouteId("c") || chapters[0].id;
+    showChapter(initialId, { push: false, animate: true });
+  } catch (err) {
+    bodyEl.innerHTML = `<div class="error"><strong>Could not load lessons.</strong><br>${err.message}<br><br>Serve the <code>web/</code> folder over HTTP (for example <code>python3 -m http.server 4173</code>), then open the site from that URL.</div>`;
+  }
+}
+
+async function initLabPage() {
+  const navEl = document.querySelector("[data-lab-nav]");
+  const bodyEl = document.querySelector("[data-lab-body]");
+  const titleEl = document.querySelector("[data-lab-title]");
+  const progressEl = document.querySelector("[data-progress]");
+  const pagerEl = document.querySelector("[data-pager]");
+  if (!navEl || !bodyEl) return;
+
+  setupSidebarToggle();
+
+  let currentIndex = -1;
+  let transitionToken = 0;
+  const paneEl = bodyEl.closest(".content-pane");
+  const cache = new Map();
+  const LAB_OUT_MS = 280;
+  const prefersReducedMotion = () =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const resolveIndex = (id) => {
+    let index = LABS.findIndex((l) => l.id === id);
+    if (index < 0) index = 0;
+    return index;
+  };
+
+  const setActiveNav = (id) => {
+    navEl.querySelectorAll("a[data-lab-id]").forEach((a) => {
+      a.classList.toggle("is-active", a.dataset.labId === id);
+    });
+  };
+
+  const renderPager = (index) => {
+    if (!pagerEl) return;
+    const prev = LABS[index - 1];
+    const next = LABS[index + 1];
+    pagerEl.innerHTML = `
+      ${prev ? `<a class="pager-prev" href="${labHref(prev.id)}" data-lab-id="${prev.id}"><span>Previous lab</span>${prev.title}</a>` : ""}
+      ${next ? `<a class="pager-next" href="${labHref(next.id)}" data-lab-id="${next.id}"><span>Next lab</span>${next.title}</a>` : ""}
+    `;
+  };
+
+  const clearLabMotion = () => {
+    bodyEl.classList.remove("is-leaving", "is-switching");
+    paneEl?.classList.remove("is-chapter-leaving", "is-chapter-switching");
+  };
+
+  const playLabIn = () => {
+    clearLabMotion();
+    void bodyEl.offsetWidth;
+    bodyEl.classList.add("is-switching");
+    paneEl?.classList.add("is-chapter-switching");
+  };
+
+  const loadLabMarkdown = async (id) => {
+    if (cache.has(id)) return cache.get(id);
+    const md = await loadText(`./content/labs/${id}.md`);
+    cache.set(id, md);
+    return md;
+  };
+
+  const applyLab = async (lab, index) => {
+    setActiveNav(lab.id);
+    if (titleEl) titleEl.textContent = lab.title;
+    if (progressEl) progressEl.textContent = `Lab ${index + 1} of ${LABS.length} · ${lab.level}`;
+    document.title = `${lab.title} — rean-git`;
+    renderPager(index);
+
+    try {
+      const md = await loadLabMarkdown(lab.id);
+      renderMarkdown(bodyEl, md);
+      bodyEl.querySelector("h1")?.remove();
+    } catch (err) {
+      bodyEl.innerHTML = `<div class="error"><strong>Could not load lab.</strong><br>${err.message}<br><br>Serve the <code>web/</code> folder over HTTP.</div>`;
+    }
+  };
+
+  const showLab = async (id, { push = false, animate = true } = {}) => {
+    const index = resolveIndex(id);
+    const lab = LABS[index];
+
+    if (index === currentIndex) {
+      if (push) history.replaceState({ id: lab.id }, "", labHref(lab.id));
+      return;
+    }
+
+    const token = ++transitionToken;
+    const hadLab = currentIndex >= 0;
+    currentIndex = index;
+
+    if (push) {
+      history.pushState({ id: lab.id }, "", labHref(lab.id));
+    }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    const shouldAnimate = animate && !prefersReducedMotion();
+
+    if (shouldAnimate && hadLab) {
+      clearLabMotion();
+      bodyEl.classList.add("is-leaving");
+      paneEl?.classList.add("is-chapter-leaving");
+      await new Promise((resolve) => setTimeout(resolve, LAB_OUT_MS));
+      if (token !== transitionToken) return;
+    }
+
+    await applyLab(lab, index);
+    if (token !== transitionToken) return;
+
+    if (shouldAnimate) {
+      playLabIn();
+    } else {
+      clearLabMotion();
+    }
+  };
+
+  navEl.innerHTML = LABS.map(
+    (l) =>
+      `<li><a href="${labHref(l.id)}" data-lab-id="${l.id}">${l.title}<span class="lab-level">${l.level}</span></a></li>`
+  ).join("");
+
+  const goToLab = (id, opts) => {
+    if (!id) return;
+    showLab(id, opts);
+  };
+
+  navEl.addEventListener("click", (event) => {
+    const link = event.target.closest("a[data-lab-id]");
+    if (!link) return;
+    event.preventDefault();
+    goToLab(link.dataset.labId, { push: true, animate: true });
+  });
+
+  pagerEl?.addEventListener("click", (event) => {
+    const link = event.target.closest("a[data-lab-id]");
+    if (!link) return;
+    event.preventDefault();
+    goToLab(link.dataset.labId, { push: true, animate: true });
+  });
+
+  window.addEventListener("popstate", () => {
+    goToLab(getRouteId("id") || LABS[0].id, { push: false, animate: true });
+  });
+
+  goToLab(getRouteId("id") || LABS[0].id, { push: false, animate: true });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.body.dataset.page === "learn") initLearnPage();
+  if (document.body.dataset.page === "lab") initLabPage();
+});
