@@ -122,43 +122,13 @@ function renderMarkdown(target, md) {
   enhanceCodeBlocks(target);
 }
 
-function setupSidebarToggle() {
-  const sidebar = document.querySelector("[data-sidebar]");
-  const toggle = document.querySelector("[data-side-toggle]");
-  const backdrop = document.querySelector("[data-backdrop]");
-  if (!sidebar || !toggle) return;
-
-  const close = () => {
-    sidebar.classList.remove("is-open");
-    backdrop?.classList.remove("is-on");
-    toggle.setAttribute("aria-expanded", "false");
-  };
-
-  const open = () => {
-    sidebar.classList.add("is-open");
-    backdrop?.classList.add("is-on");
-    toggle.setAttribute("aria-expanded", "true");
-  };
-
-  toggle.addEventListener("click", () => {
-    if (sidebar.classList.contains("is-open")) close();
-    else open();
-  });
-  backdrop?.addEventListener("click", close);
-  sidebar.addEventListener("click", (event) => {
-    if (event.target.closest("a")) close();
-  });
-}
-
 async function initLearnPage() {
-  const navEl = document.querySelector("[data-chapter-nav]");
+  const selectEl = document.querySelector("[data-chapter-select]");
   const bodyEl = document.querySelector("[data-chapter-body]");
   const titleEl = document.querySelector("[data-chapter-title]");
   const progressEl = document.querySelector("[data-progress]");
   const pagerEl = document.querySelector("[data-pager]");
-  if (!navEl || !bodyEl) return;
-
-  setupSidebarToggle();
+  if (!selectEl || !bodyEl) return;
 
   try {
     const raw = await loadText("./content/guide.md");
@@ -168,7 +138,7 @@ async function initLearnPage() {
     let currentIndex = -1;
     let transitionToken = 0;
     const paneEl = bodyEl.closest(".content-pane");
-    const CHAPTER_OUT_MS = 280;
+    const CHAPTER_OUT_MS = 300;
     const prefersReducedMotion = () =>
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -178,10 +148,8 @@ async function initLearnPage() {
       return index;
     };
 
-    const setActiveNav = (id) => {
-      navEl.querySelectorAll("a[data-chapter-id]").forEach((a) => {
-        a.classList.toggle("is-active", a.dataset.chapterId === id);
-      });
+    const syncSelect = (id) => {
+      selectEl.value = id;
     };
 
     const renderPager = (index) => {
@@ -207,9 +175,9 @@ async function initLearnPage() {
     };
 
     const applyChapter = (chapter, index) => {
-      setActiveNav(chapter.id);
+      syncSelect(chapter.id);
       if (titleEl) titleEl.textContent = chapter.title;
-      if (progressEl) progressEl.textContent = `Chapter ${index + 1} of ${chapters.length}`;
+      if (progressEl) progressEl.textContent = `${index + 1} / ${chapters.length}`;
       document.title = `${chapter.title} — rean-git`;
       renderMarkdown(bodyEl, chapter.body);
       renderPager(index);
@@ -253,10 +221,10 @@ async function initLearnPage() {
       }
     };
 
-    navEl.innerHTML = chapters
+    selectEl.innerHTML = chapters
       .map((c, i) => {
         const n = String(i + 1).padStart(2, "0");
-        return `<li><a href="${chapterHref(c.id)}" data-chapter-id="${c.id}"><small>${n}</small>${c.title}</a></li>`;
+        return `<option value="${c.id}">${n} — ${c.title}</option>`;
       })
       .join("");
 
@@ -265,11 +233,8 @@ async function initLearnPage() {
       showChapter(id, opts);
     };
 
-    navEl.addEventListener("click", (event) => {
-      const link = event.target.closest("a[data-chapter-id]");
-      if (!link) return;
-      event.preventDefault();
-      goToChapter(link.dataset.chapterId, { push: true, animate: true });
+    selectEl.addEventListener("change", () => {
+      goToChapter(selectEl.value, { push: true, animate: true });
     });
 
     pagerEl?.addEventListener("click", (event) => {
@@ -283,28 +248,25 @@ async function initLearnPage() {
       goToChapter(getRouteId("c") || chapters[0].id, { push: false, animate: true });
     });
 
-    const initialId = getRouteId("c") || chapters[0].id;
-    showChapter(initialId, { push: false, animate: true });
+    showChapter(getRouteId("c") || chapters[0].id, { push: false, animate: true });
   } catch (err) {
     bodyEl.innerHTML = `<div class="error"><strong>Could not load lessons.</strong><br>${err.message}<br><br>Serve the <code>web/</code> folder over HTTP (for example <code>python3 -m http.server 4173</code>), then open the site from that URL.</div>`;
   }
 }
 
 async function initLabPage() {
-  const navEl = document.querySelector("[data-lab-nav]");
+  const selectEl = document.querySelector("[data-lab-select]");
   const bodyEl = document.querySelector("[data-lab-body]");
   const titleEl = document.querySelector("[data-lab-title]");
   const progressEl = document.querySelector("[data-progress]");
   const pagerEl = document.querySelector("[data-pager]");
-  if (!navEl || !bodyEl) return;
-
-  setupSidebarToggle();
+  if (!selectEl || !bodyEl) return;
 
   let currentIndex = -1;
   let transitionToken = 0;
   const paneEl = bodyEl.closest(".content-pane");
   const cache = new Map();
-  const LAB_OUT_MS = 280;
+  const LAB_OUT_MS = 300;
   const prefersReducedMotion = () =>
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -314,10 +276,8 @@ async function initLabPage() {
     return index;
   };
 
-  const setActiveNav = (id) => {
-    navEl.querySelectorAll("a[data-lab-id]").forEach((a) => {
-      a.classList.toggle("is-active", a.dataset.labId === id);
-    });
+  const syncSelect = (id) => {
+    selectEl.value = id;
   };
 
   const renderPager = (index) => {
@@ -350,9 +310,9 @@ async function initLabPage() {
   };
 
   const applyLab = async (lab, index) => {
-    setActiveNav(lab.id);
+    syncSelect(lab.id);
     if (titleEl) titleEl.textContent = lab.title;
-    if (progressEl) progressEl.textContent = `Lab ${index + 1} of ${LABS.length} · ${lab.level}`;
+    if (progressEl) progressEl.textContent = `${index + 1} / ${LABS.length} · ${lab.level}`;
     document.title = `${lab.title} — rean-git`;
     renderPager(index);
 
@@ -404,21 +364,18 @@ async function initLabPage() {
     }
   };
 
-  navEl.innerHTML = LABS.map(
-    (l) =>
-      `<li><a href="${labHref(l.id)}" data-lab-id="${l.id}">${l.title}<span class="lab-level">${l.level}</span></a></li>`
-  ).join("");
+  selectEl.innerHTML = LABS.map((l, i) => {
+    const n = String(i + 1).padStart(2, "0");
+    return `<option value="${l.id}">${n} — ${l.title}</option>`;
+  }).join("");
 
   const goToLab = (id, opts) => {
     if (!id) return;
     showLab(id, opts);
   };
 
-  navEl.addEventListener("click", (event) => {
-    const link = event.target.closest("a[data-lab-id]");
-    if (!link) return;
-    event.preventDefault();
-    goToLab(link.dataset.labId, { push: true, animate: true });
+  selectEl.addEventListener("change", () => {
+    goToLab(selectEl.value, { push: true, animate: true });
   });
 
   pagerEl?.addEventListener("click", (event) => {

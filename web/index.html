@@ -11,12 +11,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,650&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="assets/css/styles.css" />
   </head>
-  <body>
+  <body class="page-home">
     <header class="site-header site-header-bar">
       <div class="wrap header-inner">
         <a class="logo" href="./">rean<span>-git</span></a>
@@ -33,107 +33,91 @@
     </header>
 
     <main>
-      <section class="hero" aria-label="Introduction">
-        <div class="hero-copy">
+      <section class="masthead" aria-label="Introduction">
+        <div class="wrap masthead-inner">
           <p class="brand">rean<span class="dot">-</span>git</p>
-          <h1 class="headline">Learn Git with your hands on the keyboard.</h1>
-          <p class="lede">
-            Fifteen chapters and seven labs — from first commit to team workflow.
-          </p>
-          <div class="cta-row">
-            <a class="btn btn-primary" href="./learn.html">Start learning</a>
-            <a class="btn btn-ghost" href="./labs.html">Open labs</a>
+          <div class="masthead-body">
+            <h1 class="headline">Learn Git with your hands on the keyboard.</h1>
+            <p class="lede">
+              Fifteen chapters and seven labs — from first commit to team workflow.
+            </p>
+            <div class="cta-row">
+              <a class="btn btn-primary" href="./learn.html">Start learning</a>
+              <a class="btn btn-ghost" href="./labs.html">Open labs</a>
+            </div>
           </div>
         </div>
-
-        <figure class="terminal" aria-label="Example Git session">
-          <div class="terminal-bar" aria-hidden="true">
-            <i></i><i></i><i></i>
-            <span>~/rean-git</span>
-          </div>
-          <pre><code><span class="prompt">$</span> <span class="cmd">git init</span>
-<span class="out">Initialized empty Git repository</span>
-<span class="prompt">$</span> <span class="cmd">git commit -m "first step"</span>
-<span class="out">[main (root-commit) a3f1c2d] first step</span>
-<span class="prompt">$</span> <span class="cmd">git branch feature/learn</span>
-<span class="prompt">$</span> <span class="cursor" aria-hidden="true"></span></code></pre>
-        </figure>
+        <p class="commit-ribbon wrap" aria-hidden="true">
+          <span>a3f1c2d</span>
+          <span>first step</span>
+          <span>main</span>
+          <span>feature/learn</span>
+        </p>
       </section>
 
       <section class="path" id="path">
-        <div class="path-intro">
-          <h2>Seven labs. One clear path.</h2>
-          <p>
-            Read a chapter, then practice. Lab folders live in the repo under
-            <code>labs/</code> — open a terminal beside the site.
-          </p>
-        </div>
+        <div class="wrap">
+          <div class="path-intro">
+            <p class="eyebrow">Practice track</p>
+            <h2>Seven labs in order</h2>
+            <p>
+              Read a chapter, then practice. Lab folders live under
+              <code>labs/</code> — keep a terminal open beside this site.
+            </p>
+          </div>
 
-        <ol class="lab-list">
-          <li>
-            <a href="./lab.html?id=01-first-repo">
-              <span class="lab-num">01</span>
-              <div>
+          <ol class="lab-track">
+            <li>
+              <a href="./lab.html?id=01-first-repo">
+                <span class="lab-num">01</span>
                 <h3 class="lab-title">First repo</h3>
-                <p class="lab-desc">Init, stage, commit — your first real history.</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="./lab.html?id=02-branch-merge">
-              <span class="lab-num">02</span>
-              <div>
+                <p class="lab-desc">Init, stage, commit.</p>
+              </a>
+            </li>
+            <li>
+              <a href="./lab.html?id=02-branch-merge">
+                <span class="lab-num">02</span>
                 <h3 class="lab-title">Branch &amp; merge</h3>
-                <p class="lab-desc">Split work safely, then bring it back together.</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="./lab.html?id=03-conflict">
-              <span class="lab-num">03</span>
-              <div>
+                <p class="lab-desc">Split work, then join it.</p>
+              </a>
+            </li>
+            <li>
+              <a href="./lab.html?id=03-conflict">
+                <span class="lab-num">03</span>
                 <h3 class="lab-title">Conflict</h3>
-                <p class="lab-desc">Meet a merge conflict and resolve it calmly.</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="./lab.html?id=04-rebase">
-              <span class="lab-num">04</span>
-              <div>
+                <p class="lab-desc">Resolve a merge conflict.</p>
+              </a>
+            </li>
+            <li>
+              <a href="./lab.html?id=04-rebase">
+                <span class="lab-num">04</span>
                 <h3 class="lab-title">Rebase</h3>
-                <p class="lab-desc">Replay commits and keep history readable.</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="./lab.html?id=05-undo">
-              <span class="lab-num">05</span>
-              <div>
+                <p class="lab-desc">Replay commits cleanly.</p>
+              </a>
+            </li>
+            <li>
+              <a href="./lab.html?id=05-undo">
+                <span class="lab-num">05</span>
                 <h3 class="lab-title">Undo</h3>
-                <p class="lab-desc">Recover from mistakes with restore, reset, revert.</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="./lab.html?id=06-remote-pr">
-              <span class="lab-num">06</span>
-              <div>
+                <p class="lab-desc">Restore, reset, revert.</p>
+              </a>
+            </li>
+            <li>
+              <a href="./lab.html?id=06-remote-pr">
+                <span class="lab-num">06</span>
                 <h3 class="lab-title">Remote &amp; PR</h3>
-                <p class="lab-desc">Push, pull, and open a clean pull request.</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="./lab.html?id=07-team-workflow">
-              <span class="lab-num">07</span>
-              <div>
+                <p class="lab-desc">Push and open a PR.</p>
+              </a>
+            </li>
+            <li>
+              <a href="./lab.html?id=07-team-workflow">
+                <span class="lab-num">07</span>
                 <h3 class="lab-title">Team workflow</h3>
-                <p class="lab-desc">Day-to-day Git habits that scale with a team.</p>
-              </div>
-            </a>
-          </li>
-        </ol>
+                <p class="lab-desc">Habits that scale.</p>
+              </a>
+            </li>
+          </ol>
+        </div>
       </section>
     </main>
 
