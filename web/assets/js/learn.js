@@ -165,6 +165,7 @@ async function initLearnPage() {
     const clearChapterMotion = () => {
       bodyEl.classList.remove("is-leaving", "is-switching");
       paneEl?.classList.remove("is-chapter-leaving", "is-chapter-switching");
+      document.body.classList.remove("is-leaving", "is-switching");
     };
 
     const playChapterIn = () => {
@@ -172,6 +173,7 @@ async function initLearnPage() {
       void bodyEl.offsetWidth;
       bodyEl.classList.add("is-switching");
       paneEl?.classList.add("is-chapter-switching");
+      document.body.classList.add("is-switching");
     };
 
     const applyChapter = (chapter, index) => {
@@ -208,6 +210,7 @@ async function initLearnPage() {
         clearChapterMotion();
         bodyEl.classList.add("is-leaving");
         paneEl?.classList.add("is-chapter-leaving");
+        document.body.classList.add("is-leaving");
         await new Promise((resolve) => setTimeout(resolve, CHAPTER_OUT_MS));
         if (token !== transitionToken) return;
       }
@@ -293,6 +296,7 @@ async function initLabPage() {
   const clearLabMotion = () => {
     bodyEl.classList.remove("is-leaving", "is-switching");
     paneEl?.classList.remove("is-chapter-leaving", "is-chapter-switching");
+    document.body.classList.remove("is-leaving", "is-switching");
   };
 
   const playLabIn = () => {
@@ -300,6 +304,7 @@ async function initLabPage() {
     void bodyEl.offsetWidth;
     bodyEl.classList.add("is-switching");
     paneEl?.classList.add("is-chapter-switching");
+    document.body.classList.add("is-switching");
   };
 
   const loadLabMarkdown = async (id) => {
@@ -350,6 +355,7 @@ async function initLabPage() {
       clearLabMotion();
       bodyEl.classList.add("is-leaving");
       paneEl?.classList.add("is-chapter-leaving");
+      document.body.classList.add("is-leaving");
       await new Promise((resolve) => setTimeout(resolve, LAB_OUT_MS));
       if (token !== transitionToken) return;
     }
