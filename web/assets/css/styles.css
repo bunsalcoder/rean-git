@@ -100,19 +100,45 @@ a {
 }
 
 .nav {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.15rem;
 }
 
+.nav-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transform: translate3d(0, 0, 0);
+  transition:
+    transform 0.38s var(--ease-spring),
+    width 0.38s var(--ease-spring),
+    height 0.38s var(--ease-spring),
+    opacity 0.2s var(--ease);
+}
+
+.nav.is-indicator-ready .nav-indicator {
+  opacity: 1;
+}
+
 .nav a {
+  position: relative;
+  z-index: 1;
   text-decoration: none;
   font-weight: 500;
   font-size: 0.9rem;
   color: var(--ink-soft);
   padding: 0.45rem 0.8rem;
   border-radius: 999px;
-  transition: color 0.2s var(--ease), background 0.2s var(--ease);
+  transition: color 0.28s var(--ease), background 0.28s var(--ease), font-weight 0.28s var(--ease);
 }
 
 .nav a:hover {
@@ -122,8 +148,11 @@ a {
 
 .nav a[aria-current="page"] {
   color: var(--ink);
-  background: var(--accent-soft);
   font-weight: 600;
+}
+
+.nav a[aria-current="page"]:hover {
+  background: transparent;
 }
 
 .nav-toggle {
@@ -193,9 +222,21 @@ a {
     pointer-events: auto;
   }
 
+  .nav-indicator {
+    display: none;
+  }
+
   .nav a {
     border-radius: var(--radius);
     padding: 0.75rem 0.85rem;
+  }
+
+  .nav a[aria-current="page"] {
+    background: var(--accent-soft);
+  }
+
+  .nav a[aria-current="page"]:hover {
+    background: var(--accent-soft);
   }
 }
 
