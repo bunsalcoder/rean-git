@@ -285,7 +285,7 @@ a {
   color: var(--ink);
 }
 
-.brand .dot {
+.brand span {
   color: var(--accent);
 }
 
