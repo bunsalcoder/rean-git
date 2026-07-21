@@ -122,7 +122,7 @@ function renderMarkdown(target, md) {
   enhanceCodeBlocks(target);
 }
 
-async function initLearnPage(signal) {
+async function initLearnPage(signal, { animate = true } = {}) {
   const selectEl = document.querySelector("[data-chapter-select]");
   const bodyEl = document.querySelector("[data-chapter-body]");
   const titleEl = document.querySelector("[data-chapter-title]");
@@ -139,7 +139,7 @@ async function initLearnPage(signal) {
     let currentIndex = -1;
     let transitionToken = 0;
     const paneEl = bodyEl.closest(".content-pane");
-    const CHAPTER_OUT_MS = 300;
+    const CHAPTER_OUT_MS = 380;
     const prefersReducedMotion = () =>
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -264,7 +264,7 @@ async function initLearnPage(signal) {
       { signal }
     );
 
-    showChapter(getRouteId("c") || chapters[0].id, { push: false, animate: true });
+    showChapter(getRouteId("c") || chapters[0].id, { push: false, animate });
 
     return {
       goTo(id, opts) {
@@ -278,7 +278,7 @@ async function initLearnPage(signal) {
   }
 }
 
-async function initLabPage(signal) {
+async function initLabPage(signal, { animate = true } = {}) {
   const selectEl = document.querySelector("[data-lab-select]");
   const bodyEl = document.querySelector("[data-lab-body]");
   const titleEl = document.querySelector("[data-lab-title]");
@@ -290,7 +290,7 @@ async function initLabPage(signal) {
   let transitionToken = 0;
   const paneEl = bodyEl.closest(".content-pane");
   const cache = new Map();
-  const LAB_OUT_MS = 300;
+  const LAB_OUT_MS = 380;
   const prefersReducedMotion = () =>
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -428,7 +428,7 @@ async function initLabPage(signal) {
     { signal }
   );
 
-  goToLab(getRouteId("id") || LABS[0].id, { push: false, animate: true });
+  goToLab(getRouteId("id") || LABS[0].id, { push: false, animate });
 
   return {
     goTo(id, opts) {
@@ -449,15 +449,15 @@ async function initLabPage(signal) {
     labApi = null;
   };
 
-  const mount = async () => {
+  const mount = async ({ animate = true } = {}) => {
     unmount();
     abortController = new AbortController();
     const { signal } = abortController;
 
     if (document.body.dataset.page === "learn") {
-      learnApi = await initLearnPage(signal);
+      learnApi = await initLearnPage(signal, { animate });
     } else if (document.body.dataset.page === "lab") {
-      labApi = await initLabPage(signal);
+      labApi = await initLabPage(signal, { animate });
     }
   };
 
