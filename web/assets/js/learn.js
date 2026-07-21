@@ -122,16 +122,17 @@ function renderMarkdown(target, md) {
   enhanceCodeBlocks(target);
 }
 
-async function initLearnPage() {
+async function initLearnPage(signal) {
   const selectEl = document.querySelector("[data-chapter-select]");
   const bodyEl = document.querySelector("[data-chapter-body]");
   const titleEl = document.querySelector("[data-chapter-title]");
   const progressEl = document.querySelector("[data-progress]");
   const pagerEl = document.querySelector("[data-pager]");
-  if (!selectEl || !bodyEl) return;
+  if (!selectEl || !bodyEl) return null;
 
   try {
     const raw = await loadText("./content/guide.md");
+    if (signal?.aborted) return null;
     const chapters = splitGuide(raw);
     if (!chapters.length) throw new Error("No chapters found");
 
@@ -236,34 +237,54 @@ async function initLearnPage() {
       showChapter(id, opts);
     };
 
-    selectEl.addEventListener("change", () => {
-      goToChapter(selectEl.value, { push: true, animate: true });
-    });
+    selectEl.addEventListener(
+      "change",
+      () => {
+        goToChapter(selectEl.value, { push: true, animate: true });
+      },
+      { signal }
+    );
 
-    pagerEl?.addEventListener("click", (event) => {
-      const link = event.target.closest("a[data-chapter-id]");
-      if (!link) return;
-      event.preventDefault();
-      goToChapter(link.dataset.chapterId, { push: true, animate: true });
-    });
+    pagerEl?.addEventListener(
+      "click",
+      (event) => {
+        const link = event.target.closest("a[data-chapter-id]");
+        if (!link) return;
+        event.preventDefault();
+        goToChapter(link.dataset.chapterId, { push: true, animate: true });
+      },
+      { signal }
+    );
 
-    window.addEventListener("popstate", () => {
-      goToChapter(getRouteId("c") || chapters[0].id, { push: false, animate: true });
-    });
+    window.addEventListener(
+      "popstate",
+      () => {
+        goToChapter(getRouteId("c") || chapters[0].id, { push: false, animate: true });
+      },
+      { signal }
+    );
 
     showChapter(getRouteId("c") || chapters[0].id, { push: false, animate: true });
+
+    return {
+      goTo(id, opts) {
+        goToChapter(id || chapters[0].id, opts);
+      },
+    };
   } catch (err) {
+    if (signal?.aborted) return null;
     bodyEl.innerHTML = `<div class="error"><strong>Could not load lessons.</strong><br>${err.message}<br><br>Serve the <code>web/</code> folder over HTTP (for example <code>python3 -m http.server 4173</code>), then open the site from that URL.</div>`;
+    return null;
   }
 }
 
-async function initLabPage() {
+async function initLabPage(signal) {
   const selectEl = document.querySelector("[data-lab-select]");
   const bodyEl = document.querySelector("[data-lab-body]");
   const titleEl = document.querySelector("[data-lab-title]");
   const progressEl = document.querySelector("[data-progress]");
   const pagerEl = document.querySelector("[data-pager]");
-  if (!selectEl || !bodyEl) return;
+  if (!selectEl || !bodyEl) return null;
 
   let currentIndex = -1;
   let transitionToken = 0;
@@ -380,25 +401,85 @@ async function initLabPage() {
     showLab(id, opts);
   };
 
-  selectEl.addEventListener("change", () => {
-    goToLab(selectEl.value, { push: true, animate: true });
-  });
+  selectEl.addEventListener(
+    "change",
+    () => {
+      goToLab(selectEl.value, { push: true, animate: true });
+    },
+    { signal }
+  );
 
-  pagerEl?.addEventListener("click", (event) => {
-    const link = event.target.closest("a[data-lab-id]");
-    if (!link) return;
-    event.preventDefault();
-    goToLab(link.dataset.labId, { push: true, animate: true });
-  });
+  pagerEl?.addEventListener(
+    "click",
+    (event) => {
+      const link = event.target.closest("a[data-lab-id]");
+      if (!link) return;
+      event.preventDefault();
+      goToLab(link.dataset.labId, { push: true, animate: true });
+    },
+    { signal }
+  );
 
-  window.addEventListener("popstate", () => {
-    goToLab(getRouteId("id") || LABS[0].id, { push: false, animate: true });
-  });
+  window.addEventListener(
+    "popstate",
+    () => {
+      goToLab(getRouteId("id") || LABS[0].id, { push: false, animate: true });
+    },
+    { signal }
+  );
 
   goToLab(getRouteId("id") || LABS[0].id, { push: false, animate: true });
+
+  return {
+    goTo(id, opts) {
+      goToLab(id || LABS[0].id, opts);
+    },
+  };
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  if (document.body.dataset.page === "learn") initLearnPage();
-  if (document.body.dataset.page === "lab") initLabPage();
-});
+(() => {
+  let abortController = null;
+  let learnApi = null;
+  let labApi = null;
+
+  const unmount = () => {
+    abortController?.abort();
+    abortController = null;
+    learnApi = null;
+    labApi = null;
+  };
+
+  const mount = async () => {
+    unmount();
+    abortController = new AbortController();
+    const { signal } = abortController;
+
+    if (document.body.dataset.page === "learn") {
+      learnApi = await initLearnPage(signal);
+    } else if (document.body.dataset.page === "lab") {
+      labApi = await initLabPage(signal);
+    }
+  };
+
+  window.ReanGitContent = {
+    mount,
+    unmount,
+    goLearn(id, opts) {
+      learnApi?.goTo(id, opts);
+    },
+    goLab(id, opts) {
+      labApi?.goTo(id, opts);
+    },
+  };
+
+  const start = () => {
+    if (window.__reanGitDeferContentMount) return;
+    mount();
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start, { once: true });
+  } else {
+    start();
+  }
+})();

@@ -4,6 +4,14 @@
   const header = document.querySelector(".site-header-bar");
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const navMotionQuery = window.matchMedia("(min-width: 721px)");
+  const MARKED_SRC = "https://cdn.jsdelivr.net/npm/marked/marked.min.js";
+  const LEARN_SRC = new URL("./assets/js/learn.js", location.href).href;
+  const MAIN_SRC = new URL("./assets/js/main.js", location.href).href;
+  const PILL_MS = 340;
+
+  let lastPageKey = pageKey(location.href);
+  let navToken = 0;
+  const pageCache = new Map();
 
   if (toggle && nav) {
     toggle.addEventListener("click", () => {
@@ -34,24 +42,35 @@
     window.addEventListener("scroll", syncHeader, { passive: true });
   }
 
-  const path = location.pathname.replace(/index\.html$/, "");
-  const links = nav ? [...nav.querySelectorAll("a")] : [];
+  function pageKey(url) {
+    const target = new URL(url, location.href);
+    return target.pathname.replace(/\/index\.html$/, "/");
+  }
 
-  links.forEach((a) => {
-    a.removeAttribute("aria-current");
-    const href = a.getAttribute("href");
-    if (!href) return;
-    const target = new URL(href, location.href);
-    const samePath = target.pathname.replace(/index\.html$/, "") === path;
-    if (!samePath) return;
-    const linkC = target.searchParams.get("c");
-    const pageC = new URLSearchParams(location.search).get("c");
-    if (linkC && pageC !== linkC) return;
-    if (!linkC && pageC === "14") return;
-    a.setAttribute("aria-current", "page");
-  });
+  function syncActiveLinks() {
+    if (!nav) return;
+    const path = pageKey(location.href);
 
-  if (!nav || !links.length) return;
+    [...nav.querySelectorAll("a")].forEach((a) => {
+      a.removeAttribute("aria-current");
+      const href = a.getAttribute("href");
+      if (!href) return;
+      const target = new URL(href, location.href);
+      if (pageKey(target) !== path) return;
+      const linkC = target.searchParams.get("c");
+      const pageC = new URLSearchParams(location.search).get("c");
+      if (linkC && pageC !== linkC) return;
+      if (!linkC && pageC === "14") return;
+      a.setAttribute("aria-current", "page");
+    });
+  }
+
+  syncActiveLinks();
+
+  if (!nav) return;
+
+  const links = [...nav.querySelectorAll("a")];
+  if (!links.length) return;
 
   let indicator = nav.querySelector(".nav-indicator");
   if (!indicator) {
@@ -99,7 +118,202 @@
 
   syncIndicator();
 
+  function selectTab(link, { animate = true } = {}) {
+    links.forEach((item) => item.removeAttribute("aria-current"));
+    link.setAttribute("aria-current", "page");
+    moveIndicator(link, { animate: animate && !prefersReducedMotion });
+  }
+
+  function wait(ms) {
+    return new Promise((resolve) => window.setTimeout(resolve, ms));
+  }
+
+  function nextFrame() {
+    return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+  }
+
+  async function prefetchPage(href) {
+    if (pageCache.has(href)) return pageCache.get(href);
+
+    const pending = fetch(href, { credentials: "same-origin" })
+      .then(async (response) => {
+        if (!response.ok) throw new Error(`Could not load ${href}`);
+        return response.text();
+      })
+      .catch((error) => {
+        pageCache.delete(href);
+        throw error;
+      });
+
+    pageCache.set(href, pending);
+    return pending;
+  }
+
+  function loadScript(src) {
+    const absolute = new URL(src, location.href).href;
+    if ([...document.scripts].some((script) => script.src === absolute)) {
+      return Promise.resolve();
+    }
+
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = absolute;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error(`Failed to load ${absolute}`));
+      document.body.appendChild(script);
+    });
+  }
+
+  async function ensurePageScripts(doc) {
+    const needsMarked = Boolean(doc.querySelector('script[src*="marked"]'));
+    const needsLearn = Boolean(doc.querySelector('script[src*="learn.js"]'));
+    const needsMain = Boolean(doc.querySelector('script[src*="main.js"]'));
+
+    window.__reanGitDeferContentMount = true;
+    window.__reanGitDeferHomeMount = true;
+
+    try {
+      if (needsMarked && !window.marked) await loadScript(MARKED_SRC);
+      if (needsLearn) await loadScript(LEARN_SRC);
+      if (needsMain) await loadScript(MAIN_SRC);
+    } finally {
+      window.__reanGitDeferContentMount = false;
+      window.__reanGitDeferHomeMount = false;
+    }
+  }
+
+  function replaceShell(doc) {
+    document.title = doc.title;
+
+    document.body.className = doc.body.className;
+    const page = doc.body.getAttribute("data-page");
+    if (page) document.body.setAttribute("data-page", page);
+    else document.body.removeAttribute("data-page");
+
+    const currentMain = document.querySelector("main");
+    const nextMain = doc.querySelector("main");
+    if (currentMain && nextMain) {
+      currentMain.replaceWith(document.importNode(nextMain, true));
+    }
+
+    document.querySelectorAll("body > footer").forEach((footer) => footer.remove());
+    const main = document.querySelector("main");
+    doc.querySelectorAll("body > footer").forEach((footer) => {
+      const node = document.importNode(footer, true);
+      if (main) main.after(node);
+      else document.body.appendChild(node);
+    });
+  }
+
+  async function bootPage() {
+    window.ReanGitContent?.unmount?.();
+
+    const page = document.body.dataset.page;
+    if (page === "learn" || page === "lab") {
+      await window.ReanGitContent?.mount?.();
+      return;
+    }
+
+    window.ReanGitHome?.mount?.();
+  }
+
+  async function applyDocument(href, html, { push = true } = {}) {
+    const targetUrl = new URL(href, location.href);
+    const doc = new DOMParser().parseFromString(html, "text/html");
+
+    await ensurePageScripts(doc);
+    await nextFrame();
+
+    replaceShell(doc);
+    if (push) history.pushState({ soft: true }, "", targetUrl.href);
+    lastPageKey = pageKey(targetUrl);
+    syncActiveLinks();
+    syncIndicator({ animate: false });
+
+    await nextFrame();
+    await bootPage();
+    window.scrollTo(0, 0);
+  }
+
+  async function softNavigate(href, { push = true, animatePill = false } = {}) {
+    const targetUrl = new URL(href, location.href);
+    if (targetUrl.origin !== location.origin) {
+      location.assign(targetUrl.href);
+      return;
+    }
+
+    const sameDocument = pageKey(targetUrl) === pageKey(location.href);
+
+    if (sameDocument && document.body.dataset.page === "learn") {
+      const chapterId = targetUrl.searchParams.get("c");
+      if (push) history.pushState({ soft: true }, "", targetUrl.href);
+      lastPageKey = pageKey(targetUrl);
+      syncActiveLinks();
+      if (!animatePill) syncIndicator({ animate: false });
+      window.ReanGitContent?.goLearn?.(chapterId, { push: false, animate: true });
+      return;
+    }
+
+    if (sameDocument && document.body.dataset.page === "lab") {
+      const labId = targetUrl.searchParams.get("id");
+      if (push) history.pushState({ soft: true }, "", targetUrl.href);
+      lastPageKey = pageKey(targetUrl);
+      syncActiveLinks();
+      if (!animatePill) syncIndicator({ animate: false });
+      window.ReanGitContent?.goLab?.(labId, { push: false, animate: true });
+      return;
+    }
+
+    const html = await prefetchPage(targetUrl.href);
+    await applyDocument(targetUrl.href, html, { push });
+  }
+
+  async function navigateFromLink(link) {
+    const href = link.href;
+    if (href === location.href) return;
+
+    const token = ++navToken;
+    const shouldAnimatePill = navMotionQuery.matches && !prefersReducedMotion;
+
+    // Paint the pill immediately — before any network/DOM work.
+    selectTab(link, { animate: shouldAnimatePill });
+    await nextFrame();
+    if (token !== navToken) return;
+
+    const targetUrl = new URL(href, location.href);
+    const sameDocument = pageKey(targetUrl) === pageKey(location.href);
+    const prefetch = sameDocument ? null : prefetchPage(href);
+
+    if (shouldAnimatePill) await wait(PILL_MS);
+    if (token !== navToken) return;
+
+    try {
+      if (sameDocument && document.body.dataset.page === "learn") {
+        await softNavigate(href, { push: true, animatePill: true });
+        return;
+      }
+
+      if (sameDocument && document.body.dataset.page === "lab") {
+        await softNavigate(href, { push: true, animatePill: true });
+        return;
+      }
+
+      const html = await (prefetch || prefetchPage(href));
+      if (token !== navToken) return;
+      await applyDocument(href, html, { push: true });
+    } catch {
+      if (token === navToken) location.assign(href);
+    }
+  }
+
   links.forEach((link) => {
+    link.addEventListener("pointerenter", () => {
+      if (link.href === location.href) return;
+      const targetUrl = new URL(link.href, location.href);
+      if (pageKey(targetUrl) === pageKey(location.href)) return;
+      prefetchPage(link.href).catch(() => {});
+    });
+
     link.addEventListener("click", (event) => {
       if (
         event.defaultPrevented ||
@@ -108,39 +322,35 @@
         event.ctrlKey ||
         event.shiftKey ||
         event.altKey ||
-        link.target === "_blank" ||
-        !navMotionQuery.matches ||
-        prefersReducedMotion
+        link.target === "_blank"
       ) {
         return;
       }
 
-      const href = link.href;
-      if (href === location.href) {
+      if (link.href === location.href) {
         event.preventDefault();
         return;
       }
 
       event.preventDefault();
-
-      links.forEach((item) => item.removeAttribute("aria-current"));
-      link.setAttribute("aria-current", "page");
-      moveIndicator(link, { animate: true });
-
-      const navigate = () => {
-        location.assign(href);
-      };
-
-      let didNavigate = false;
-      const go = () => {
-        if (didNavigate) return;
-        didNavigate = true;
-        navigate();
-      };
-
-      indicator.addEventListener("transitionend", go, { once: true });
-      window.setTimeout(go, 420);
+      navigateFromLink(link);
     });
+  });
+
+  window.addEventListener("popstate", () => {
+    const nextKey = pageKey(location.href);
+    if (nextKey === lastPageKey) return;
+
+    const token = ++navToken;
+    softNavigate(location.href, { push: false })
+      .then(() => {
+        if (token !== navToken) return;
+        syncActiveLinks();
+        syncIndicator({ animate: false });
+      })
+      .catch(() => {
+        if (token === navToken) location.reload();
+      });
   });
 
   navMotionQuery.addEventListener("change", () => syncIndicator());

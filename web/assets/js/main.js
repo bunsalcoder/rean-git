@@ -28,6 +28,21 @@
     });
   };
 
-  reveal(".lab-track li", { stagger: 45 });
-  reveal(".lab-grid a", { stagger: 50 });
+  const mount = () => {
+    reveal(".lab-track li", { stagger: 45 });
+    reveal(".lab-grid a", { stagger: 50 });
+  };
+
+  window.ReanGitHome = { mount };
+
+  const start = () => {
+    if (window.__reanGitDeferHomeMount) return;
+    mount();
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start, { once: true });
+  } else {
+    start();
+  }
 })();
