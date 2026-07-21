@@ -1004,6 +1004,29 @@ a {
   color: var(--ink-soft);
 }
 
+main.is-page-leaving,
+.site-footer.is-page-leaving,
+.pager-footer.is-page-leaving {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: opacity 0.36s var(--ease), transform 0.36s var(--ease);
+}
+
+main.is-page-pending,
+.site-footer.is-page-pending,
+.pager-footer.is-page-pending {
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+}
+
+main.is-page-entering,
+.site-footer.is-page-entering,
+.pager-footer.is-page-entering {
+  animation: page-in 0.72s var(--ease-out) both;
+}
+
 .md-body.is-leaving,
 .content-pane.is-chapter-leaving [data-chapter-title],
 .content-pane.is-chapter-leaving [data-lab-title],
@@ -1013,8 +1036,8 @@ a {
 .page-lab.is-leaving [data-pager],
 .page-learn.is-leaving [data-pager] {
   opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+  transform: translateY(10px);
+  transition: opacity 0.36s var(--ease), transform 0.36s var(--ease);
 }
 
 .md-body.is-switching,
@@ -1025,13 +1048,24 @@ a {
 .content-pane.is-chapter-switching [data-pager],
 .page-lab.is-switching [data-pager],
 .page-learn.is-switching [data-pager] {
-  animation: rise 0.45s var(--ease-out) forwards;
+  animation: rise 0.72s var(--ease-out) forwards;
 }
 
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
@@ -1050,6 +1084,15 @@ a {
     animation: none;
   }
 
+  main.is-page-leaving,
+  .site-footer.is-page-leaving,
+  .pager-footer.is-page-leaving,
+  main.is-page-pending,
+  .site-footer.is-page-pending,
+  .pager-footer.is-page-pending,
+  main.is-page-entering,
+  .site-footer.is-page-entering,
+  .pager-footer.is-page-entering,
   .md-body.is-leaving,
   .content-pane.is-chapter-leaving [data-chapter-title],
   .content-pane.is-chapter-leaving [data-lab-title],

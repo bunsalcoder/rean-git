@@ -8,6 +8,8 @@
   const LEARN_SRC = new URL("./assets/js/learn.js", location.href).href;
   const MAIN_SRC = new URL("./assets/js/main.js", location.href).href;
   const PILL_MS = 340;
+  const PAGE_OUT_MS = 360;
+  const PAGE_IN_MS = 720;
 
   let lastPageKey = pageKey(location.href);
   let navToken = 0;
@@ -132,6 +134,46 @@
     return new Promise((resolve) => requestAnimationFrame(() => resolve()));
   }
 
+  function pageShellNodes() {
+    return [
+      document.querySelector("main"),
+      ...document.querySelectorAll("body > .site-footer, body > .pager-footer"),
+    ].filter(Boolean);
+  }
+
+  async function leavePage() {
+    if (prefersReducedMotion) return;
+    const nodes = pageShellNodes();
+    if (!nodes.length) return;
+    nodes.forEach((el) => {
+      el.classList.remove("is-page-entering", "is-page-pending");
+      el.classList.add("is-page-leaving");
+    });
+    await wait(PAGE_OUT_MS);
+  }
+
+  function holdPage() {
+    if (prefersReducedMotion) return;
+    pageShellNodes().forEach((el) => {
+      el.classList.remove("is-page-leaving", "is-page-entering");
+      el.classList.add("is-page-pending");
+    });
+  }
+
+  function enterPage() {
+    if (prefersReducedMotion) return;
+    const nodes = pageShellNodes();
+    if (!nodes.length) return;
+    nodes.forEach((el) => {
+      el.classList.remove("is-page-leaving", "is-page-pending");
+      void el.offsetWidth;
+      el.classList.add("is-page-entering");
+    });
+    window.setTimeout(() => {
+      nodes.forEach((el) => el.classList.remove("is-page-entering"));
+    }, PAGE_IN_MS);
+  }
+
   async function prefetchPage(href) {
     if (pageCache.has(href)) return pageCache.get(href);
 
@@ -205,19 +247,19 @@
     });
   }
 
-  async function bootPage() {
+  async function bootPage({ animate = true } = {}) {
     window.ReanGitContent?.unmount?.();
 
     const page = document.body.dataset.page;
     if (page === "learn" || page === "lab") {
-      await window.ReanGitContent?.mount?.();
+      await window.ReanGitContent?.mount?.({ animate });
       return;
     }
 
     window.ReanGitHome?.mount?.();
   }
 
-  async function applyDocument(href, html, { push = true } = {}) {
+  async function applyDocument(href, html, { push = true, animate = true } = {}) {
     const targetUrl = new URL(href, location.href);
     const doc = new DOMParser().parseFromString(html, "text/html");
 
@@ -225,17 +267,24 @@
     await nextFrame();
 
     replaceShell(doc);
+    if (animate) holdPage();
     if (push) history.pushState({ soft: true }, "", targetUrl.href);
     lastPageKey = pageKey(targetUrl);
     syncActiveLinks();
     syncIndicator({ animate: false });
 
+    // Mount first (no inner motion), then ease the whole page in once content is ready.
     await nextFrame();
-    await bootPage();
+    await bootPage({ animate: false });
     window.scrollTo(0, 0);
+
+    if (animate) {
+      await nextFrame();
+      enterPage();
+    }
   }
 
-  async function softNavigate(href, { push = true, animatePill = false } = {}) {
+  async function softNavigate(href, { push = true, animatePill = false, animate = true } = {}) {
     const targetUrl = new URL(href, location.href);
     if (targetUrl.origin !== location.origin) {
       location.assign(targetUrl.href);
@@ -250,7 +299,7 @@
       lastPageKey = pageKey(targetUrl);
       syncActiveLinks();
       if (!animatePill) syncIndicator({ animate: false });
-      window.ReanGitContent?.goLearn?.(chapterId, { push: false, animate: true });
+      window.ReanGitContent?.goLearn?.(chapterId, { push: false, animate });
       return;
     }
 
@@ -260,12 +309,13 @@
       lastPageKey = pageKey(targetUrl);
       syncActiveLinks();
       if (!animatePill) syncIndicator({ animate: false });
-      window.ReanGitContent?.goLab?.(labId, { push: false, animate: true });
+      window.ReanGitContent?.goLab?.(labId, { push: false, animate });
       return;
     }
 
+    if (animate) await leavePage();
     const html = await prefetchPage(targetUrl.href);
-    await applyDocument(targetUrl.href, html, { push });
+    await applyDocument(targetUrl.href, html, { push, animate });
   }
 
   async function navigateFromLink(link) {
@@ -274,6 +324,7 @@
 
     const token = ++navToken;
     const shouldAnimatePill = navMotionQuery.matches && !prefersReducedMotion;
+    const shouldAnimatePage = !prefersReducedMotion;
 
     // Paint the pill immediately — before any network/DOM work.
     selectTab(link, { animate: shouldAnimatePill });
@@ -282,25 +333,33 @@
 
     const targetUrl = new URL(href, location.href);
     const sameDocument = pageKey(targetUrl) === pageKey(location.href);
+    const sameLearnOrLab =
+      sameDocument &&
+      (document.body.dataset.page === "learn" || document.body.dataset.page === "lab");
     const prefetch = sameDocument ? null : prefetchPage(href);
 
+    // Fade outgoing page while the pill travels (same-doc chapter/lab handles its own leave).
+    const leavePromise =
+      shouldAnimatePage && !sameLearnOrLab ? leavePage() : Promise.resolve();
+
     if (shouldAnimatePill) await wait(PILL_MS);
+    await leavePromise;
     if (token !== navToken) return;
 
     try {
       if (sameDocument && document.body.dataset.page === "learn") {
-        await softNavigate(href, { push: true, animatePill: true });
+        await softNavigate(href, { push: true, animatePill: true, animate: true });
         return;
       }
 
       if (sameDocument && document.body.dataset.page === "lab") {
-        await softNavigate(href, { push: true, animatePill: true });
+        await softNavigate(href, { push: true, animatePill: true, animate: true });
         return;
       }
 
       const html = await (prefetch || prefetchPage(href));
       if (token !== navToken) return;
-      await applyDocument(href, html, { push: true });
+      await applyDocument(href, html, { push: true, animate: true });
     } catch {
       if (token === navToken) location.assign(href);
     }
