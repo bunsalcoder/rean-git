@@ -29,6 +29,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* Keep layout width stable when pages differ in scroll height */
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -118,11 +120,12 @@ a {
   z-index: 0;
   opacity: 0;
   transform: translate3d(0, 0, 0);
+  will-change: transform, width, height;
   transition:
-    transform 0.38s var(--ease-spring),
-    width 0.38s var(--ease-spring),
-    height 0.38s var(--ease-spring),
-    opacity 0.2s var(--ease);
+    transform 0.34s var(--ease-out),
+    width 0.34s var(--ease-out),
+    height 0.34s var(--ease-out),
+    opacity 0.18s var(--ease);
 }
 
 .nav.is-indicator-ready .nav-indicator {
