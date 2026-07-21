@@ -2,7 +2,7 @@
 
 > **Project:** `rean-git`  
 > **Audience:** Beginners and juniors who use Git but don’t fully get it yet  
-> **Style:** Step-by-step, with commands you can run, explanations of *why*, and labs in this repo
+> **Style:** Real problems first, then the simple commands that fix them — plus labs in this repo
 
 ---
 
@@ -55,39 +55,33 @@ cd path/to/rean-git
 
 ## 1. What problem does Git solve?
 
-### The classic pain
+### Real-world problem
 
-You edit code. Then:
+You’re building a school project website with a friend.
 
-- You want yesterday’s version back
-- Two people change the same file
-- “Which zip is the final final?”
-- A deploy broke — what changed since last week?
+- You break the homepage, and want yesterday’s version back
+- Your friend also edited `index.html` — whose zip is “final”?
+- Friday’s deploy failed — what changed since Monday?
 
-Folders, emails, and `project-v2-FINAL.zip` don’t scale.
+Without Git, people invent `project-v2-FINAL-really.zip`. That doesn’t scale.
 
-### Git’s answer
+### Git’s answer (simple)
 
-**Git is a version control system.** It records snapshots of your project over time so you can:
+**Git is a version control system.** It saves snapshots of your project so you can:
 
-- Travel through history
-- Work on parallel ideas (branches)
-- Combine work from multiple people
-- Recover from mistakes
+- Go back in time
+- Work on ideas in parallel (branches)
+- Combine work from more than one person
+- Undo mistakes without guessing which zip to open
 
-### What Git is (and is not)
+### Git vs GitHub (don’t mix them up)
 
-**Git is:**
+| | What it is |
+|--|------------|
+| **Git** | The tool on your computer that tracks history |
+| **GitHub** | A website that *hosts* Git repos, PRs, and reviews |
 
-- A tool that tracks changes in a folder (a *repository*)
-- Local-first — your laptop has the full history
-- The foundation of GitHub, GitLab, Bitbucket, etc.
-
-**Git is not:**
-
-- The same thing as GitHub (GitHub *hosts* Git repos + PRs + CI)
-- Automatic backup to the cloud (you push for that)
-- A substitute for good commit messages and reviews
+Git works offline. GitHub is where you share and collaborate.
 
 ### Lab link
 
@@ -97,76 +91,62 @@ After chapters 3–5 → [Lab 01 — First repo](./lab.html?id=01-first-repo)
 
 ## 2. Core mental model
 
-Memorize these words:
+### Real-world picture
 
-### Working tree
+Think of packing for a trip:
 
-The files you see and edit — your normal project folder.
+1. Clothes on the bed = files you edited (**working tree**)
+2. Suitcase you’re filling = what you chose for *this* trip (**staging**)
+3. Zipped suitcase with a label = a saved trip (**commit**)
+4. Photo album of every trip = **history**
 
-### Staging area (index)
+You don’t shove the whole room into every suitcase — you pick what belongs in *this* commit.
 
-A holding zone for “what will go into the *next* commit.”  
-You choose pieces with `git add`.
+### The four words that matter
 
-### Commit
-
-A saved snapshot of the staged files, plus metadata (author, message, parent commit).  
-Commits form a chain — that’s your history.
-
-### Repository (repo)
-
-The project folder **plus** the hidden `.git/` directory that stores all history and metadata.
-
-### Branch
-
-A movable label pointing at a commit. `main` is usually your default branch. Creating a branch means “start a new line of work from here.”
-
-### Remote
-
-A copy of the repo somewhere else (often GitHub) named `origin` by default.
+| Word | Meaning |
+|------|---------|
+| **Working tree** | The files you see and edit |
+| **Staging** | Holding zone for the *next* commit (`git add`) |
+| **Commit** | A saved snapshot with a message |
+| **Branch** | A sticky note pointing at a commit (usually `main`) |
 
 ```
 edit files  →  git add  →  staging  →  git commit  →  history
                                               ↓
-                                        git push → remote
+                                        git push → remote (GitHub)
 ```
 
-### Three places your file can live
+### Why this matters at work
 
-| Place | Command that moves it there |
-|-------|-----------------------------|
-| Working tree only (modified) | you edited the file |
-| Staging area | `git add` |
-| A commit | `git commit` |
-
-Understanding this triangle solves half of “Git confusion.”
+You fixed a login bug *and* started a messy experiment in the same folder. Staging lets you commit **only the login fix** and leave the experiment out. That one idea clears half of “Git confusion.”
 
 ---
 
 ## 3. Install & first config
 
+### Real-world problem
+
+You try to commit, and Git says it doesn’t know who you are. Every commit needs an author — like signing a change log at work.
+
 ### Install
 
-- **macOS:** `xcode-select --install` (includes Git) or [git-scm.com](https://git-scm.com)
+- **macOS:** `xcode-select --install` or [git-scm.com](https://git-scm.com)
 - **Windows:** [Git for Windows](https://git-scm.com/download/win)
 - **Linux:** `sudo apt install git` / `sudo dnf install git`
-
-Verify:
 
 ```bash
 git --version
 ```
 
-### Identity (required before commits)
-
-Git stamps every commit with your name and email:
+### Set your identity (do this once)
 
 ```bash
 git config --global user.name "Your Name"
 git config --global user.email "you@example.com"
 ```
 
-Use the **same email** as your GitHub account if you want commits linked to your profile.
+Use the **same email** as GitHub so your commits show on your profile.
 
 ### Helpful defaults
 
@@ -176,8 +156,6 @@ git config --global pull.rebase false
 git config --global core.editor "code --wait"   # or nano / vim
 ```
 
-Check everything:
-
 ```bash
 git config --list --show-origin
 ```
@@ -186,37 +164,35 @@ git config --list --show-origin
 
 ## 4. Your first repository
 
-Two ways to start:
+### Real-world problem
 
-### A) Create locally
+You start a personal notes site (or homework folder). You want history from day one — not after you’ve already lost a good draft.
+
+### A) Brand new project on your laptop
 
 ```bash
 mkdir my-notes && cd my-notes
 git init
 ```
 
-→ Creates `.git/`. You now have a repo.
+→ Creates a hidden `.git/` folder. You’re in a repo.
 
-### B) Clone an existing remote
+### B) Join an existing project (clone)
 
 ```bash
 git clone https://github.com/bunsalcoder/rean-git.git
 cd rean-git
 ```
 
-→ Downloads the project **and** its history.
+→ Downloads the files **and** the full history. This is how you join a team repo at work.
 
-### Status is your friend
+### When you’re lost: ask `git status`
 
 ```bash
 git status
 ```
 
-Read it every time you’re unsure. It tells you:
-
-- Which branch you’re on
-- What’s modified / staged / untracked
-- What to do next
+It always answers: which branch, what’s changed, what to do next. Make it a habit — same as checking the build status before you leave for the day.
 
 ### First commit ritual
 
@@ -237,23 +213,29 @@ Complete **[Lab 01 — First repo](./lab.html?id=01-first-repo)** before continu
 
 ## 5. Staging, commits, and history
 
-### Why staging exists
+### Real-world problem
 
-You can commit *some* changes and leave others for later. That’s intentional.
+You changed three things today:
+
+1. Fixed a typo on the homepage (ship it)
+2. Started a half-finished dark mode (not ready)
+3. Tweaked your personal notes (unrelated)
+
+You want **one clean commit** for the typo — not a dump of everything. That’s why staging exists.
+
+### Stage only what belongs together
 
 ```bash
-git add path/to/file.txt     # one file
-git add .                    # everything in this folder (careful)
-git add -p                   # stage hunks interactively
+git add index.html            # just the typo fix
+git add -p                    # pick hunks interactively
+git restore --staged FILE     # oops — unstage, keep edits
 ```
 
-Unstage (keep your edits):
+`git add .` stages *everything*. Useful, but careful when the folder is messy.
 
-```bash
-git restore --staged FILE
-```
+### Commit messages that help future-you
 
-### Good commit messages
+At work, people search history for “when did login break?” A vague message wastes hours.
 
 Prefer:
 
@@ -261,7 +243,7 @@ Prefer:
 Fix login redirect after password reset
 ```
 
-Over:
+Not:
 
 ```text
 fix
@@ -269,72 +251,68 @@ update
 asdf
 ```
 
-A useful pattern:
-
-- **Subject:** what changed (imperative mood, ~50 characters)
-- Optional body: why / context
-
 ```bash
-git commit -m "Explain the change in one line"
+git commit -m "Fix login redirect after password reset"
 ```
 
-### Reading history
+### See what changed / what you saved
 
 ```bash
-git log
+git diff              # edits not staged yet
+git diff --staged     # what the next commit will include
 git log --oneline
 git log --oneline --graph --all
-git show HEAD
+git show HEAD         # latest commit details
 ```
 
-`HEAD` means “the commit I’m currently on.”
-
-### Diffs
-
-```bash
-git diff              # unstaged changes
-git diff --staged     # staged vs last commit
-```
+`HEAD` = “the commit I’m on right now.”
 
 ---
 
 ## 6. Branching
 
-Branches let you try ideas without breaking `main`.
+### Real-world problem
 
-### Create and switch
+`main` is the live site. Your teammate asks you to add a “Contact” page — but a hot bug just came in on the homepage.
+
+If you edit `main` directly, unfinished Contact work might ship with the bugfix. **Branches** let you isolate work.
+
+### Create a safe line of work
 
 ```bash
-git branch feature/hello        # create
-git switch feature/hello        # move HEAD there
-# or in one step:
-git switch -c feature/hello
+git switch -c feat/contact-page     # new branch + switch
+# older style: git checkout -b feat/contact-page
 ```
 
-Older synonym: `git checkout -b feature/hello`.
-
-### See branches
+Later, for the bug:
 
 ```bash
-git branch          # local
-git branch -a       # local + remote-tracking
+git switch main
+git switch -c fix/homepage-crash
+```
+
+### See where you are
+
+```bash
+git branch          # local branches (* = current)
+git branch -a       # include remotes
 ```
 
 ### Mental picture
 
 ```
-main:    A---B---C
-                  \
-feature:           D---E
+main:              A---B---C
+                            \
+feat/contact-page:           D---E
 ```
 
-Each letter is a commit. Branches are just pointers.
+Each letter is a commit. A branch is just a pointer with a name.
 
-### Rules of thumb
+### Rules that match real jobs
 
-- Keep `main` deployable / reviewable
-- Name branches for the work: `fix/login-crash`, `feat/signup-form`
-- Don’t leave experimental work half-merged
+- Keep `main` safe to deploy
+- Name branches for the job: `fix/login-crash`, `feat/signup-form`
+- One purpose per branch
 
 ### Lab
 
@@ -344,75 +322,80 @@ Each letter is a commit. Branches are just pointers.
 
 ## 7. Merging
 
-Merging combines one branch’s history into another.
+### Real-world problem
+
+Your Contact page is done and reviewed. You need those commits on `main` so the site can go live. **Merge** = “bring this finished work into the branch we ship from.”
+
+### The basic move
 
 ```bash
 git switch main
-git merge feature/hello
+git merge feat/contact-page
 ```
 
-### Fast-forward
+### What you’ll see
 
-If `main` has no new commits since you branched, Git simply moves the `main` pointer forward. History stays a straight line.
+**Fast-forward** — `main` had no new commits while you worked. Git just moves the `main` pointer forward. History stays a straight line.
 
-### Three-way merge
-
-If both branches moved, Git creates a **merge commit** with two parents.
+**Merge commit** — someone else merged to `main` while you worked. Git joins both lines and may create a commit with two parents.
 
 ```bash
 git log --oneline --graph --all
 ```
 
-### Delete a finished branch
+### Clean up the finished branch
 
 ```bash
-git branch -d feature/hello
+git branch -d feat/contact-page
 ```
 
-Use `-D` only when you intend to discard it.
+Use `-D` only when you mean “throw this branch away.”
 
 ---
 
 ## 8. Conflicts
 
-A conflict means Git can’t automatically combine two edits to the same lines.
+### Real-world problem
 
-### How to cause one (then fix it)
+You and a teammate both change the homepage button text:
 
-Both branches edit the same part of a file, then you merge.
+- You: `Sign up`
+- They: `Get started`
 
-Git marks the file:
+Git cannot guess which wording to keep. That’s a **conflict** — not an error, a decision.
+
+### What the file looks like
 
 ```text
 <<<<<<< HEAD
-your version
+Sign up
 =======
-their version
->>>>>>> feature/other
+Get started
+>>>>>>> feat/other
 ```
 
-### Resolve calmly
+### Resolve calmly (same as at work)
 
 1. Open the file
-2. Keep the correct final content (remove markers)
-3. Stage and finish:
+2. Pick the final text (or combine ideas) and **delete the markers**
+3. Finish the merge:
 
 ```bash
-git add FILE
-git commit          # completes the merge (message pre-filled)
+git add index.html
+git commit          # message is often pre-filled
 ```
 
-Or abort:
+Panic button:
 
 ```bash
 git merge --abort
 ```
 
-### Tips
+### Stay out of big fights
 
 - Pull / merge often so conflicts stay small
-- Talk to teammates when the same hotspot is busy
-- `git status` tells you which files are still unmerged
+- Talk when two people own the same hot file
+- `git status` lists files still unmerged
 
 ### Lab
 
@@ -422,33 +405,39 @@ git merge --abort
 
 ## 9. Rebase (carefully)
 
-**Rebase** replays your commits on top of another branch — rewriting history to look linear.
+### Real-world problem
+
+Your feature branch has three commits. Meanwhile `main` got a security fix. Before you open a PR, you want your work to sit **on top of** the latest `main` — clean history, fewer surprises in review.
+
+**Rebase** = replay *your* commits on top of another branch.
 
 ```bash
-git switch feature/hello
+git switch feat/contact-page
 git fetch origin
 git rebase main
 ```
 
-### Merge vs rebase
+### Merge vs rebase (when to use which)
 
 | | Merge | Rebase |
 |--|-------|--------|
-| History | Keeps true branch junctions | Linear, as if you started later |
-| Safety on shared branches | Safer | Dangerous if others already pulled your commits |
-| Typical use | Integrate feature → main | Update your feature onto latest main |
+| History | Keeps the real branch join | Looks like a straight line |
+| Shared branches | Safer | Risky if others already pulled your commits |
+| Typical use | Merge feature → `main` | Update *your* feature onto latest `main` |
 
-### Golden rule
+### Golden rule (memorize this)
 
-**Do not rebase commits that other people already based work on** (especially `main` on a shared remote).
+**Do not rebase commits other people already built on** — especially shared `main`.
 
-### Interactive rebase (later)
+Rebase your *local* feature branch. Prefer merge (or revert) for history everyone shares.
+
+### Optional: clean commits before a PR
 
 ```bash
 git rebase -i HEAD~3
 ```
 
-Lets you squash / reword local commits before a PR. Powerful — practice in a throwaway branch first.
+Squash “oops” commits into one clear story. Practice on a throwaway branch first.
 
 ### Lab
 
@@ -458,70 +447,64 @@ Lets you squash / reword local commits before a PR. Powerful — practice in a t
 
 ## 10. Undoing mistakes
 
-Pick the tool by *what you want to keep*.
+### Real-world problem
 
-### Discard unstaged edits in a file
+You commit the wrong file, typo a message, or wipe good code by accident. Panic is optional — pick the tool by **what you still want to keep**.
 
-```bash
-git restore FILE
-```
-
-### Unstage
+### “I edited the wrong file — throw my edits away”
 
 ```bash
-git restore --staged FILE
+git restore FILE                 # discard unstaged edits in that file
 ```
 
-### Fix the last commit message (not pushed yet)
+### “I staged too much”
+
+```bash
+git restore --staged FILE        # unstage; keep the edits
+```
+
+### “Last commit message is wrong” (not pushed yet)
 
 ```bash
 git commit --amend -m "Better message"
 ```
 
-### Add forgotten files to the last commit (not pushed)
+### “I forgot a file in the last commit” (not pushed)
 
 ```bash
 git add forgotten.txt
 git commit --amend --no-edit
 ```
 
-### Soft reset — move branch back, keep changes staged
+### “Undo the last commit, keep my work”
 
 ```bash
-git reset --soft HEAD~1
+git reset --soft HEAD~1          # back one commit; changes stay staged
+git reset HEAD~1                 # back one; changes stay unstaged
 ```
 
-### Mixed reset (default) — move back, keep changes unstaged
-
-```bash
-git reset HEAD~1
-```
-
-### Hard reset — move back and wipe working tree changes
+### “Nuke everything back to last commit” (dangerous)
 
 ```bash
 git reset --hard HEAD~1
 ```
 
-⚠️ Hard reset destroys uncommitted work. Be sure.
+⚠️ Destroys uncommitted work. Only when you’re sure.
 
-### Revert — safe undo on shared history
-
-Creates a *new* commit that undoes an old one:
+### “We already pushed — don’t rewrite history”
 
 ```bash
-git revert COMMIT_SHA
+git revert COMMIT_SHA            # new commit that undoes an old one
 ```
 
-Prefer `revert` over `reset --hard` once commits are on the remote.
+At work, **prefer `revert` on shared branches**. `reset --hard` on remote history makes teammates suffer.
 
-### Find lost commits
+### “I think I lost a commit”
 
 ```bash
 git reflog
+git switch -c recover HASH       # bring it back on a new branch
 ```
-
-Then `git switch -c recover HASH` if you need them back.
 
 ### Lab
 
@@ -531,15 +514,19 @@ Then `git switch -c recover HASH` if you need them back.
 
 ## 11. Remotes & GitHub
 
+### Real-world problem
+
+Your laptop dies — or a teammate needs the code. Local Git alone is not a backup. A **remote** (usually GitHub, named `origin`) is the shared copy.
+
 ### See remotes
 
 ```bash
 git remote -v
 ```
 
-### Add a remote (new project)
+### New project → GitHub
 
-1. Create an empty repo on GitHub (no README if you already have local commits)
+1. Create an empty repo on GitHub (skip the README if you already have local commits)
 2. Connect and push:
 
 ```bash
@@ -547,24 +534,22 @@ git remote add origin https://github.com/YOU/REPO.git
 git push -u origin main
 ```
 
-`-u` sets upstream so later you can `git push` / `git pull` without extra args.
+`-u` remembers the upstream so later `git push` / `git pull` are shorter.
 
-### Daily sync
+### Daily sync (same as most jobs)
 
 ```bash
-git fetch origin          # download updates (don’t merge yet)
-git pull                  # fetch + merge (or rebase, per config)
+git fetch origin          # download updates; don’t change your files yet
+git pull                  # fetch + merge into your current branch
 git push                  # upload your commits
 ```
 
-### Tracking branches
+`origin/main` is your laptop’s *picture* of GitHub’s `main`. `fetch` updates the picture; `pull` brings those commits into your branch.
 
-`origin/main` is a local *picture* of the remote. `fetch` updates that picture; `merge`/`rebase` brings those commits into your branch.
-
-### Auth notes
+### Auth
 
 - HTTPS + personal access token, or
-- SSH keys (`git@github.com:YOU/REPO.git`)
+- SSH (`git@github.com:YOU/REPO.git`)
 
 ### Lab
 
@@ -574,67 +559,64 @@ git push                  # upload your commits
 
 ## 12. Pull requests
 
-A **pull request (PR)** asks: “Please review my branch and merge it into `main`.”
+### Real-world problem
+
+You fixed a login bug. You should **not** push straight to `main` on a team. A **pull request (PR)** says: “Please review this branch, then merge it.”
+
+That’s how real teams ship: review first, then land on `main`.
 
 ### Typical flow
 
 ```bash
 git switch main
 git pull
-git switch -c feat/short-name
-# …commits…
-git push -u origin feat/short-name
+git switch -c fix/login-redirect
+# …make commits…
+git push -u origin fix/login-redirect
 ```
 
-Then on GitHub: **Compare & pull request**.
+On GitHub: **Compare & pull request**.
 
-### What makes a good PR
+### What reviewers actually want
 
-- Small and focused (one purpose)
-- Clear title and description (*why*, how to test)
-- Linked issue if you have one
-- Green checks / no surprise files
+- Small PR — one purpose
+- Title that states the fix (`Fix login redirect after password reset`)
+- Short description: *why*, how to test
+- No surprise files (no `.env`, no `node_modules`)
 
-### Review habits
-
-- Read the diff, not only the description
-- Ask questions; suggest, don’t demand when tone matters
-- Approve when it’s good enough — perfect is optional
-
-### After merge
+### After it’s merged
 
 ```bash
 git switch main
 git pull
-git branch -d feat/short-name
-git push origin --delete feat/short-name   # optional cleanup
+git branch -d fix/login-redirect
+git push origin --delete fix/login-redirect   # optional cleanup
 ```
 
 ---
 
 ## 13. Team workflows
 
-### Trunk-based / short branches
+### Real-world problem
 
-- Branch from latest `main`
-- Open PRs often
-- Prefer small diffs
+Five people push random commits to `main`. Deploys break. Nobody knows what shipped. Workflows exist so the team stays fast *and* safe.
 
-### Protected `main`
+### Habits that scale
 
-Common rules on GitHub:
+| Habit | Why |
+|-------|-----|
+| Short-lived branches | Less drift from `main`, smaller conflicts |
+| Open PRs often | Feedback early, not a 2,000-line surprise |
+| Protect `main` | Reviews + CI required; no direct pushes |
+| Ignore junk | Secrets and build output never hit the repo |
+
+### Protect `main` on GitHub (common rules)
 
 - Require PR reviews
 - Require CI to pass
-- No direct pushes to `main`
+- Block direct pushes to `main`
 
 ### Commit hygiene
-
-- Don’t commit secrets (`.env`, keys) — use `.gitignore`
-- Don’t commit build junk (`node_modules/`, `dist/`) unless intentional
-- One logical change per commit when you can
-
-### `.gitignore` starter
 
 ```gitignore
 .DS_Store
@@ -643,11 +625,17 @@ Common rules on GitHub:
 node_modules/
 ```
 
-### Communication
+Don’t commit secrets or `node_modules/`. One logical change per commit when you can.
 
-- Branch names that explain the work
-- PR descriptions for future-you
-- Rebase or merge main into your feature *before* asking for review
+### Before you ask for review
+
+```bash
+git switch main && git pull
+git switch feat/your-branch
+git merge main                 # or: git rebase main (local only)
+```
+
+Update your branch with latest `main` first — reviewers shouldn’t fix your merge conflicts for you.
 
 ### Lab
 
@@ -717,20 +705,20 @@ Use this as your progress board.
 ### Foundations
 
 - [ ] Git installed and `user.name` / `user.email` set
-- [ ] You can explain working tree vs staging vs commit
+- [ ] You can explain working tree vs staging vs commit (suitcase story)
 - [ ] Lab 01 complete
 
 ### Local collaboration with yourself
 
-- [ ] Create branches confidently
-- [ ] Merge without fear
-- [ ] Resolve a conflict once on purpose
+- [ ] Create branches for features and bug fixes
+- [ ] Merge finished work into `main`
+- [ ] Resolve one conflict on purpose
 - [ ] Labs 02–03 complete
 
 ### History skills
 
-- [ ] Rebase a local feature onto `main`
-- [ ] Amend / reset / revert with intent
+- [ ] Rebase a *local* feature onto latest `main`
+- [ ] Choose restore / reset / revert for the situation
 - [ ] Labs 04–05 complete
 
 ### Remote & team
