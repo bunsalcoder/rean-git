@@ -179,13 +179,78 @@ function renderMarkdown(target, md) {
   enhanceCheckboxes(target);
 }
 
+function padNum(n) {
+  return String(n).padStart(2, "0");
+}
+
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
+  );
+}
+
+function setupSidebarToggle(signal) {
+  const sidebar = document.querySelector("[data-sidebar]");
+  const toggle = document.querySelector("[data-side-toggle]");
+  const backdrop = document.querySelector("[data-backdrop]");
+  if (!sidebar || !toggle) return { close: () => {} };
+
+  const close = () => {
+    sidebar.classList.remove("is-open");
+    backdrop?.classList.remove("is-on");
+    toggle.setAttribute("aria-expanded", "false");
+  };
+
+  const open = () => {
+    sidebar.classList.add("is-open");
+    backdrop?.classList.add("is-on");
+    toggle.setAttribute("aria-expanded", "true");
+  };
+
+  toggle.addEventListener(
+    "click",
+    () => {
+      if (sidebar.classList.contains("is-open")) close();
+      else open();
+    },
+    { signal }
+  );
+  backdrop?.addEventListener("click", close, { signal });
+  sidebar.addEventListener(
+    "click",
+    (event) => {
+      if (event.target.closest("a")) close();
+    },
+    { signal }
+  );
+  window.addEventListener(
+    "keydown",
+    (event) => {
+      if (event.key === "Escape") close();
+    },
+    { signal }
+  );
+  window.addEventListener(
+    "resize",
+    () => {
+      if (window.matchMedia("(min-width: 901px)").matches) close();
+    },
+    { signal }
+  );
+  signal?.addEventListener("abort", close);
+
+  return { close };
+}
+
 async function initLearnPage(signal, { animate = true } = {}) {
-  const selectEl = document.querySelector("[data-chapter-select]");
+  const navEl = document.querySelector("[data-chapter-nav]");
   const bodyEl = document.querySelector("[data-chapter-body]");
   const titleEl = document.querySelector("[data-chapter-title]");
   const progressEl = document.querySelector("[data-progress]");
   const pagerEl = document.querySelector("[data-pager]");
-  if (!selectEl || !bodyEl) return null;
+  if (!navEl || !bodyEl) return null;
+
+  setupSidebarToggle(signal);
 
   try {
     const raw = await loadText("./content/guide.md");
@@ -206,8 +271,10 @@ async function initLearnPage(signal, { animate = true } = {}) {
       return index;
     };
 
-    const syncSelect = (id) => {
-      selectEl.value = id;
+    const setActiveNav = (id) => {
+      navEl.querySelectorAll("a[data-chapter-id]").forEach((a) => {
+        a.classList.toggle("is-active", a.dataset.chapterId === id);
+      });
     };
 
     const renderPager = (index) => {
@@ -235,7 +302,7 @@ async function initLearnPage(signal, { animate = true } = {}) {
     };
 
     const applyChapter = (chapter, index) => {
-      syncSelect(chapter.id);
+      setActiveNav(chapter.id);
       if (titleEl) titleEl.textContent = chapter.title;
       if (progressEl) progressEl.textContent = `${index + 1} / ${chapters.length}`;
       document.title = `${chapter.title} — rean-git`;
@@ -282,10 +349,10 @@ async function initLearnPage(signal, { animate = true } = {}) {
       }
     };
 
-    selectEl.innerHTML = chapters
+    navEl.innerHTML = chapters
       .map((c, i) => {
-        const n = String(i + 1).padStart(2, "0");
-        return `<option value="${c.id}">${n} — ${c.title}</option>`;
+        const n = padNum(i + 1);
+        return `<li><a href="${chapterHref(c.id)}" data-chapter-id="${c.id}"><small style="display:block;opacity:.55;font-size:.72rem;font-weight:700;letter-spacing:.06em">${n}</small>${escapeHtml(c.title)}</a></li>`;
       })
       .join("");
 
@@ -294,10 +361,13 @@ async function initLearnPage(signal, { animate = true } = {}) {
       showChapter(id, opts);
     };
 
-    selectEl.addEventListener(
-      "change",
-      () => {
-        goToChapter(selectEl.value, { push: true, animate: true });
+    navEl.addEventListener(
+      "click",
+      (event) => {
+        const link = event.target.closest("a[data-chapter-id]");
+        if (!link) return;
+        event.preventDefault();
+        goToChapter(link.dataset.chapterId, { push: true, animate: true });
       },
       { signal }
     );
@@ -336,12 +406,14 @@ async function initLearnPage(signal, { animate = true } = {}) {
 }
 
 async function initLabPage(signal, { animate = true } = {}) {
-  const selectEl = document.querySelector("[data-lab-select]");
+  const navEl = document.querySelector("[data-lab-nav]");
   const bodyEl = document.querySelector("[data-lab-body]");
   const titleEl = document.querySelector("[data-lab-title]");
   const progressEl = document.querySelector("[data-progress]");
   const pagerEl = document.querySelector("[data-pager]");
-  if (!selectEl || !bodyEl) return null;
+  if (!navEl || !bodyEl) return null;
+
+  setupSidebarToggle(signal);
 
   let currentIndex = -1;
   let transitionToken = 0;
@@ -357,8 +429,10 @@ async function initLabPage(signal, { animate = true } = {}) {
     return index;
   };
 
-  const syncSelect = (id) => {
-    selectEl.value = id;
+  const setActiveNav = (id) => {
+    navEl.querySelectorAll("a[data-lab-id]").forEach((a) => {
+      a.classList.toggle("is-active", a.dataset.labId === id);
+    });
   };
 
   const renderPager = (index) => {
@@ -393,7 +467,7 @@ async function initLabPage(signal, { animate = true } = {}) {
   };
 
   const applyLab = async (lab, index) => {
-    syncSelect(lab.id);
+    setActiveNav(lab.id);
     if (titleEl) titleEl.textContent = lab.title;
     if (progressEl) progressEl.textContent = `${index + 1} / ${LABS.length} · ${lab.level}`;
     document.title = `${lab.title} — rean-git`;
@@ -448,20 +522,23 @@ async function initLabPage(signal, { animate = true } = {}) {
     }
   };
 
-  selectEl.innerHTML = LABS.map((l, i) => {
-    const n = String(i + 1).padStart(2, "0");
-    return `<option value="${l.id}">${n} — ${l.title}</option>`;
-  }).join("");
+  navEl.innerHTML = LABS.map(
+    (l) =>
+      `<li><a href="${labHref(l.id)}" data-lab-id="${l.id}">${escapeHtml(l.title)}<br><span style="opacity:.6;font-weight:500;font-size:.8rem">${escapeHtml(l.level)}</span></a></li>`
+  ).join("");
 
   const goToLab = (id, opts) => {
     if (!id) return;
     showLab(id, opts);
   };
 
-  selectEl.addEventListener(
-    "change",
-    () => {
-      goToLab(selectEl.value, { push: true, animate: true });
+  navEl.addEventListener(
+    "click",
+    (event) => {
+      const link = event.target.closest("a[data-lab-id]");
+      if (!link) return;
+      event.preventDefault();
+      goToLab(link.dataset.labId, { push: true, animate: true });
     },
     { signal }
   );
@@ -493,7 +570,6 @@ async function initLabPage(signal, { animate = true } = {}) {
     },
   };
 }
-
 (() => {
   let abortController = null;
   let learnApi = null;

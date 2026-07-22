@@ -32,31 +32,34 @@
       </div>
     </header>
 
-    <main class="reader">
-      <article class="content-pane wrap">
+    <div class="backdrop" data-backdrop></div>
+
+    <div class="app-shell">
+      <aside class="sidebar" data-sidebar>
+        <h2>Labs</h2>
+        <ul class="side-nav" data-lab-nav>
+          <li class="status">Loading…</li>
+        </ul>
+        <p class="sidebar-foot">
+          <a href="./labs.html">All labs</a>
+        </p>
+      </aside>
+
+      <article class="content-pane">
         <div class="toolbar">
-          <label class="jump">
-            <span class="jump-label">Lab</span>
-            <select class="jump-select" data-lab-select aria-label="Jump to lab">
-              <option>Loading…</option>
-            </select>
-          </label>
-          <div class="toolbar-meta">
-            <a class="toolbar-link" href="./labs.html">All labs</a>
-            <p class="progress-pill" data-progress>Loading</p>
-          </div>
+          <button class="btn btn-ghost side-toggle" type="button" data-side-toggle aria-expanded="false">
+            Labs menu
+          </button>
+          <p class="progress-pill" data-progress>Loading</p>
         </div>
         <p class="eyebrow">Hands-on</p>
         <h1 data-lab-title>Loading…</h1>
         <div class="md-body" data-lab-body>
           <p class="status">Fetching lab…</p>
         </div>
+        <nav class="pager" data-pager aria-label="Lab navigation"></nav>
       </article>
-    </main>
-
-    <footer class="pager-footer">
-      <nav class="wrap pager pager--bar" data-pager aria-label="Lab navigation"></nav>
-    </footer>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="./assets/js/site.js"></script>

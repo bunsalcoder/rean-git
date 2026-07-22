@@ -32,15 +32,21 @@
       </div>
     </header>
 
-    <main class="reader">
-      <article class="content-pane wrap">
+    <div class="backdrop" data-backdrop></div>
+
+    <div class="app-shell">
+      <aside class="sidebar" data-sidebar>
+        <h2>Chapters</h2>
+        <ul class="side-nav" data-chapter-nav>
+          <li class="status">Loading…</li>
+        </ul>
+      </aside>
+
+      <article class="content-pane">
         <div class="toolbar">
-          <label class="jump">
-            <span class="jump-label">Chapter</span>
-            <select class="jump-select" data-chapter-select aria-label="Jump to chapter">
-              <option>Loading…</option>
-            </select>
-          </label>
+          <button class="btn btn-ghost side-toggle" type="button" data-side-toggle aria-expanded="false">
+            Chapters
+          </button>
           <p class="progress-pill" data-progress>Loading</p>
         </div>
         <p class="eyebrow">Curriculum</p>
@@ -48,12 +54,9 @@
         <div class="md-body" data-chapter-body>
           <p class="status">Fetching handbook…</p>
         </div>
+        <nav class="pager" data-pager aria-label="Chapter navigation"></nav>
       </article>
-    </main>
-
-    <footer class="pager-footer">
-      <nav class="wrap pager pager--bar" data-pager aria-label="Chapter navigation"></nav>
-    </footer>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="./assets/js/site.js"></script>

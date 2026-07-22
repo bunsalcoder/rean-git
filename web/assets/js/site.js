@@ -137,6 +137,7 @@
   function pageShellNodes() {
     return [
       document.querySelector("main"),
+      document.querySelector(".app-shell"),
       ...document.querySelectorAll("body > .site-footer, body > .pager-footer"),
     ].filter(Boolean);
   }
@@ -232,19 +233,24 @@
     if (page) document.body.setAttribute("data-page", page);
     else document.body.removeAttribute("data-page");
 
-    const currentMain = document.querySelector("main");
-    const nextMain = doc.querySelector("main");
-    if (currentMain && nextMain) {
-      currentMain.replaceWith(document.importNode(nextMain, true));
-    }
+    document
+      .querySelectorAll("body > main, body > .app-shell, body > .backdrop, body > footer")
+      .forEach((el) => el.remove());
 
-    document.querySelectorAll("body > footer").forEach((footer) => footer.remove());
-    const main = document.querySelector("main");
-    doc.querySelectorAll("body > footer").forEach((footer) => {
-      const node = document.importNode(footer, true);
-      if (main) main.after(node);
-      else document.body.appendChild(node);
-    });
+    const header = document.querySelector("body > header");
+    let anchor = header;
+    doc
+      .querySelectorAll("body > .backdrop, body > main, body > .app-shell, body > footer")
+      .forEach((el) => {
+        const node = document.importNode(el, true);
+        if (anchor) {
+          anchor.after(node);
+          anchor = node;
+        } else {
+          document.body.appendChild(node);
+          anchor = node;
+        }
+      });
   }
 
   async function bootPage({ animate = true } = {}) {
