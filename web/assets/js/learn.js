@@ -103,6 +103,62 @@ function enhanceCodeBlocks(root) {
   });
 }
 
+function checklistStorageKey() {
+  const url = new URL(location.href);
+  return `rean-git:checklist:${url.pathname}${url.search}`;
+}
+
+function readChecklistState() {
+  try {
+    const raw = localStorage.getItem(checklistStorageKey());
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeChecklistState(state) {
+  try {
+    localStorage.setItem(checklistStorageKey(), JSON.stringify(state));
+  } catch {
+    /* private mode / quota — ignore */
+  }
+}
+
+function enhanceCheckboxes(root) {
+  const boxes = root.querySelectorAll('input[type="checkbox"]');
+  if (!boxes.length) return;
+
+  const saved = readChecklistState();
+
+  boxes.forEach((input, index) => {
+    const item = input.closest("li") || input.parentElement;
+    if (item) {
+      item.classList.add("task-list-item");
+      item.parentElement?.classList.add("contains-task-list");
+    }
+
+    const label = (item?.textContent || "").replace(/\s+/g, " ").trim() || String(index);
+    input.disabled = false;
+    input.removeAttribute("disabled");
+
+    if (Object.prototype.hasOwnProperty.call(saved, label)) {
+      input.checked = Boolean(saved[label]);
+    }
+
+    input.addEventListener("change", () => {
+      const next = readChecklistState();
+      next[label] = input.checked;
+      writeChecklistState(next);
+      item?.classList.toggle("is-checked", input.checked);
+    });
+
+    item?.classList.toggle("is-checked", input.checked);
+  });
+}
+
 async function loadText(url) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Could not load ${url}`);
@@ -120,6 +176,7 @@ function renderMarkdown(target, md) {
     target.innerHTML = `<pre>${md.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]))}</pre>`;
   }
   enhanceCodeBlocks(target);
+  enhanceCheckboxes(target);
 }
 
 async function initLearnPage(signal, { animate = true } = {}) {
