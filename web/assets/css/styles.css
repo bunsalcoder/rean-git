@@ -792,6 +792,30 @@ a {
   margin-top: 0.3rem;
 }
 
+.md-body ul.contains-task-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.md-body .task-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+
+.md-body .task-list-item input[type="checkbox"] {
+  flex: none;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0.35rem 0 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.md-body .task-list-item.is-checked {
+  color: var(--ink-soft);
+}
+
 .md-body a {
   color: var(--accent-deep);
   font-weight: 600;
