@@ -814,6 +814,14 @@ a {
 
 .md-body .task-list-item.is-checked {
   color: var(--ink-soft);
+  text-decoration: line-through;
+}
+
+.md-body .task-list-item.is-checked code,
+.md-body .task-list-item.is-checked a,
+.md-body .task-list-item.is-checked em,
+.md-body .task-list-item.is-checked strong {
+  text-decoration: line-through;
 }
 
 .md-body a {
