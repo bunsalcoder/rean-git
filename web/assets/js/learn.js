@@ -14,8 +14,20 @@ const CHAPTERS = [
   { id: "11", title: "Remotes & GitHub", match: /^## 11\. /m },
   { id: "12", title: "Pull requests", match: /^## 12\. /m },
   { id: "13", title: "Team workflows", match: /^## 13\. /m },
-  { id: "14", title: "Cheat sheet", match: /^## 14\. /m },
-  { id: "15", title: "Learning path checklist", match: /^## 15\. /m },
+  { id: "14", title: "Stash", match: /^## 14\. /m },
+  { id: "15", title: "Tags & releases", match: /^## 15\. /m },
+  { id: "16", title: "Cherry-pick", match: /^## 16\. /m },
+  { id: "17", title: "Interactive rebase", match: /^## 17\. /m },
+  { id: "18", title: "Bisect", match: /^## 18\. /m },
+  { id: "19", title: "Worktrees & detached HEAD", match: /^## 19\. /m },
+  { id: "20", title: "Inspecting history", match: /^## 20\. /m },
+  { id: "21", title: "Hooks", match: /^## 21\. /m },
+  { id: "22", title: "Signing commits", match: /^## 22\. /m },
+  { id: "23", title: "Forks & multiple remotes", match: /^## 23\. /m },
+  { id: "24", title: "Submodules & Git LFS", match: /^## 24\. /m },
+  { id: "25", title: "How Git works inside", match: /^## 25\. /m },
+  { id: "26", title: "Cheat sheet", match: /^## 26\. /m },
+  { id: "27", title: "Learning path checklist", match: /^## 27\. /m },
 ];
 
 const LABS = [
@@ -26,6 +38,12 @@ const LABS = [
   { id: "05-undo", title: "Undo", level: "Intermediate" },
   { id: "06-remote-pr", title: "Remote & PR", level: "Intermediate" },
   { id: "07-team-workflow", title: "Team workflow", level: "Advanced" },
+  { id: "08-stash", title: "Stash", level: "Advanced" },
+  { id: "09-tags", title: "Tags", level: "Advanced" },
+  { id: "10-cherry-pick", title: "Cherry-pick", level: "Advanced" },
+  { id: "11-interactive-rebase", title: "Interactive rebase", level: "Advanced" },
+  { id: "12-bisect", title: "Bisect", level: "Advanced" },
+  { id: "13-internals", title: "Internals", level: "Advanced" },
 ];
 
 function getParam(name) {
