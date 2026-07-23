@@ -1,8 +1,8 @@
 # rean-git
 
-Hands-on Git from first commit to team workflow — chapters, commands, and labs you run yourself.
+Hands-on Git from zero to hero — chapters, commands, and labs you run yourself.
 
-A guided path for beginners and juniors who use Git but don’t fully get it yet. Learn to branch, commit, merge, resolve conflicts, open clean PRs, and recover from common mistakes.
+A guided path from absolute beginner through advanced Git: everyday workflow, power tools (stash, rebase, bisect), collaboration patterns, and how Git stores history under the hood.
 
 ## Open the site locally
 

@@ -1,8 +1,8 @@
-# Git From First Commit to Team Workflow
+# Git From Zero to Hero
 
 > **Project:** `rean-git`  
-> **Audience:** Beginners and juniors who use Git but don’t fully get it yet  
-> **Style:** Real problems first, then the simple commands that fix them — plus labs in this repo
+> **Audience:** Absolute beginners through advanced — build real skill, not superstition  
+> **Style:** Real problems first, then the commands that fix them — plus labs in this repo
 
 ---
 
@@ -16,6 +16,16 @@
 ```bash
 cd path/to/rean-git
 ```
+
+**Path shape**
+
+| Stage | Chapters | Goal |
+|-------|----------|------|
+| Foundations | 1–5 | Think in commits |
+| Collaboration | 6–13 | Branch, merge, ship with a team |
+| Power tools | 14–20 | Stash, tags, rewrite, debug history |
+| Professional | 21–24 | Hooks, signing, forks, large assets |
+| Mastery | 25–27 | Internals, cheat sheet, checklist |
 
 **Conventions used here**
 
@@ -48,8 +58,20 @@ cd path/to/rean-git
 11. [Remotes & GitHub](#11-remotes--github)
 12. [Pull requests](#12-pull-requests)
 13. [Team workflows](#13-team-workflows)
-14. [Cheat sheet](#14-cheat-sheet)
-15. [Learning path checklist](#15-learning-path-checklist)
+14. [Stash](#14-stash)
+15. [Tags & releases](#15-tags--releases)
+16. [Cherry-pick](#16-cherry-pick)
+17. [Interactive rebase](#17-interactive-rebase)
+18. [Bisect](#18-bisect)
+19. [Worktrees & detached HEAD](#19-worktrees--detached-head)
+20. [Inspecting history](#20-inspecting-history)
+21. [Hooks](#21-hooks)
+22. [Signing commits](#22-signing-commits)
+23. [Forks & multiple remotes](#23-forks--multiple-remotes)
+24. [Submodules & Git LFS](#24-submodules--git-lfs)
+25. [How Git works inside](#25-how-git-works-inside)
+26. [Cheat sheet](#26-cheat-sheet)
+27. [Learning path checklist](#27-learning-path-checklist)
 
 ---
 
@@ -351,6 +373,10 @@ git branch -d feat/contact-page
 
 Use `-D` only when you mean “throw this branch away.”
 
+### Lab
+
+Same practice as branching: **[Lab 02 — Branch & merge](../labs/02-branch-merge/)**
+
 ---
 
 ## 8. Conflicts
@@ -431,13 +457,13 @@ git rebase main
 
 Rebase your *local* feature branch. Prefer merge (or revert) for history everyone shares.
 
-### Optional: clean commits before a PR
+### Preview: clean commits before a PR
 
 ```bash
 git rebase -i HEAD~3
 ```
 
-Squash “oops” commits into one clear story. Practice on a throwaway branch first.
+Squash “oops” commits into one clear story. You’ll go deeper in **chapter 17**. Practice on a throwaway branch first.
 
 ### Lab
 
@@ -593,6 +619,10 @@ git branch -d fix/login-redirect
 git push origin --delete fix/login-redirect   # optional cleanup
 ```
 
+### Lab
+
+Finish the remote practice: **[Lab 06 — Remote & PR](../labs/06-remote-pr/)**
+
 ---
 
 ## 13. Team workflows
@@ -643,13 +673,527 @@ Update your branch with latest `main` first — reviewers shouldn’t fix your m
 
 ---
 
-## 14. Cheat sheet
+## 14. Stash
+
+### Real-world problem
+
+You’re mid-feature with messy uncommitted edits. A production bug needs a hotfix *right now* on `main`. You can’t commit half-broken work, and you don’t want to lose it.
+
+**Stash** = temporary shelf for uncommitted changes.
+
+### Basic moves
+
+```bash
+git stash push -m "wip contact form"
+git status                 # clean working tree
+git switch main
+# …fix the bug, commit, push…
+git switch feat/contact
+git stash list
+git stash pop              # re-apply + drop from list
+```
+
+### Useful variants
+
+```bash
+git stash push -u -m "include untracked"   # also stash new files
+git stash apply stash@{0}                  # re-apply, keep stash
+git stash drop stash@{0}
+git stash show -p stash@{0}                # preview
+```
+
+### Rules of thumb
+
+- Stash is local — it doesn’t go to GitHub
+- Prefer named stashes (`-m`) so you remember them
+- Don’t let stashes pile up for weeks
+
+### Lab
+
+**[Lab 08 — Stash](../labs/08-stash/)**
+
+---
+
+## 15. Tags & releases
+
+### Real-world problem
+
+Customers run “version 1.4.2”. Deploy scripts need a **fixed name** for a commit — not “whatever `main` is today.”
+
+A **tag** is a sticky label on a commit. Teams use tags for releases.
+
+### Lightweight vs annotated
+
+```bash
+git tag v1.0.0-beta                 # lightweight pointer
+git tag -a v1.0.0 -m "Ship v1.0.0"  # annotated (preferred for releases)
+git tag -l
+git show v1.0.0
+```
+
+### Share tags
+
+```bash
+git push origin v1.0.0
+git push origin --tags              # all local tags (be careful)
+```
+
+### Move carefully
+
+```bash
+git tag -d v1.0.0                   # delete local
+git push origin --delete v1.0.0     # delete remote
+```
+
+Moving a published tag breaks people who already pulled it. Prefer a new version (`v1.0.1`).
+
+### SemVer (common pattern)
+
+`MAJOR.MINOR.PATCH` — breaking / feature / fix. Example: `v2.1.0`.
+
+### Lab
+
+**[Lab 09 — Tags](../labs/09-tags/)**
+
+---
+
+## 16. Cherry-pick
+
+### Real-world problem
+
+A critical fix landed on `feat/billing`. Production needs *only that commit* on `main` — not the whole unfinished feature.
+
+**Cherry-pick** copies a commit onto your current branch.
+
+```bash
+git switch main
+git pull
+git log feat/billing --oneline      # find the fix SHA
+git cherry-pick abc1234
+git push
+```
+
+### Conflicts
+
+Same markers as merge. Fix files, then:
+
+```bash
+git add .
+git cherry-pick --continue
+# or
+git cherry-pick --abort
+```
+
+### When not to cherry-pick
+
+- Prefer merge/rebase when you want the *whole* branch
+- Cherry-picking the same fix into many long-lived branches can create duplicate commits — communicate with the team
+
+### Lab
+
+**[Lab 10 — Cherry-pick](../labs/10-cherry-pick/)**
+
+---
+
+## 17. Interactive rebase
+
+### Real-world problem
+
+Your PR has: `wip`, `fix typo`, `actually fix login`, `oops`. Reviewers deserve one clear story.
+
+**Interactive rebase** lets you reorder, edit, squash, or drop commits *before* others build on them.
+
+```bash
+git switch feat/login
+git rebase -i HEAD~4        # or: git rebase -i main
+```
+
+An editor opens with lines like:
+
+```text
+pick a111 fix login
+pick b222 wip
+pick c333 typo
+```
+
+### Common todo commands
+
+| Command | Meaning |
+|---------|---------|
+| `pick` | Keep as-is |
+| `reword` | Keep changes, edit message |
+| `squash` / `fixup` | Fold into previous commit |
+| `edit` | Pause to amend that commit |
+| `drop` | Remove the commit |
+
+Save & close → Git replays. Resolve conflicts with `--continue` / `--abort` like a normal rebase.
+
+### Golden rules (same as chapter 9)
+
+- Only rewrite **local** commits (or a branch nobody else uses)
+- After rewriting a pushed branch: `git push --force-with-lease` (safer than `--force`)
+- Never force-push `main`
+
+### Lab
+
+**[Lab 11 — Interactive rebase](../labs/11-interactive-rebase/)**
+
+---
+
+## 18. Bisect
+
+### Real-world problem
+
+“Login broke sometime last month.” Blind guessing wastes a day. **Bisect** binary-searches history to find the first bad commit.
+
+```bash
+git bisect start
+git bisect bad                  # current commit is broken
+git bisect good v1.2.0          # or an old SHA that worked
+# Git checks out a midpoint. Test the app, then:
+git bisect good                 # if this midpoint works
+# or
+git bisect bad                  # if this midpoint is broken
+# …repeat until Git prints the first bad commit…
+git bisect reset                # return to where you started
+```
+
+### Automate when you have a test
+
+```bash
+git bisect start HEAD v1.2.0
+git bisect run ./scripts/check-login.sh
+```
+
+Exit code `0` = good, non-zero = bad.
+
+### Lab
+
+**[Lab 12 — Bisect](../labs/12-bisect/)**
+
+---
+
+## 19. Worktrees & detached HEAD
+
+### Real-world problem
+
+You need to review a PR while your feature branch is dirty. Stashing works — or you check out a **second working folder** with `git worktree`.
+
+### Detached HEAD (what it means)
+
+```bash
+git switch --detach v1.0.0
+# or older: git checkout v1.0.0
+```
+
+You’re on a commit, **not** a branch name. New commits can become hard to find unless you create a branch:
+
+```bash
+git switch -c hotfix/from-tag
+```
+
+`git status` will warn you when you’re detached. Read that warning.
+
+### Worktrees
+
+```bash
+git worktree add ../rean-git-pr-42 pr-42-branch
+cd ../rean-git-pr-42
+# review / test…
+cd -
+git worktree remove ../rean-git-pr-42
+git worktree list
+```
+
+Each worktree has its own files; they share the same `.git` object database.
+
+### When to use which
+
+| Tool | Use |
+|------|-----|
+| Stash | Quick context switch, short-lived |
+| Worktree | Parallel work for hours/days |
+| New clone | Heavy isolation (different remotes/config) |
+
+---
+
+## 20. Inspecting history
+
+### Real-world problem
+
+“Who changed this line?” “What landed last Tuesday?” “Show only commits that touch `auth/`.” Heroes read history fluently.
+
+### Who touched this line?
+
+```bash
+git blame FILE
+git blame -L 20,40 FILE
+```
+
+### Powerful `log`
+
+```bash
+git log --oneline --graph --all --decorate
+git log --since="2 weeks ago" --author="Ada"
+git log -S "redirect" -p          # pickaxe: commits that add/remove that string
+git log -- PATH/TO/FILE
+git log --grep="login" -i
+git show HASH
+git show HASH:path/to/file        # file contents at that commit
+```
+
+### Compare branches / ranges
+
+```bash
+git log main..feat/login          # on feat but not main
+git diff main...feat/login        # triple-dot: changes since branches diverged
+git shortlog -sn                  # commit counts by author
+```
+
+### Cleaner diffs
+
+```bash
+git diff --stat
+git diff --word-diff
+git range-diff main...feat/login  # compare two histories after rebase
+```
+
+Master these and GitHub’s UI becomes optional for investigation.
+
+---
+
+## 21. Hooks
+
+### Real-world problem
+
+Someone pushes a commit that fails lint. CI catches it later — after review time is burned. **Hooks** run scripts at Git events on your machine (or the server).
+
+### Client hooks you’ll actually meet
+
+| Hook | When |
+|------|------|
+| `pre-commit` | Before a commit is created |
+| `commit-msg` | Validate / format the message |
+| `pre-push` | Before `git push` sends objects |
+
+Hooks live in `.git/hooks/` (not committed by default). Sample files end in `.sample`.
+
+### Minimal example
+
+```bash
+# .git/hooks/pre-commit  (chmod +x)
+#!/bin/sh
+npm test || exit 1
+```
+
+### Team-friendly pattern
+
+Commit a `scripts/hooks/` or use a tool ([Husky](https://typicode.github.io/husky/), `pre-commit` framework) so everyone shares the same checks. Don’t rely only on local hooks — still run CI.
+
+### Server / platform hooks
+
+GitHub **branch protection** + required checks is the modern “server hook.” Classic `update` hooks exist on bare servers you host yourself.
+
+---
+
+## 22. Signing commits
+
+### Real-world problem
+
+Anyone can set `user.name` to your name. **Signed commits** prove the author controls a key GitHub trusts — useful for releases and security-sensitive orgs.
+
+### SSH signing (simple on modern GitHub)
+
+```bash
+git config --global gpg.format ssh
+git config --global user.signingkey ~/.ssh/id_ed25519.pub
+git config --global commit.gpgsign true
+# Add the same SSH key as a “Signing key” on GitHub
+```
+
+### GPG / SSH verify locally
+
+```bash
+git log --show-signature -1
+git verify-commit HEAD
+```
+
+### Amend & rebase note
+
+Rewriting history re-signs (or drops signatures). That’s expected after interactive rebase.
+
+Many teams make signing optional for juniors; some require it on `main`. Match your workplace.
+
+---
+
+## 23. Forks & multiple remotes
+
+### Real-world problem
+
+You contribute to an open-source repo you don’t write access to. Pattern:
+
+1. **Fork** on GitHub (your copy)
+2. Clone *your* fork
+3. Add the original as `upstream`
+4. Push branches to `origin`, open a PR into `upstream`
+
+```bash
+git clone https://github.com/YOU/project.git
+cd project
+git remote add upstream https://github.com/ORIGINAL/project.git
+git remote -v
+git fetch upstream
+git switch main
+git merge upstream/main          # or: git rebase upstream/main
+git push origin main
+```
+
+### Multiple remotes at work
+
+```bash
+git remote add staging git@github.com:Acme/app-staging.git
+git push staging feat/demo:main
+```
+
+Names are arbitrary — `origin` is only a convention.
+
+### Mirror / backup
+
+```bash
+git clone --mirror URL
+git push --mirror BACKUP_URL
+```
+
+Use carefully — mirrors rewrite matching refs.
+
+---
+
+## 24. Submodules & Git LFS
+
+### Real-world problem
+
+Your app needs a shared design-system repo, or 2 GB of video assets. Normal Git commits hate huge binaries and nested-repos are awkward.
+
+### Submodules (nested Git repos)
+
+```bash
+git submodule add https://github.com/Acme/design-system.git libs/design
+git submodule update --init --recursive
+```
+
+After clone of a parent repo:
+
+```bash
+git clone --recurse-submodules URL
+# or later:
+git submodule update --init --recursive
+```
+
+**Trade-off:** Submodules pin a specific commit. Teammates must remember to init/update. Prefer a package manager when you can; use submodules when you truly need a nested Git project.
+
+### Git LFS (Large File Storage)
+
+```bash
+git lfs install
+git lfs track "*.psd"
+git add .gitattributes
+git add hero.psd
+git commit -m "Add hero artwork via LFS"
+```
+
+LFS stores pointers in Git and big files on an LFS server. Needs `git-lfs` installed for everyone who checks out those files.
+
+### Alternatives
+
+- Package registry / CDN for assets
+- Subtree merges (`git subtree`) — less common, fewer gotchas than submodules for some teams
+
+---
+
+## 25. How Git works inside
+
+### Real-world problem
+
+Commands feel like magic until you see the model. Once you do, `reset`, `rebase`, and “detached HEAD” stop being scary.
+
+### Everything is content-addressed
+
+Git stores objects hashed by content (SHA-1 or SHA-256 in newer repos):
+
+| Object | Holds |
+|--------|-------|
+| **blob** | File contents |
+| **tree** | Directory listing → blobs/trees |
+| **commit** | Parent(s) + tree + author + message |
+| **tag** | Annotated tag object |
+
+```bash
+git cat-file -t HEAD
+git cat-file -p HEAD
+git rev-parse HEAD
+ls .git/objects
+```
+
+### Refs are names for commits
+
+```bash
+cat .git/HEAD                     # ref: refs/heads/main
+cat .git/refs/heads/main          # current tip SHA
+git show-ref
+```
+
+A **branch** is a movable ref. A **tag** is usually immovable. **Remote-tracking** refs live under `refs/remotes/origin/…`.
+
+### The three trees (again, for real)
+
+1. Working directory — your files  
+2. Index (staging) — `.git/index`  
+3. `HEAD` commit — last snapshot on this branch  
+
+`git status` compares these three.
+
+### Packfiles
+
+Loose objects eventually pack into efficient `.git/objects/pack/` files. `git gc` cleans up. You rarely need to touch this.
+
+### Why this makes you a hero
+
+- Cherry-pick = copy a commit object onto another parent  
+- Reset = move a branch ref (and maybe index/worktree)  
+- Reflog = local diary of where HEAD pointed  
+
+### Beyond this handbook (map of the rest)
+
+You now own everyday Git plus the power tools. These show up less often — learn them when a real job needs them:
+
+| Topic | When you need it |
+|-------|------------------|
+| `git sparse-checkout` | Huge monorepo; only check out some folders |
+| Partial clone (`--filter`) | Clone history/blobs on demand |
+| `git filter-repo` / BFG | Permanently remove secrets or huge files from history |
+| `git notes` | Attach metadata without changing commit hashes |
+| `git format-patch` / `am` | Email-based patch workflow |
+| `rerere` | Reuse recorded conflict resolutions |
+| `git replace` | Temporarily swap one object for another |
+| Credential helpers | Cache HTTPS tokens securely |
+| Maintenance (`git maintenance`) | Keep large repos fast |
+
+Official deep dive: [Pro Git book](https://git-scm.com/book/en/v2) (free).
+
+### Lab
+
+**[Lab 13 — Internals](../labs/13-internals/)**
+
+---
+
+## 26. Cheat sheet
 
 ### Setup
 
 ```bash
 git config --global user.name "Your Name"
 git config --global user.email "you@example.com"
+git config --global init.defaultBranch main
 git init
 git clone URL
 ```
@@ -659,19 +1203,23 @@ git clone URL
 ```bash
 git status
 git add FILE
+git add -p
 git commit -m "message"
-git log --oneline --graph --all
+git log --oneline --graph --all --decorate
 git diff
 git diff --staged
 ```
 
-### Branches
+### Branches & integrate
 
 ```bash
 git switch -c branch-name
 git switch main
 git branch -d branch-name
 git merge branch-name
+git rebase main
+git rebase -i HEAD~3
+git cherry-pick HASH
 ```
 
 ### Undo
@@ -684,9 +1232,11 @@ git reset --soft HEAD~1
 git reset --hard HEAD~1
 git revert HASH
 git reflog
+git stash push -m "wip"
+git stash pop
 ```
 
-### Remotes
+### Remotes & tags
 
 ```bash
 git remote -v
@@ -694,13 +1244,34 @@ git fetch
 git pull
 git push
 git push -u origin branch-name
+git push --force-with-lease
+git tag -a v1.0.0 -m "msg"
+git push origin v1.0.0
+```
+
+### Inspect
+
+```bash
+git blame FILE
+git log -S "symbol" -p
+git show HASH
+git bisect start
+git worktree add ../other branch
+```
+
+### Internals peek
+
+```bash
+git rev-parse HEAD
+git cat-file -p HEAD
+git show-ref
 ```
 
 ---
 
-## 15. Learning path checklist
+## 27. Learning path checklist
 
-Use this as your progress board.
+Use this as your progress board — foundations first, then hero skills.
 
 ### Foundations
 
@@ -727,6 +1298,29 @@ Use this as your progress board.
 - [ ] Use `.gitignore` and short-lived branches
 - [ ] Labs 06–07 complete
 
+### Power tools
+
+- [ ] Stash unfinished work and recover it
+- [ ] Tag a release and push the tag
+- [ ] Cherry-pick a single commit onto another branch
+- [ ] Squash commits with interactive rebase
+- [ ] Find a bad commit with bisect
+- [ ] Labs 08–12 complete
+
+### Professional Git
+
+- [ ] Explain detached HEAD and when worktrees help
+- [ ] Use `blame` / `log -S` to investigate a change
+- [ ] Know what hooks and signed commits are for
+- [ ] Add an `upstream` remote on a fork
+- [ ] Explain when to use submodules vs LFS vs packages
+
+### Mastery
+
+- [ ] Describe blob / tree / commit / ref in plain words
+- [ ] Lab 13 complete
+- [ ] You reach for `git status` before guessing
+
 ---
 
-You’re ready to treat Git as a tool you control — not a roulette wheel. Keep the terminal open, read `git status`, and practice in the labs.
+You’re not done learning Git forever — the ecosystem keeps evolving — but you now own the full mental model: everyday workflow, power tools, collaboration patterns, and how the database underneath works. Keep the terminal open, read `git status`, and practice in the labs.
