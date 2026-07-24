@@ -145,6 +145,52 @@ function writeChecklistState(state) {
   }
 }
 
+const LAST_CHAPTER_KEY = "rean-git:last-chapter";
+const LAST_LAB_KEY = "rean-git:last-lab";
+
+function readStorageItem(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writeStorageItem(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    /* private mode / quota — ignore */
+  }
+}
+
+function readLastChapter(chapters) {
+  const saved = readStorageItem(LAST_CHAPTER_KEY);
+  if (!saved) return null;
+  return chapters.some((c) => c.id === saved) ? saved : null;
+}
+
+function writeLastChapter(id) {
+  writeStorageItem(LAST_CHAPTER_KEY, id);
+}
+
+function readLastLab() {
+  const saved = readStorageItem(LAST_LAB_KEY);
+  if (!saved) return null;
+  return LABS.some((l) => l.id === saved) ? saved : null;
+}
+
+function writeLastLab(id) {
+  writeStorageItem(LAST_LAB_KEY, id);
+}
+
+function resolveRouteOrResume(queryKey, savedId, fallbackId) {
+  const routed = getRouteId(queryKey);
+  if (routed) return { id: routed, fromRoute: true };
+  if (savedId) return { id: savedId, fromRoute: false };
+  return { id: fallbackId, fromRoute: false };
+}
+
 function enhanceCheckboxes(root) {
   const boxes = root.querySelectorAll('input[type="checkbox"]');
   if (!boxes.length) return;
@@ -321,6 +367,7 @@ async function initLearnPage(signal, { animate = true } = {}) {
 
     const applyChapter = (chapter, index) => {
       setActiveNav(chapter.id);
+      writeLastChapter(chapter.id);
       if (titleEl) titleEl.textContent = chapter.title;
       if (progressEl) progressEl.textContent = `${index + 1} / ${chapters.length}`;
       document.title = `${chapter.title} — rean-git`;
@@ -409,11 +456,17 @@ async function initLearnPage(signal, { animate = true } = {}) {
       { signal }
     );
 
-    showChapter(getRouteId("c") || chapters[0].id, { push: false, animate });
+    const start = resolveRouteOrResume("c", readLastChapter(chapters), chapters[0].id);
+    showChapter(start.id, { push: false, animate });
+    if (!start.fromRoute) {
+      history.replaceState({ c: start.id }, "", chapterHref(start.id));
+    }
 
     return {
       goTo(id, opts) {
-        goToChapter(id || chapters[0].id, opts);
+        const target = id || readLastChapter(chapters) || chapters[0].id;
+        goToChapter(target, opts);
+        if (!id) history.replaceState({ c: target }, "", chapterHref(target));
       },
     };
   } catch (err) {
@@ -486,6 +539,7 @@ async function initLabPage(signal, { animate = true } = {}) {
 
   const applyLab = async (lab, index) => {
     setActiveNav(lab.id);
+    writeLastLab(lab.id);
     if (titleEl) titleEl.textContent = lab.title;
     if (progressEl) progressEl.textContent = `${index + 1} / ${LABS.length} · ${lab.level}`;
     document.title = `${lab.title} — rean-git`;
@@ -580,11 +634,17 @@ async function initLabPage(signal, { animate = true } = {}) {
     { signal }
   );
 
-  goToLab(getRouteId("id") || LABS[0].id, { push: false, animate });
+  const start = resolveRouteOrResume("id", readLastLab(), LABS[0].id);
+  goToLab(start.id, { push: false, animate });
+  if (!start.fromRoute) {
+    history.replaceState({ id: start.id }, "", labHref(start.id));
+  }
 
   return {
     goTo(id, opts) {
-      goToLab(id || LABS[0].id, opts);
+      const target = id || readLastLab() || LABS[0].id;
+      goToLab(target, opts);
+      if (!id) history.replaceState({ id: target }, "", labHref(target));
     },
   };
 }
