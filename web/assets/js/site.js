@@ -93,17 +93,30 @@
   function syncActiveLinks() {
     if (!nav) return;
     const path = pageKey(location.href);
+    const pageC = new URLSearchParams(location.search).get("c");
+    const links = [...nav.querySelectorAll("a")];
+    const hasChapterMatch = links.some((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return false;
+      const target = new URL(href, location.href);
+      if (pageKey(target) !== path) return false;
+      const linkC = target.searchParams.get("c");
+      return Boolean(linkC && pageC === linkC);
+    });
 
-    [...nav.querySelectorAll("a")].forEach((a) => {
+    links.forEach((a) => {
       a.removeAttribute("aria-current");
       const href = a.getAttribute("href");
       if (!href) return;
       const target = new URL(href, location.href);
       if (pageKey(target) !== path) return;
       const linkC = target.searchParams.get("c");
-      const pageC = new URLSearchParams(location.search).get("c");
-      if (linkC && pageC !== linkC) return;
-      if (!linkC && pageC === "14") return;
+      if (linkC) {
+        if (pageC === linkC) a.setAttribute("aria-current", "page");
+        return;
+      }
+      // Prefer a chapter-specific nav link (e.g. Cheat sheet) over the generic page link (Learn).
+      if (hasChapterMatch) return;
       a.setAttribute("aria-current", "page");
     });
   }
