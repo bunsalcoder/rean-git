@@ -26,7 +26,20 @@
     return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
   }
 
-  function applyTheme(theme, { persist = false } = {}) {
+  let themeBusy = false;
+
+  function setThemeRevealOrigin(x, y) {
+    const root = document.documentElement;
+    const radius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+    root.style.setProperty("--theme-x", `${x}px`);
+    root.style.setProperty("--theme-y", `${y}px`);
+    root.style.setProperty("--theme-r", `${radius}px`);
+  }
+
+  function paintTheme(theme) {
     const next = theme === "dark" ? "dark" : "light";
     document.documentElement.setAttribute("data-theme", next);
     if (themeToggle) {
@@ -35,14 +48,80 @@
         next === "dark" ? "Switch to light mode" : "Switch to dark mode"
       );
     }
-    if (persist) localStorage.setItem(THEME_KEY, next);
+    return next;
+  }
+
+  function applyTheme(theme, { persist = false, animate = false, originX, originY } = {}) {
+    const next = theme === "dark" ? "dark" : "light";
+    if (next === currentTheme()) {
+      paintTheme(next);
+      if (persist) localStorage.setItem(THEME_KEY, next);
+      return;
+    }
+
+    const commit = () => {
+      paintTheme(next);
+      if (persist) localStorage.setItem(THEME_KEY, next);
+    };
+
+    const canViewTransition =
+      animate &&
+      !prefersReducedMotion &&
+      !themeBusy &&
+      typeof document.startViewTransition === "function";
+
+    if (canViewTransition) {
+      const fallbackX = themeToggle
+        ? themeToggle.getBoundingClientRect().left + themeToggle.offsetWidth / 2
+        : window.innerWidth / 2;
+      const fallbackY = themeToggle
+        ? themeToggle.getBoundingClientRect().top + themeToggle.offsetHeight / 2
+        : window.innerHeight / 2;
+      const x = Number.isFinite(originX) && originX > 0 ? originX : fallbackX;
+      const y = Number.isFinite(originY) && originY > 0 ? originY : fallbackY;
+
+      setThemeRevealOrigin(x, y);
+      themeBusy = true;
+      document.documentElement.classList.add("theme-transitioning");
+
+      try {
+        const transition = document.startViewTransition(commit);
+        transition.finished
+          .catch(() => {})
+          .finally(() => {
+            themeBusy = false;
+            document.documentElement.classList.remove("theme-transitioning");
+          });
+      } catch {
+        themeBusy = false;
+        document.documentElement.classList.remove("theme-transitioning");
+        commit();
+      }
+      return;
+    }
+
+    if (animate && !prefersReducedMotion) {
+      document.documentElement.classList.add("theme-animate");
+      commit();
+      window.setTimeout(() => {
+        document.documentElement.classList.remove("theme-animate");
+      }, 480);
+      return;
+    }
+
+    commit();
   }
 
   applyTheme(localStorage.getItem(THEME_KEY) || systemTheme());
 
   if (themeToggle) {
-    themeToggle.addEventListener("click", () => {
-      applyTheme(currentTheme() === "dark" ? "light" : "dark", { persist: true });
+    themeToggle.addEventListener("click", (event) => {
+      applyTheme(currentTheme() === "dark" ? "light" : "dark", {
+        persist: true,
+        animate: true,
+        originX: event.clientX,
+        originY: event.clientY,
+      });
     });
   }
 

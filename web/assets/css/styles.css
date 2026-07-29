@@ -166,10 +166,12 @@ a {
   justify-content: center;
   color: var(--ink);
   cursor: pointer;
+  view-transition-name: theme-toggle;
   transition:
-    background 0.2s var(--ease),
-    border-color 0.2s var(--ease),
-    color 0.2s var(--ease);
+    background 0.25s var(--ease),
+    border-color 0.35s var(--ease),
+    color 0.35s var(--ease),
+    transform 0.25s var(--ease-spring);
 }
 
 .theme-toggle:hover,
@@ -178,26 +180,145 @@ a {
   outline: none;
 }
 
-.theme-toggle svg {
-  width: 1.15rem;
-  height: 1.15rem;
+.theme-toggle:active {
+  transform: scale(0.92);
+}
+
+.theme-icon {
+  width: 1.3rem;
+  height: 1.3rem;
+  overflow: visible;
+}
+
+.theme-sun,
+.theme-moon {
+  transform-origin: 12px 12px;
+  transition:
+    opacity 0.4s var(--ease),
+    transform 0.55s var(--ease);
+}
+
+/* Snap icon state inside View Transition snapshots; VT handles the swap */
+html.theme-transitioning .theme-sun,
+html.theme-transitioning .theme-moon {
+  transition: none;
+}
+
+.theme-sun-core {
+  fill: currentColor;
+}
+
+.theme-sun-rays {
   fill: none;
   stroke: currentColor;
   stroke-width: 1.75;
   stroke-linecap: round;
-  stroke-linejoin: round;
 }
 
-.theme-toggle .icon-moon {
-  display: none;
+.theme-moon {
+  fill: currentColor;
+  opacity: 0;
+  transform: rotate(90deg) scale(0.4);
 }
 
-[data-theme="dark"] .theme-toggle .icon-sun {
-  display: none;
+[data-theme="dark"] .theme-sun {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.4);
 }
 
-[data-theme="dark"] .theme-toggle .icon-moon {
-  display: block;
+[data-theme="dark"] .theme-moon {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+/* Circular wipe when View Transitions are available */
+@supports (view-transition-name: root) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  html.theme-transitioning::view-transition-old(root) {
+    z-index: 1;
+  }
+
+  html.theme-transitioning::view-transition-new(root) {
+    z-index: 2;
+    animation: theme-circle-in 0.55s var(--ease) both;
+  }
+
+  ::view-transition-group(theme-toggle) {
+    z-index: 10;
+    animation-duration: 0.5s;
+    animation-timing-function: var(--ease);
+  }
+
+  html.theme-transitioning::view-transition-old(theme-toggle) {
+    animation: theme-icon-out 0.45s var(--ease) both;
+  }
+
+  html.theme-transitioning::view-transition-new(theme-toggle) {
+    animation: theme-icon-in 0.5s var(--ease) both;
+  }
+
+  @keyframes theme-circle-in {
+    from {
+      clip-path: circle(0px at var(--theme-x, 50%) var(--theme-y, 50%));
+    }
+    to {
+      clip-path: circle(var(--theme-r, 100vmax) at var(--theme-x, 50%) var(--theme-y, 50%));
+    }
+  }
+
+  @keyframes theme-icon-out {
+    to {
+      opacity: 0;
+      transform: rotate(70deg) scale(0.55);
+    }
+  }
+
+  @keyframes theme-icon-in {
+    from {
+      opacity: 0;
+      transform: rotate(-70deg) scale(0.55);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle {
+    view-transition-name: none;
+  }
+
+  .theme-sun,
+  .theme-moon {
+    transition: none;
+  }
+
+  html.theme-animate,
+  html.theme-animate body,
+  html.theme-animate body *:not(svg *),
+  html.theme-animate body *::before,
+  html.theme-animate body *::after {
+    transition: none !important;
+  }
+}
+
+/* Soft color crossfade fallback (no View Transitions) */
+html.theme-animate,
+html.theme-animate body,
+html.theme-animate body *:not(svg *),
+html.theme-animate body *::before,
+html.theme-animate body *::after {
+  transition:
+    background-color 0.45s var(--ease),
+    background 0.45s var(--ease),
+    color 0.45s var(--ease),
+    border-color 0.45s var(--ease),
+    box-shadow 0.45s var(--ease),
+    fill 0.45s var(--ease),
+    stroke 0.45s var(--ease) !important;
 }
 
 .logo:hover {
