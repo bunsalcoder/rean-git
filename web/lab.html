@@ -35,12 +35,24 @@
         </nav>
         <div class="header-actions">
           <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle dark mode">
-            <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="12" cy="12" r="4" />
-              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
-            </svg>
-            <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M21 14.5A8.5 8.5 0 1 1 9.5 3a7 7 0 0 0 11.5 11.5z" />
+            <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <g class="theme-sun">
+                <circle class="theme-sun-core" cx="12" cy="12" r="4.25" />
+                <g class="theme-sun-rays">
+                  <line x1="12" y1="1.5" x2="12" y2="3.75" />
+                  <line x1="12" y1="20.25" x2="12" y2="22.5" />
+                  <line x1="1.5" y1="12" x2="3.75" y2="12" />
+                  <line x1="20.25" y1="12" x2="22.5" y2="12" />
+                  <line x1="4.05" y1="4.05" x2="5.65" y2="5.65" />
+                  <line x1="18.35" y1="18.35" x2="19.95" y2="19.95" />
+                  <line x1="4.05" y1="19.95" x2="5.65" y2="18.35" />
+                  <line x1="18.35" y1="5.65" x2="19.95" y2="4.05" />
+                </g>
+              </g>
+              <path
+                class="theme-moon"
+                d="M20.2 14.15A7.85 7.85 0 0 1 9.85 3.8 7.1 7.1 0 1 0 20.2 14.15z"
+              />
             </svg>
           </button>
           <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Menu">
