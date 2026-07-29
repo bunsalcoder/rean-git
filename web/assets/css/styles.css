@@ -222,7 +222,8 @@ a {
   width: 0;
   height: 0;
   border-radius: 999px;
-  background: var(--accent-soft);
+  background: var(--accent);
+  box-shadow: 0 4px 14px var(--accent-glow);
   pointer-events: none;
   z-index: 0;
   opacity: 0;
@@ -257,11 +258,12 @@ a {
 }
 
 .nav a[aria-current="page"] {
-  color: var(--ink);
+  color: #fff;
   font-weight: 600;
 }
 
 .nav a[aria-current="page"]:hover {
+  color: #fff;
   background: transparent;
 }
 
@@ -342,11 +344,12 @@ a {
   }
 
   .nav a[aria-current="page"] {
-    background: var(--accent-soft);
+    background: var(--accent);
+    box-shadow: 0 4px 14px var(--accent-glow);
   }
 
   .nav a[aria-current="page"]:hover {
-    background: var(--accent-soft);
+    background: var(--accent);
   }
 }
 
