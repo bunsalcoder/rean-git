@@ -1,9 +1,12 @@
 (() => {
   const nav = document.querySelector("[data-nav]");
   const toggle = document.querySelector("[data-nav-toggle]");
+  const themeToggle = document.querySelector("[data-theme-toggle]");
   const header = document.querySelector(".site-header-bar");
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const navMotionQuery = window.matchMedia("(min-width: 721px)");
+  const themeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  const THEME_KEY = "rean-git-theme";
   const MARKED_SRC = "https://cdn.jsdelivr.net/npm/marked/marked.min.js";
   const LEARN_SRC = new URL("./assets/js/learn.js", location.href).href;
   const MAIN_SRC = new URL("./assets/js/main.js", location.href).href;
@@ -14,6 +17,44 @@
   let lastPageKey = pageKey(location.href);
   let navToken = 0;
   const pageCache = new Map();
+
+  function systemTheme() {
+    return themeQuery.matches ? "dark" : "light";
+  }
+
+  function currentTheme() {
+    return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+  }
+
+  function applyTheme(theme, { persist = false } = {}) {
+    const next = theme === "dark" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", next);
+    if (themeToggle) {
+      themeToggle.setAttribute(
+        "aria-label",
+        next === "dark" ? "Switch to light mode" : "Switch to dark mode"
+      );
+    }
+    if (persist) localStorage.setItem(THEME_KEY, next);
+  }
+
+  applyTheme(localStorage.getItem(THEME_KEY) || systemTheme());
+
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      applyTheme(currentTheme() === "dark" ? "light" : "dark", { persist: true });
+    });
+  }
+
+  const onSystemThemeChange = () => {
+    if (localStorage.getItem(THEME_KEY)) return;
+    applyTheme(systemTheme());
+  };
+  if (typeof themeQuery.addEventListener === "function") {
+    themeQuery.addEventListener("change", onSystemThemeChange);
+  } else if (typeof themeQuery.addListener === "function") {
+    themeQuery.addListener(onSystemThemeChange);
+  }
 
   if (toggle && nav) {
     toggle.addEventListener("click", () => {
