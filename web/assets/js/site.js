@@ -105,7 +105,7 @@
       commit();
       window.setTimeout(() => {
         document.documentElement.classList.remove("theme-animate");
-      }, 480);
+      }, 900);
       return;
     }
 

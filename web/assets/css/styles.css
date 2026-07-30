@@ -194,8 +194,8 @@ a {
 .theme-moon {
   transform-origin: 12px 12px;
   transition:
-    opacity 0.4s var(--ease),
-    transform 0.55s var(--ease);
+    opacity 0.7s var(--ease),
+    transform 0.9s var(--ease);
 }
 
 /* Snap icon state inside View Transition snapshots; VT handles the swap */
@@ -245,21 +245,21 @@ html.theme-transitioning .theme-moon {
 
   html.theme-transitioning::view-transition-new(root) {
     z-index: 2;
-    animation: theme-circle-in 0.55s var(--ease) both;
+    animation: theme-circle-in 1s var(--ease) both;
   }
 
   ::view-transition-group(theme-toggle) {
     z-index: 10;
-    animation-duration: 0.5s;
+    animation-duration: 0.85s;
     animation-timing-function: var(--ease);
   }
 
   html.theme-transitioning::view-transition-old(theme-toggle) {
-    animation: theme-icon-out 0.45s var(--ease) both;
+    animation: theme-icon-out 0.8s var(--ease) both;
   }
 
   html.theme-transitioning::view-transition-new(theme-toggle) {
-    animation: theme-icon-in 0.5s var(--ease) both;
+    animation: theme-icon-in 0.85s var(--ease) both;
   }
 
   @keyframes theme-circle-in {
@@ -312,13 +312,13 @@ html.theme-animate body *:not(svg *),
 html.theme-animate body *::before,
 html.theme-animate body *::after {
   transition:
-    background-color 0.45s var(--ease),
-    background 0.45s var(--ease),
-    color 0.45s var(--ease),
-    border-color 0.45s var(--ease),
-    box-shadow 0.45s var(--ease),
-    fill 0.45s var(--ease),
-    stroke 0.45s var(--ease) !important;
+    background-color 0.85s var(--ease),
+    background 0.85s var(--ease),
+    color 0.85s var(--ease),
+    border-color 0.85s var(--ease),
+    box-shadow 0.85s var(--ease),
+    fill 0.85s var(--ease),
+    stroke 0.85s var(--ease) !important;
 }
 
 .logo:hover {
