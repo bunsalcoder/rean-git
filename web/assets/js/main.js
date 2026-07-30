@@ -28,9 +28,47 @@
     });
   };
 
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  const typeTerminal = async () => {
+    const typed = document.querySelector("[data-term-typed]");
+    const graph = document.querySelector(".branch-graph");
+    const featLine = document.querySelector(".branch-line.feat");
+    if (!typed) return;
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const lines = Array.from(document.querySelectorAll("[data-term-reveal]"));
+    const command = "git status";
+
+    if (reduce) {
+      lines.forEach((line) => line.classList.add("is-shown"));
+      typed.textContent = command;
+      graph?.classList.add("is-drawn");
+      featLine?.classList.add("is-drawn");
+      return;
+    }
+
+    for (const line of lines) {
+      await sleep(220);
+      line.classList.add("is-shown");
+    }
+
+    await sleep(400);
+    typed.textContent = "";
+    for (const ch of command) {
+      typed.textContent += ch;
+      await sleep(55 + Math.random() * 40);
+    }
+
+    graph?.classList.add("is-drawn");
+    featLine?.classList.add("is-drawn");
+  };
+
   const mount = () => {
     reveal(".lab-track li", { stagger: 45 });
     reveal(".lab-grid a", { stagger: 50 });
+    reveal(".method-step", { stagger: 90 });
+    typeTerminal();
   };
 
   window.ReanGitHome = { mount };
