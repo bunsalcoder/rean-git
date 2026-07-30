@@ -61,8 +61,8 @@
     <main>
       <section class="masthead" aria-label="Introduction">
         <div class="wrap masthead-inner">
-          <p class="brand">rean<span>-git</span></p>
-          <div class="masthead-body">
+          <div class="masthead-copy">
+            <p class="brand">rean<span>-git</span></p>
             <h1 class="headline">Learn Git with your hands on the keyboard.</h1>
             <p class="lede">
               Twenty-seven chapters and thirteen labs — from first commit to Git internals.
@@ -72,6 +72,41 @@
               <a class="btn btn-ghost" href="./labs.html">Open labs</a>
             </div>
           </div>
+
+          <div class="hero-stage" aria-hidden="true">
+            <div class="term">
+              <div class="term-bar">
+                <span class="term-dot"></span>
+                <span class="term-dot"></span>
+                <span class="term-dot"></span>
+                <span class="term-title">~/rean-git</span>
+              </div>
+              <div class="term-body" data-term-body>
+                <p data-term-reveal><span class="term-prompt">$</span> <span class="term-cmd">git init</span></p>
+                <p class="term-out" data-term-reveal>Initialized empty Git repository</p>
+                <p data-term-reveal><span class="term-prompt">$</span> <span class="term-cmd">git add README.md</span></p>
+                <p data-term-reveal><span class="term-prompt">$</span> <span class="term-cmd">git commit -m "first step"</span></p>
+                <p class="term-out term-ok" data-term-reveal>[main a3f1c2d] first step</p>
+                <p data-term-reveal><span class="term-prompt">$</span> <span class="term-cmd">git checkout -b feature/learn</span></p>
+                <p class="term-out" data-term-reveal>Switched to a new branch 'feature/learn'</p>
+                <p class="term-live">
+                  <span class="term-prompt">$</span>
+                  <span class="term-typed" data-term-typed></span><span class="term-caret"></span>
+                </p>
+              </div>
+            </div>
+            <svg class="branch-graph" viewBox="0 0 280 120" fill="none" aria-hidden="true">
+              <path class="branch-line main" d="M24 88 H256" />
+              <path class="branch-line feat" d="M88 88 C110 88 118 40 148 40 H232" />
+              <circle class="branch-node" cx="40" cy="88" r="6" />
+              <circle class="branch-node" cx="88" cy="88" r="6" />
+              <circle class="branch-node accent" cx="148" cy="40" r="6" />
+              <circle class="branch-node accent" cx="200" cy="40" r="6" />
+              <circle class="branch-node" cx="200" cy="88" r="6" />
+              <text class="branch-label" x="34" y="110">main</text>
+              <text class="branch-label accent" x="168" y="28">feature/learn</text>
+            </svg>
+          </div>
         </div>
         <p class="commit-ribbon wrap" aria-hidden="true">
           <span>a3f1c2d</span>
@@ -79,6 +114,32 @@
           <span>main</span>
           <span>feature/learn</span>
         </p>
+      </section>
+
+      <section class="method" id="method" aria-labelledby="method-title">
+        <div class="wrap">
+          <div class="method-intro">
+            <p class="eyebrow">How you learn</p>
+            <h2 id="method-title">Read a chapter. Run the commands. Keep going.</h2>
+          </div>
+          <ol class="method-steps">
+            <li class="method-step">
+              <span class="method-num">01</span>
+              <h3>Read</h3>
+              <p>Short handbook chapters that explain one idea at a time.</p>
+            </li>
+            <li class="method-step">
+              <span class="method-num">02</span>
+              <h3>Practice</h3>
+              <p>Open a lab folder, keep a terminal open, and type every command.</p>
+            </li>
+            <li class="method-step">
+              <span class="method-num">03</span>
+              <h3>Level up</h3>
+              <p>From first commit through rebase, remotes, and Git internals.</p>
+            </li>
+          </ol>
+        </div>
       </section>
 
       <section class="path" id="path">
