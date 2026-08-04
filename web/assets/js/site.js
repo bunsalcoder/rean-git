@@ -43,10 +43,12 @@
     const next = theme === "dark" ? "dark" : "light";
     document.documentElement.setAttribute("data-theme", next);
     if (themeToggle) {
-      themeToggle.setAttribute(
-        "aria-label",
-        next === "dark" ? "Switch to light mode" : "Switch to dark mode"
-      );
+      const i18n = window.ReanGitI18n;
+      const label =
+        next === "dark"
+          ? i18n?.t?.("nav.themeToLight") || "Switch to light mode"
+          : i18n?.t?.("nav.themeToDark") || "Switch to dark mode";
+      themeToggle.setAttribute("aria-label", label);
     }
     return next;
   }
@@ -113,6 +115,8 @@
   }
 
   applyTheme(localStorage.getItem(THEME_KEY) || systemTheme());
+  window.ReanGitI18n?.ready?.then(() => paintTheme(currentTheme()));
+  window.ReanGitI18n?.onChange?.(() => paintTheme(currentTheme()));
 
   if (themeToggle) {
     themeToggle.addEventListener("click", (event) => {
@@ -406,6 +410,7 @@
     await nextFrame();
 
     replaceShell(doc);
+    window.ReanGitI18n?.apply?.();
     if (animate) holdPage();
     if (push) history.pushState({ soft: true }, "", targetUrl.href);
     lastPageKey = pageKey(targetUrl);

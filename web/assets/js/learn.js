@@ -1,50 +1,97 @@
 /* Chapter & lab markdown reader — rean-git */
-const CHAPTERS = [
-  { id: "how-to-use", title: "How to use this guide", match: /^## How to use this guide$/m },
-  { id: "1", title: "What problem does Git solve?", match: /^## 1\. /m },
-  { id: "2", title: "Core mental model", match: /^## 2\. /m },
-  { id: "3", title: "Install & first config", match: /^## 3\. /m },
-  { id: "4", title: "Your first repository", match: /^## 4\. /m },
-  { id: "5", title: "Staging, commits, and history", match: /^## 5\. /m },
-  { id: "6", title: "Branching", match: /^## 6\. /m },
-  { id: "7", title: "Merging", match: /^## 7\. /m },
-  { id: "8", title: "Conflicts", match: /^## 8\. /m },
-  { id: "9", title: "Rebase (carefully)", match: /^## 9\. /m },
-  { id: "10", title: "Undoing mistakes", match: /^## 10\. /m },
-  { id: "11", title: "Remotes & GitHub", match: /^## 11\. /m },
-  { id: "12", title: "Pull requests", match: /^## 12\. /m },
-  { id: "13", title: "Team workflows", match: /^## 13\. /m },
-  { id: "14", title: "Stash", match: /^## 14\. /m },
-  { id: "15", title: "Tags & releases", match: /^## 15\. /m },
-  { id: "16", title: "Cherry-pick", match: /^## 16\. /m },
-  { id: "17", title: "Interactive rebase", match: /^## 17\. /m },
-  { id: "18", title: "Bisect", match: /^## 18\. /m },
-  { id: "19", title: "Worktrees & detached HEAD", match: /^## 19\. /m },
-  { id: "20", title: "Inspecting history", match: /^## 20\. /m },
-  { id: "21", title: "Hooks", match: /^## 21\. /m },
-  { id: "22", title: "Signing commits", match: /^## 22\. /m },
-  { id: "23", title: "Forks & multiple remotes", match: /^## 23\. /m },
-  { id: "24", title: "Submodules & Git LFS", match: /^## 24\. /m },
-  { id: "25", title: "How Git works inside", match: /^## 25\. /m },
-  { id: "26", title: "Cheat sheet", match: /^## 26\. /m },
-  { id: "27", title: "Learning path checklist", match: /^## 27\. /m },
+const CHAPTER_IDS = [
+  "how-to-use",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "11",
+  "12",
+  "13",
+  "14",
+  "15",
+  "16",
+  "17",
+  "18",
+  "19",
+  "20",
+  "21",
+  "22",
+  "23",
+  "24",
+  "25",
+  "26",
+  "27",
 ];
 
-const LABS = [
-  { id: "01-first-repo", title: "First repo", level: "Beginner" },
-  { id: "02-branch-merge", title: "Branch & merge", level: "Beginner" },
-  { id: "03-conflict", title: "Conflict", level: "Intermediate" },
-  { id: "04-rebase", title: "Rebase", level: "Intermediate" },
-  { id: "05-undo", title: "Undo", level: "Intermediate" },
-  { id: "06-remote-pr", title: "Remote & PR", level: "Intermediate" },
-  { id: "07-team-workflow", title: "Team workflow", level: "Advanced" },
-  { id: "08-stash", title: "Stash", level: "Advanced" },
-  { id: "09-tags", title: "Tags", level: "Advanced" },
-  { id: "10-cherry-pick", title: "Cherry-pick", level: "Advanced" },
-  { id: "11-interactive-rebase", title: "Interactive rebase", level: "Advanced" },
-  { id: "12-bisect", title: "Bisect", level: "Advanced" },
-  { id: "13-internals", title: "Internals", level: "Advanced" },
+const LAB_META = [
+  { id: "01-first-repo", level: "beginner" },
+  { id: "02-branch-merge", level: "beginner" },
+  { id: "03-conflict", level: "intermediate" },
+  { id: "04-rebase", level: "intermediate" },
+  { id: "05-undo", level: "intermediate" },
+  { id: "06-remote-pr", level: "intermediate" },
+  { id: "07-team-workflow", level: "advanced" },
+  { id: "08-stash", level: "advanced" },
+  { id: "09-tags", level: "advanced" },
+  { id: "10-cherry-pick", level: "advanced" },
+  { id: "11-interactive-rebase", level: "advanced" },
+  { id: "12-bisect", level: "advanced" },
+  { id: "13-internals", level: "advanced" },
 ];
+
+function t(key, vars) {
+  return window.ReanGitI18n?.t?.(key, vars) ?? key;
+}
+
+function getChapters() {
+  const howToUse = t("chapterMatch.howToUse");
+  const howToPatterns = [
+    howToUse !== "chapterMatch.howToUse" ? new RegExp(howToUse, "m") : null,
+    /^## How to use this guide$/m,
+  ].filter(Boolean);
+
+  return CHAPTER_IDS.map((id) => {
+    const title = t(`chapters.${id}`);
+    if (id === "how-to-use") {
+      return {
+        id,
+        title,
+        matchLine: (line) => howToPatterns.some((re) => re.test(line)),
+      };
+    }
+    const num = id;
+    const match = new RegExp(`^## ${num}\\. `, "m");
+    return {
+      id,
+      title,
+      matchLine: (line) => match.test(line),
+    };
+  });
+}
+
+function getLabs() {
+  return LAB_META.map((lab) => ({
+    id: lab.id,
+    title: t(`labs.${lab.id}.title`),
+    level: t(`levels.${lab.level}`),
+  }));
+}
+
+function tocMatchLine(line) {
+  const localized = t("chapterMatch.toc");
+  const patterns = [
+    localized !== "chapterMatch.toc" ? new RegExp(localized, "m") : null,
+    /^## Table of contents$/m,
+  ].filter(Boolean);
+  return patterns.some((re) => re.test(line));
+}
 
 function getParam(name) {
   return new URLSearchParams(location.search).get(name);
@@ -64,13 +111,13 @@ function labHref(id) {
   return `./lab.html?id=${encodeURIComponent(id)}`;
 }
 
-function splitGuide(markdown) {
+function splitGuide(markdown, chapters) {
   const lines = markdown.split("\n");
   const starts = [];
 
   lines.forEach((line, index) => {
-    CHAPTERS.forEach((ch, ci) => {
-      if (ch.match.test(line)) {
+    chapters.forEach((ch, ci) => {
+      if (ch.matchLine(line)) {
         starts.push({ ci, index, title: ch.title, id: ch.id });
       }
     });
@@ -80,15 +127,13 @@ function splitGuide(markdown) {
 
   return starts.map((s, i) => {
     let end = i + 1 < starts.length ? starts[i + 1].index : lines.length;
-    if (CHAPTERS[s.ci].id === "how-to-use") {
-      const tocAt = lines.findIndex(
-        (line, idx) => idx > s.index && /^## Table of contents$/m.test(line)
-      );
+    if (chapters[s.ci].id === "how-to-use") {
+      const tocAt = lines.findIndex((line, idx) => idx > s.index && tocMatchLine(line));
       if (tocAt !== -1) end = tocAt;
     }
     let body = lines.slice(s.index, end).join("\n").trim();
     body = body.replace(/^##\s.+\n+/, "");
-    return { ...CHAPTERS[s.ci], body };
+    return { ...chapters[s.ci], body };
   });
 }
 
@@ -104,17 +149,17 @@ function enhanceCodeBlocks(root) {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "copy-btn";
-    btn.textContent = "Copy";
+    btn.textContent = t("ui.copy");
     btn.addEventListener("click", async () => {
       const text = pre.querySelector("code")?.textContent || pre.textContent;
       try {
         await navigator.clipboard.writeText(text);
-        btn.textContent = "Copied";
+        btn.textContent = t("ui.copied");
         setTimeout(() => {
-          btn.textContent = "Copy";
+          btn.textContent = t("ui.copy");
         }, 1400);
       } catch {
-        btn.textContent = "Failed";
+        btn.textContent = t("ui.failed");
       }
     });
     wrap.appendChild(btn);
@@ -177,7 +222,7 @@ function writeLastChapter(id) {
 function readLastLab() {
   const saved = readStorageItem(LAST_LAB_KEY);
   if (!saved) return null;
-  return LABS.some((l) => l.id === saved) ? saved : null;
+  return LAB_META.some((l) => l.id === saved) ? saved : null;
 }
 
 function writeLastLab(id) {
@@ -227,6 +272,24 @@ async function loadText(url) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Could not load ${url}`);
   return res.text();
+}
+
+async function loadLocalizedContent(relativePath) {
+  const locale = window.ReanGitI18n?.getLocale?.() || "en";
+  const candidates =
+    locale === "en"
+      ? [`./content/en/${relativePath}`]
+      : [`./content/${locale}/${relativePath}`, `./content/en/${relativePath}`];
+
+  let lastError = null;
+  for (const url of candidates) {
+    try {
+      return await loadText(url);
+    } catch (err) {
+      lastError = err;
+    }
+  }
+  throw lastError || new Error(`Could not load ${relativePath}`);
 }
 
 function renderMarkdown(target, md) {
@@ -317,9 +380,10 @@ async function initLearnPage(signal, { animate = true } = {}) {
   setupSidebarToggle(signal);
 
   try {
-    const raw = await loadText("./content/guide.md");
+    const raw = await loadLocalizedContent("guide.md");
     if (signal?.aborted) return null;
-    const chapters = splitGuide(raw);
+    const chapterDefs = getChapters();
+    const chapters = splitGuide(raw, chapterDefs);
     if (!chapters.length) throw new Error("No chapters found");
 
     let currentIndex = -1;
@@ -346,8 +410,8 @@ async function initLearnPage(signal, { animate = true } = {}) {
       const prev = chapters[index - 1];
       const next = chapters[index + 1];
       pagerEl.innerHTML = `
-        ${prev ? `<a class="pager-prev" href="${chapterHref(prev.id)}" data-chapter-id="${prev.id}"><span>Previous</span>${prev.title}</a>` : ""}
-        ${next ? `<a class="pager-next" href="${chapterHref(next.id)}" data-chapter-id="${next.id}"><span>Next</span>${next.title}</a>` : ""}
+        ${prev ? `<a class="pager-prev" href="${chapterHref(prev.id)}" data-chapter-id="${prev.id}"><span>${escapeHtml(t("learn.previous"))}</span>${escapeHtml(prev.title)}</a>` : ""}
+        ${next ? `<a class="pager-next" href="${chapterHref(next.id)}" data-chapter-id="${next.id}"><span>${escapeHtml(t("learn.next"))}</span>${escapeHtml(next.title)}</a>` : ""}
       `;
     };
 
@@ -369,7 +433,12 @@ async function initLearnPage(signal, { animate = true } = {}) {
       setActiveNav(chapter.id);
       writeLastChapter(chapter.id);
       if (titleEl) titleEl.textContent = chapter.title;
-      if (progressEl) progressEl.textContent = `${index + 1} / ${chapters.length}`;
+      if (progressEl) {
+        progressEl.textContent = t("ui.progress", {
+          current: index + 1,
+          total: chapters.length,
+        });
+      }
       document.title = `${chapter.title} — rean-git`;
       renderMarkdown(bodyEl, chapter.body);
       renderPager(index);
@@ -471,7 +540,7 @@ async function initLearnPage(signal, { animate = true } = {}) {
     };
   } catch (err) {
     if (signal?.aborted) return null;
-    bodyEl.innerHTML = `<div class="error"><strong>Could not load lessons.</strong><br>${err.message}<br><br>Serve the <code>web/</code> folder over HTTP (for example <code>python3 -m http.server 4173</code>), then open the site from that URL.</div>`;
+    bodyEl.innerHTML = `<div class="error"><strong>${escapeHtml(t("learn.loadError"))}</strong><br>${escapeHtml(err.message)}<br><br>${escapeHtml(t("learn.serveHint"))}</div>`;
     return null;
   }
 }
@@ -486,6 +555,7 @@ async function initLabPage(signal, { animate = true } = {}) {
 
   setupSidebarToggle(signal);
 
+  const labs = getLabs();
   let currentIndex = -1;
   let transitionToken = 0;
   const paneEl = bodyEl.closest(".content-pane");
@@ -495,7 +565,7 @@ async function initLabPage(signal, { animate = true } = {}) {
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const resolveIndex = (id) => {
-    let index = LABS.findIndex((l) => l.id === id);
+    let index = labs.findIndex((l) => l.id === id);
     if (index < 0) index = 0;
     return index;
   };
@@ -508,11 +578,11 @@ async function initLabPage(signal, { animate = true } = {}) {
 
   const renderPager = (index) => {
     if (!pagerEl) return;
-    const prev = LABS[index - 1];
-    const next = LABS[index + 1];
+    const prev = labs[index - 1];
+    const next = labs[index + 1];
     pagerEl.innerHTML = `
-      ${prev ? `<a class="pager-prev" href="${labHref(prev.id)}" data-lab-id="${prev.id}"><span>Previous lab</span>${prev.title}</a>` : ""}
-      ${next ? `<a class="pager-next" href="${labHref(next.id)}" data-lab-id="${next.id}"><span>Next lab</span>${next.title}</a>` : ""}
+      ${prev ? `<a class="pager-prev" href="${labHref(prev.id)}" data-lab-id="${prev.id}"><span>${escapeHtml(t("lab.previous"))}</span>${escapeHtml(prev.title)}</a>` : ""}
+      ${next ? `<a class="pager-next" href="${labHref(next.id)}" data-lab-id="${next.id}"><span>${escapeHtml(t("lab.next"))}</span>${escapeHtml(next.title)}</a>` : ""}
     `;
   };
 
@@ -532,7 +602,7 @@ async function initLabPage(signal, { animate = true } = {}) {
 
   const loadLabMarkdown = async (id) => {
     if (cache.has(id)) return cache.get(id);
-    const md = await loadText(`./content/labs/${id}.md`);
+    const md = await loadLocalizedContent(`labs/${id}.md`);
     cache.set(id, md);
     return md;
   };
@@ -541,7 +611,13 @@ async function initLabPage(signal, { animate = true } = {}) {
     setActiveNav(lab.id);
     writeLastLab(lab.id);
     if (titleEl) titleEl.textContent = lab.title;
-    if (progressEl) progressEl.textContent = `${index + 1} / ${LABS.length} · ${lab.level}`;
+    if (progressEl) {
+      progressEl.textContent = t("ui.progressLab", {
+        current: index + 1,
+        total: labs.length,
+        level: lab.level,
+      });
+    }
     document.title = `${lab.title} — rean-git`;
     renderPager(index);
 
@@ -550,13 +626,13 @@ async function initLabPage(signal, { animate = true } = {}) {
       renderMarkdown(bodyEl, md);
       bodyEl.querySelector("h1")?.remove();
     } catch (err) {
-      bodyEl.innerHTML = `<div class="error"><strong>Could not load lab.</strong><br>${err.message}<br><br>Serve the <code>web/</code> folder over HTTP.</div>`;
+      bodyEl.innerHTML = `<div class="error"><strong>${escapeHtml(t("lab.loadError"))}</strong><br>${escapeHtml(err.message)}<br><br>${escapeHtml(t("lab.serveHint"))}</div>`;
     }
   };
 
   const showLab = async (id, { push = false, animate = true } = {}) => {
     const index = resolveIndex(id);
-    const lab = LABS[index];
+    const lab = labs[index];
 
     if (index === currentIndex) {
       if (push) history.replaceState({ id: lab.id }, "", labHref(lab.id));
@@ -594,10 +670,12 @@ async function initLabPage(signal, { animate = true } = {}) {
     }
   };
 
-  navEl.innerHTML = LABS.map(
-    (l) =>
-      `<li><a href="${labHref(l.id)}" data-lab-id="${l.id}">${escapeHtml(l.title)}<br><span style="opacity:.6;font-weight:500;font-size:.8rem">${escapeHtml(l.level)}</span></a></li>`
-  ).join("");
+  navEl.innerHTML = labs
+    .map(
+      (l) =>
+        `<li><a href="${labHref(l.id)}" data-lab-id="${l.id}">${escapeHtml(l.title)}<br><span style="opacity:.6;font-weight:500;font-size:.8rem">${escapeHtml(l.level)}</span></a></li>`
+    )
+    .join("");
 
   const goToLab = (id, opts) => {
     if (!id) return;
@@ -629,12 +707,12 @@ async function initLabPage(signal, { animate = true } = {}) {
   window.addEventListener(
     "popstate",
     () => {
-      goToLab(getRouteId("id") || LABS[0].id, { push: false, animate: true });
+      goToLab(getRouteId("id") || labs[0].id, { push: false, animate: true });
     },
     { signal }
   );
 
-  const start = resolveRouteOrResume("id", readLastLab(), LABS[0].id);
+  const start = resolveRouteOrResume("id", readLastLab(), labs[0].id);
   goToLab(start.id, { push: false, animate });
   if (!start.fromRoute) {
     history.replaceState({ id: start.id }, "", labHref(start.id));
@@ -642,7 +720,7 @@ async function initLabPage(signal, { animate = true } = {}) {
 
   return {
     goTo(id, opts) {
-      const target = id || readLastLab() || LABS[0].id;
+      const target = id || readLastLab() || labs[0].id;
       goToLab(target, opts);
       if (!id) history.replaceState({ id: target }, "", labHref(target));
     },
@@ -662,13 +740,15 @@ async function initLabPage(signal, { animate = true } = {}) {
 
   const mount = async ({ animate = true } = {}) => {
     unmount();
-    abortController = new AbortController();
-    const { signal } = abortController;
+    const controller = new AbortController();
+    abortController = controller;
+    await window.ReanGitI18n?.ready;
+    if (controller.signal.aborted || abortController !== controller) return;
 
     if (document.body.dataset.page === "learn") {
-      learnApi = await initLearnPage(signal, { animate });
+      learnApi = await initLearnPage(controller.signal, { animate });
     } else if (document.body.dataset.page === "lab") {
-      labApi = await initLabPage(signal, { animate });
+      labApi = await initLabPage(controller.signal, { animate });
     }
   };
 
@@ -687,6 +767,13 @@ async function initLabPage(signal, { animate = true } = {}) {
     if (window.__reanGitDeferContentMount) return;
     mount();
   };
+
+  window.ReanGitI18n?.onChange?.(() => {
+    const page = document.body.dataset.page;
+    if (page === "learn" || page === "lab") {
+      mount({ animate: false });
+    }
+  });
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", start, { once: true });

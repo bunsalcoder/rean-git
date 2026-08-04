@@ -1,0 +1,187 @@
+{
+  "meta": {
+    "homeTitle": "rean-git — រៀន Git តាមការអនុវត្ត",
+    "homeDescription": "រៀន Git ពីដើមដល់ចុង — ជំពូក ពាក្យបញ្ជា និងមន្ទីរពិសោធន៍ ពី commit ដំបូងដល់ផ្នែកខាងគ្នុង។",
+    "learnTitle": "រៀន — rean-git",
+    "learnDescription": "អានកម្មវិធីសិក្សា Git របស់ rean-git តាមជំពូក។",
+    "labsTitle": "មន្ទីរពិសោធន៍ — rean-git",
+    "labsDescription": "មន្ទីរពិសោធន៍ Git សម្រាប់ផ្លូវសិក្សា rean-git។",
+    "labTitle": "មន្ទីរពិសោធន៍ — rean-git",
+    "labDescription": "សេចក្តីណែនឳមន្ទីរពិសោធន៍ Git សម្រាប់ rean-git។"
+  },
+  "nav": {
+    "home": "ទំព័រដើម",
+    "learn": "រៀន",
+    "labs": "មន្ទីរពិសោធន៍",
+    "cheatSheet": "តារាងសង្ខេប",
+    "menu": "ម៉ឺនុយ",
+    "language": "ភាសា",
+    "themeToLight": "ប្តូរទាវរបឹបភ្លឺ",
+    "themeToDark": "ប្តូរទាវរបឹបងងឺត"
+  },
+  "home": {
+    "introLabel": "សេចក្តីណែនឳ",
+    "headline": "រៀន Git ដោយដៃនៅលើក្តារចុច។",
+    "lede": "ម្ភៃប្រាំពីរជំពូក និងដប់បីមន្ទីរពិសោធន៍ — ពី commit ដំបូងដល់ផ្នែកខាងគ្នុងរបស់ Git។",
+    "startLearning": "ចាប់ផ្តើមរៀន",
+    "openLabs": "បើកមន្ទីរពិសោធន៍",
+    "methodEyebrow": "វិធីរៀន",
+    "methodTitle": "អានជំពូក។ រត់ពាក្យបញ្ជា។ បន្តទៅមុខ។",
+    "step1Title": "អាន",
+    "step1Body": "ជំពូកខ្លីៗដែលពន្យល់គំនិតមួយក្នុងពេលតែមួយ។",
+    "step2Title": "អនុវត្ត",
+    "step2Body": "បើកថតមន្ទីរពិសោធន៍ រក្សា terminal ឲយបើក ហើយវាយរាល់ពាក្យបញ្ជា។",
+    "step3Title": "ឡើងកម្រិត",
+    "step3Body": "ពី commit ដំបូង តាមរយៈ rebase, remotes និងផ្នែកខាងគ្នុងរបស់ Git។",
+    "pathEyebrow": "ផ្លូវអនុវត្ត",
+    "pathTitle": "ដប់បីមន្ទីរពិសោធន៍តាមលំដាប់",
+    "pathBody": "អានជំពូក បន្ទាប់មកអនុវត្ត។ ថតមន្ទីរពិសោធន៍ស្ថិតនៅគ្នុង labs/ — រក្សា terminal ឲយបើកក្បែរវេបសាយនេះ។",
+    "footerTagline": "rean-git — រៀន Git ពីដើមដល់ចុង តាមការអនុវត្ត។",
+    "footerLink": "អានសៀវភាវណែនឳ"
+  },
+  "labsPage": {
+    "eyebrow": "អនុវត្ត",
+    "title": "មន្ទីរពិសោធន៍",
+    "intro": "ធ្វើតាមលំដាប់។ មន្ទីរពិសោធន៍នីមួយៗស្ថិតនៅគ្នុង labs/ គ្នុង repo — បើក terminal ក្បែរទំព័រនេះ។",
+    "footerLink": "ត្រឡប់ទាវកម្មវិធីសិក្សា"
+  },
+  "learn": {
+    "chapters": "ជំពូក",
+    "loading": "កំពុងផ្ទុក…",
+    "loadingShort": "កំពុងផ្ទុក",
+    "curriculum": "កម្មវិធីសិក្សា",
+    "fetching": "កំពុងទាញយកសៀវភាវណែនឳ…",
+    "pagerLabel": "ការរុករកជំពូក",
+    "previous": "មុន",
+    "next": "បន្ទាប់",
+    "loadError": "មិនអាចផ្ទុកមេរៀនបានទេ។",
+    "serveHint": "បម្រើថត web/ តាម HTTP (ឧទាហរណ៍ python3 -m http.server 4173) បន្ទាប់មកបើកវេបសាយពី URL នោឧ។"
+  },
+  "lab": {
+    "labs": "មន្ទីរពិសោធន៍",
+    "loading": "កំពុងផ្ទុក…",
+    "loadingShort": "កំពុងផ្ទុក",
+    "handsOn": "អនុវត្តផ្ទាល់",
+    "fetching": "កំពុងទាញយកមន្ទីរពិសោធន៍…",
+    "menu": "ម៉ឺនុយមន្ទីរពិសោធន៍",
+    "allLabs": "មន្ទីរពិសោធន៍ទាំងអស់",
+    "pagerLabel": "ការរុករកមន្ទីរពិសោធន៍",
+    "previous": "មន្ទីរពិសោធន៍មុន",
+    "next": "មន្ទីរពិសោធន៍បន្ទាប់",
+    "loadError": "មិនអាចផ្ទុកមន្ទីរពិសោធន៍បានទេ។",
+    "serveHint": "បម្រើថត web/ តាម HTTP។"
+  },
+  "ui": {
+    "copy": "ចម្លង",
+    "copied": "បានចម្លង",
+    "failed": "បរាជ័យ",
+    "progress": "{current} / {total}",
+    "progressLab": "{current} / {total} · {level}"
+  },
+  "levels": {
+    "beginner": "ដំបូង",
+    "intermediate": "មធ្យម",
+    "advanced": "កម្រិតខ្ពស់"
+  },
+  "chapterMatch": {
+    "howToUse": "^## របៀបប្រើមគ្គុទ្ទេសក៍នេះ$",
+    "toc": "^## មាតិកា$"
+  },
+  "chapters": {
+    "how-to-use": "របៀបប្រើមគ្គុទ្ទេសក៍នេះ",
+    "1": "Git ដោះស្រាយបញ្ហាអ្វី?",
+    "2": "គំរូគំនិតស្នូល",
+    "3": "ដំឡើង និងកំណត់រចនាសម្ព័ន្នដំបូង",
+    "4": "repository ដំបូងរបស់អ្នក",
+    "5": "Staging, commits និងប្រវត្តិ",
+    "6": "Branching",
+    "7": "Merging",
+    "8": "Conflicts",
+    "9": "Rebase (ប្រើដោយប្រុងប្រយ័ត្ន)",
+    "10": "ត្រឡប់កំហុស",
+    "11": "Remotes និង GitHub",
+    "12": "Pull requests",
+    "13": "លំហូរការងារក្រុម",
+    "14": "Stash",
+    "15": "Tags និងការចេញផ្សាយ",
+    "16": "Cherry-pick",
+    "17": "Interactive rebase",
+    "18": "Bisect",
+    "19": "Worktrees និង detached HEAD",
+    "20": "ពិនិត្យប្រវត្តិ",
+    "21": "Hooks",
+    "22": "ចុហាត្ថលេខា commits",
+    "23": "Forks និង remotes ច្រើន",
+    "24": "Submodules និង Git LFS",
+    "25": "របៀបដែល Git ដំណើរការខាងគ្នុង",
+    "26": "តារាងសង្ខេប",
+    "27": "បញ្ជីផ្លូវសិក្សា"
+  },
+  "labs": {
+    "01-first-repo": {
+      "title": "Repo ដំបូង",
+      "teaser": "Init, stage, commit។",
+      "summary": "Init, stage, commit — ប្រវត្តិពិតដំបូងរបស់អ្នក។"
+    },
+    "02-branch-merge": {
+      "title": "Branch និង merge",
+      "teaser": "បំបែកការងារ បន្ទាប់មកបញ្ចូលគ្នា។",
+      "summary": "បំបែកការងារដោយសុវត្ថិភាព បន្ទាប់មកនាំមករួមគ្នាវិញ។"
+    },
+    "03-conflict": {
+      "title": "Conflict",
+      "teaser": "ដោះស្រាយ merge conflict។",
+      "summary": "ជួប merge conflict ហើយដោះស្រាយដោយស្ងប់ស្ងាត់។"
+    },
+    "04-rebase": {
+      "title": "Rebase",
+      "teaser": "ចាក់ឡើងវិញ commits ឲយស្អាត។",
+      "summary": "ចាក់ឡើងវិញ commits ហើយរក្សាប្រវត្តិឲយអានបានងាយ។"
+    },
+    "05-undo": {
+      "title": "ត្រឡប់វិញ",
+      "teaser": "Restore, reset, revert។",
+      "summary": "Restore, amend, reset និង revert ដោយមានគោលបំណាង។"
+    },
+    "06-remote-pr": {
+      "title": "Remote និង PR",
+      "teaser": "Push ហើយបើក PR។",
+      "summary": "Push branch ហើយបើក pull request ឲយស្អាត។"
+    },
+    "07-team-workflow": {
+      "title": "លំហូរការងារក្រុម",
+      "teaser": "ទម្លាប់ដែលអាចពង្រីកបាន។",
+      "summary": "មិនអើពើហេកសារឥតប្រយោជន៍ sync ញឺកញាប់ សរសេរ PR ដែលពិនិត្យបាន។"
+    },
+    "08-stash": {
+      "title": "Stash",
+      "teaser": "ទុក WIP ប្តូរបរិបទ។",
+      "summary": "ទុកការងារមិនទាន់រួច ប្តូរបរិបទ រួចស្តារវិញ។"
+    },
+    "09-tags": {
+      "title": "Tags",
+      "teaser": "ដាក់ស្លាកការចេញផ្សាយ។",
+      "summary": "ចំណាំការចេញផ្សាយ ហើយ checkout tag កំណែ។"
+    },
+    "10-cherry-pick": {
+      "title": "Cherry-pick",
+      "teaser": "ចម្លង commit មួយ។",
+      "summary": "នាំ commit មួយទាវ branch ផ្សេង។"
+    },
+    "11-interactive-rebase": {
+      "title": "Interactive rebase",
+      "teaser": "បង្រួមប្រវត្តិឲយច្បាស់។",
+      "summary": "បង្រួម commits រញ៉េរញ៉ៃទាវជារៀងច្បាស់លាស់។"
+    },
+    "12-bisect": {
+      "title": "Bisect",
+      "teaser": "រក commit ដែលបំបែក។",
+      "summary": "ស្វែងរកប្រវត្តិតាម binary search រក commit ដែលបំបែក។"
+    },
+    "13-internals": {
+      "title": "ផ្នែកខាងគ្នុង",
+      "teaser": "Commits, trees, blobs។",
+      "summary": "ដើរតាម commits, trees, blobs និង refs។"
+    }
+  }
+}
