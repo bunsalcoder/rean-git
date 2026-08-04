@@ -54,12 +54,14 @@
     return data;
   }
 
-  function syncLangControls(root = document) {
-    root.querySelectorAll("[data-set-lang]").forEach((btn) => {
-      const lang = btn.getAttribute("data-set-lang");
-      const active = lang === locale;
-      btn.setAttribute("aria-pressed", String(active));
-      btn.classList.toggle("is-active", active);
+  function syncLangControls(root = document, activeLocale = locale) {
+    root.querySelectorAll(".lang-switch").forEach((group) => {
+      group.querySelectorAll("[data-set-lang]").forEach((btn) => {
+        const lang = btn.getAttribute("data-set-lang");
+        const active = lang === activeLocale;
+        btn.setAttribute("aria-pressed", String(active));
+        btn.classList.toggle("is-active", active);
+      });
     });
   }
 
@@ -76,6 +78,9 @@
 
     document.documentElement.lang = locale;
     document.documentElement.setAttribute("data-lang", locale);
+    document.querySelectorAll(".lang-switch").forEach((group) => {
+      group.removeAttribute("data-pending");
+    });
     syncLangControls(root);
 
     const themeToggle = document.querySelector("[data-theme-toggle]");
@@ -98,6 +103,11 @@
 
   async function setLocale(lang, { persist: shouldPersist = true, notify = true } = {}) {
     const next = normalizeLocale(lang) || DEFAULT_LOCALE;
+    document.querySelectorAll(".lang-switch").forEach((group) => {
+      group.setAttribute("data-pending", next);
+    });
+    syncLangControls(document, next);
+
     dict = await loadDict(next);
     locale = next;
     if (shouldPersist) persist(next);
