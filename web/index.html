@@ -3,9 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>rean-git — learn Git by doing</title>
+    <title data-i18n="meta.homeTitle">rean-git — learn Git by doing</title>
     <meta
       name="description"
+      data-i18n="meta.homeDescription"
+      data-i18n-attr="content"
       content="Hands-on Git from zero to hero — chapters, commands, and labs from first commit to internals."
     />
     <link rel="icon" href="./assets/img/favicon.svg" type="image/svg+xml" />
@@ -14,7 +16,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Khmer:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <script>
@@ -22,6 +24,11 @@
         var t = localStorage.getItem("rean-git-theme");
         if (!t) t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
         document.documentElement.setAttribute("data-theme", t);
+        var l = localStorage.getItem("rean-git-lang");
+        if (l === "km" || l === "en") {
+          document.documentElement.setAttribute("lang", l);
+          document.documentElement.setAttribute("data-lang", l);
+        }
       })();
     </script>
     <link rel="stylesheet" href="assets/css/styles.css" />
@@ -31,12 +38,16 @@
       <div class="wrap header-inner">
         <a class="logo" href="./">rean<span>-git</span></a>
         <nav class="nav" data-nav>
-          <a href="./index.html" aria-current="page">Home</a>
-          <a href="./learn.html">Learn</a>
-          <a href="./labs.html">Labs</a>
-          <a href="./learn.html?c=26">Cheat sheet</a>
+          <a href="./index.html" aria-current="page" data-i18n="nav.home">Home</a>
+          <a href="./learn.html" data-i18n="nav.learn">Learn</a>
+          <a href="./labs.html" data-i18n="nav.labs">Labs</a>
+          <a href="./learn.html?c=26" data-i18n="nav.cheatSheet">Cheat sheet</a>
         </nav>
         <div class="header-actions">
+          <div class="lang-switch" role="group" data-i18n="nav.language" data-i18n-attr="aria-label" aria-label="Language">
+            <button type="button" data-set-lang="en" aria-pressed="true">EN</button>
+            <button type="button" data-set-lang="km" aria-pressed="false">ខ្មែរ</button>
+          </div>
           <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle dark mode">
             <svg class="theme-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <g class="theme-sun">
@@ -51,7 +62,7 @@
               />
             </svg>
           </button>
-          <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Menu">
+          <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" data-i18n="nav.menu" data-i18n-attr="aria-label" aria-label="Menu">
             <span></span><span></span><span></span>
           </button>
         </div>
@@ -59,17 +70,17 @@
     </header>
 
     <main>
-      <section class="masthead" aria-label="Introduction">
+      <section class="masthead" data-i18n="home.introLabel" data-i18n-attr="aria-label" aria-label="Introduction">
         <div class="wrap masthead-inner">
           <div class="masthead-copy">
             <p class="brand">rean<span>-git</span></p>
-            <h1 class="headline">Learn Git with your hands on the keyboard.</h1>
-            <p class="lede">
+            <h1 class="headline" data-i18n="home.headline">Learn Git with your hands on the keyboard.</h1>
+            <p class="lede" data-i18n="home.lede">
               Twenty-seven chapters and thirteen labs — from first commit to Git internals.
             </p>
             <div class="cta-row">
-              <a class="btn btn-primary" href="./learn.html">Start learning</a>
-              <a class="btn btn-ghost" href="./labs.html">Open labs</a>
+              <a class="btn btn-primary" href="./learn.html" data-i18n="home.startLearning">Start learning</a>
+              <a class="btn btn-ghost" href="./labs.html" data-i18n="home.openLabs">Open labs</a>
             </div>
           </div>
 
@@ -119,24 +130,24 @@
       <section class="method" id="method" aria-labelledby="method-title">
         <div class="wrap">
           <div class="method-intro">
-            <p class="eyebrow">How you learn</p>
-            <h2 id="method-title">Read a chapter. Run the commands. Keep going.</h2>
+            <p class="eyebrow" data-i18n="home.methodEyebrow">How you learn</p>
+            <h2 id="method-title" data-i18n="home.methodTitle">Read a chapter. Run the commands. Keep going.</h2>
           </div>
           <ol class="method-steps">
             <li class="method-step">
               <span class="method-num">01</span>
-              <h3>Read</h3>
-              <p>Short handbook chapters that explain one idea at a time.</p>
+              <h3 data-i18n="home.step1Title">Read</h3>
+              <p data-i18n="home.step1Body">Short handbook chapters that explain one idea at a time.</p>
             </li>
             <li class="method-step">
               <span class="method-num">02</span>
-              <h3>Practice</h3>
-              <p>Open a lab folder, keep a terminal open, and type every command.</p>
+              <h3 data-i18n="home.step2Title">Practice</h3>
+              <p data-i18n="home.step2Body">Open a lab folder, keep a terminal open, and type every command.</p>
             </li>
             <li class="method-step">
               <span class="method-num">03</span>
-              <h3>Level up</h3>
-              <p>From first commit through rebase, remotes, and Git internals.</p>
+              <h3 data-i18n="home.step3Title">Level up</h3>
+              <p data-i18n="home.step3Body">From first commit through rebase, remotes, and Git internals.</p>
             </li>
           </ol>
         </div>
@@ -145,11 +156,11 @@
       <section class="path" id="path">
         <div class="wrap">
           <div class="path-intro">
-            <p class="eyebrow">Practice track</p>
-            <h2>Thirteen labs in order</h2>
-            <p>
+            <p class="eyebrow" data-i18n="home.pathEyebrow">Practice track</p>
+            <h2 data-i18n="home.pathTitle">Thirteen labs in order</h2>
+            <p data-i18n="home.pathBody">
               Read a chapter, then practice. Lab folders live under
-              <code>labs/</code> — keep a terminal open beside this site.
+              labs/ — keep a terminal open beside this site.
             </p>
           </div>
 
@@ -157,92 +168,92 @@
             <li>
               <a href="./lab.html?id=01-first-repo">
                 <span class="lab-num">01</span>
-                <h3 class="lab-title">First repo</h3>
-                <p class="lab-desc">Init, stage, commit.</p>
+                <h3 class="lab-title" data-i18n="labs.01-first-repo.title">First repo</h3>
+                <p class="lab-desc" data-i18n="labs.01-first-repo.teaser">Init, stage, commit.</p>
               </a>
             </li>
             <li>
               <a href="./lab.html?id=02-branch-merge">
                 <span class="lab-num">02</span>
-                <h3 class="lab-title">Branch &amp; merge</h3>
-                <p class="lab-desc">Split work, then join it.</p>
+                <h3 class="lab-title" data-i18n="labs.02-branch-merge.title">Branch &amp; merge</h3>
+                <p class="lab-desc" data-i18n="labs.02-branch-merge.teaser">Split work, then join it.</p>
               </a>
             </li>
             <li>
               <a href="./lab.html?id=03-conflict">
                 <span class="lab-num">03</span>
-                <h3 class="lab-title">Conflict</h3>
-                <p class="lab-desc">Resolve a merge conflict.</p>
+                <h3 class="lab-title" data-i18n="labs.03-conflict.title">Conflict</h3>
+                <p class="lab-desc" data-i18n="labs.03-conflict.teaser">Resolve a merge conflict.</p>
               </a>
             </li>
             <li>
               <a href="./lab.html?id=04-rebase">
                 <span class="lab-num">04</span>
-                <h3 class="lab-title">Rebase</h3>
-                <p class="lab-desc">Replay commits cleanly.</p>
+                <h3 class="lab-title" data-i18n="labs.04-rebase.title">Rebase</h3>
+                <p class="lab-desc" data-i18n="labs.04-rebase.teaser">Replay commits cleanly.</p>
               </a>
             </li>
             <li>
               <a href="./lab.html?id=05-undo">
                 <span class="lab-num">05</span>
-                <h3 class="lab-title">Undo</h3>
-                <p class="lab-desc">Restore, reset, revert.</p>
+                <h3 class="lab-title" data-i18n="labs.05-undo.title">Undo</h3>
+                <p class="lab-desc" data-i18n="labs.05-undo.teaser">Restore, reset, revert.</p>
               </a>
             </li>
             <li>
               <a href="./lab.html?id=06-remote-pr">
                 <span class="lab-num">06</span>
-                <h3 class="lab-title">Remote &amp; PR</h3>
-                <p class="lab-desc">Push and open a PR.</p>
+                <h3 class="lab-title" data-i18n="labs.06-remote-pr.title">Remote &amp; PR</h3>
+                <p class="lab-desc" data-i18n="labs.06-remote-pr.teaser">Push and open a PR.</p>
               </a>
             </li>
             <li>
               <a href="./lab.html?id=07-team-workflow">
                 <span class="lab-num">07</span>
-                <h3 class="lab-title">Team workflow</h3>
-                <p class="lab-desc">Habits that scale.</p>
+                <h3 class="lab-title" data-i18n="labs.07-team-workflow.title">Team workflow</h3>
+                <p class="lab-desc" data-i18n="labs.07-team-workflow.teaser">Habits that scale.</p>
               </a>
             </li>
             <li>
               <a href="./lab.html?id=08-stash">
                 <span class="lab-num">08</span>
-                <h3 class="lab-title">Stash</h3>
-                <p class="lab-desc">Shelf WIP, switch context.</p>
+                <h3 class="lab-title" data-i18n="labs.08-stash.title">Stash</h3>
+                <p class="lab-desc" data-i18n="labs.08-stash.teaser">Shelf WIP, switch context.</p>
               </a>
             </li>
             <li>
               <a href="./lab.html?id=09-tags">
                 <span class="lab-num">09</span>
-                <h3 class="lab-title">Tags</h3>
-                <p class="lab-desc">Label releases.</p>
+                <h3 class="lab-title" data-i18n="labs.09-tags.title">Tags</h3>
+                <p class="lab-desc" data-i18n="labs.09-tags.teaser">Label releases.</p>
               </a>
             </li>
             <li>
               <a href="./lab.html?id=10-cherry-pick">
                 <span class="lab-num">10</span>
-                <h3 class="lab-title">Cherry-pick</h3>
-                <p class="lab-desc">Copy one commit over.</p>
+                <h3 class="lab-title" data-i18n="labs.10-cherry-pick.title">Cherry-pick</h3>
+                <p class="lab-desc" data-i18n="labs.10-cherry-pick.teaser">Copy one commit over.</p>
               </a>
             </li>
             <li>
               <a href="./lab.html?id=11-interactive-rebase">
                 <span class="lab-num">11</span>
-                <h3 class="lab-title">Interactive rebase</h3>
-                <p class="lab-desc">Squash a clean story.</p>
+                <h3 class="lab-title" data-i18n="labs.11-interactive-rebase.title">Interactive rebase</h3>
+                <p class="lab-desc" data-i18n="labs.11-interactive-rebase.teaser">Squash a clean story.</p>
               </a>
             </li>
             <li>
               <a href="./lab.html?id=12-bisect">
                 <span class="lab-num">12</span>
-                <h3 class="lab-title">Bisect</h3>
-                <p class="lab-desc">Find the breaking commit.</p>
+                <h3 class="lab-title" data-i18n="labs.12-bisect.title">Bisect</h3>
+                <p class="lab-desc" data-i18n="labs.12-bisect.teaser">Find the breaking commit.</p>
               </a>
             </li>
             <li>
               <a href="./lab.html?id=13-internals">
                 <span class="lab-num">13</span>
-                <h3 class="lab-title">Internals</h3>
-                <p class="lab-desc">Commits, trees, blobs.</p>
+                <h3 class="lab-title" data-i18n="labs.13-internals.title">Internals</h3>
+                <p class="lab-desc" data-i18n="labs.13-internals.teaser">Commits, trees, blobs.</p>
               </a>
             </li>
           </ol>
@@ -252,11 +263,12 @@
 
     <footer class="site-footer">
       <div class="wrap footer-inner">
-        <p>rean-git — hands-on Git from zero to hero.</p>
-        <a href="./learn.html">Read the handbook</a>
+        <p data-i18n="home.footerTagline">rean-git — hands-on Git from zero to hero.</p>
+        <a href="./learn.html" data-i18n="home.footerLink">Read the handbook</a>
       </div>
     </footer>
 
+    <script src="assets/js/i18n.js" defer></script>
     <script src="assets/js/site.js" defer></script>
     <script src="assets/js/main.js" defer></script>
   </body>

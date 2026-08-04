@@ -1,0 +1,187 @@
+{
+  "meta": {
+    "homeTitle": "rean-git — learn Git by doing",
+    "homeDescription": "Hands-on Git from zero to hero — chapters, commands, and labs from first commit to internals.",
+    "learnTitle": "Learn — rean-git",
+    "learnDescription": "Read the rean-git Git curriculum chapter by chapter.",
+    "labsTitle": "Labs — rean-git",
+    "labsDescription": "Hands-on Git labs for the rean-git learning path.",
+    "labTitle": "Lab — rean-git",
+    "labDescription": "Hands-on Git lab instructions for rean-git."
+  },
+  "nav": {
+    "home": "Home",
+    "learn": "Learn",
+    "labs": "Labs",
+    "cheatSheet": "Cheat sheet",
+    "menu": "Menu",
+    "language": "Language",
+    "themeToLight": "Switch to light mode",
+    "themeToDark": "Switch to dark mode"
+  },
+  "home": {
+    "introLabel": "Introduction",
+    "headline": "Learn Git with your hands on the keyboard.",
+    "lede": "Twenty-seven chapters and thirteen labs — from first commit to Git internals.",
+    "startLearning": "Start learning",
+    "openLabs": "Open labs",
+    "methodEyebrow": "How you learn",
+    "methodTitle": "Read a chapter. Run the commands. Keep going.",
+    "step1Title": "Read",
+    "step1Body": "Short handbook chapters that explain one idea at a time.",
+    "step2Title": "Practice",
+    "step2Body": "Open a lab folder, keep a terminal open, and type every command.",
+    "step3Title": "Level up",
+    "step3Body": "From first commit through rebase, remotes, and Git internals.",
+    "pathEyebrow": "Practice track",
+    "pathTitle": "Thirteen labs in order",
+    "pathBody": "Read a chapter, then practice. Lab folders live under labs/ — keep a terminal open beside this site.",
+    "footerTagline": "rean-git — hands-on Git from zero to hero.",
+    "footerLink": "Read the handbook"
+  },
+  "labsPage": {
+    "eyebrow": "Practice",
+    "title": "Labs",
+    "intro": "Work through these in order. Each lab lives under labs/ in the repo — open a terminal next to this page.",
+    "footerLink": "Back to curriculum"
+  },
+  "learn": {
+    "chapters": "Chapters",
+    "loading": "Loading…",
+    "loadingShort": "Loading",
+    "curriculum": "Curriculum",
+    "fetching": "Fetching handbook…",
+    "pagerLabel": "Chapter navigation",
+    "previous": "Previous",
+    "next": "Next",
+    "loadError": "Could not load lessons.",
+    "serveHint": "Serve the web/ folder over HTTP (for example python3 -m http.server 4173), then open the site from that URL."
+  },
+  "lab": {
+    "labs": "Labs",
+    "loading": "Loading…",
+    "loadingShort": "Loading",
+    "handsOn": "Hands-on",
+    "fetching": "Fetching lab…",
+    "menu": "Labs menu",
+    "allLabs": "All labs",
+    "pagerLabel": "Lab navigation",
+    "previous": "Previous lab",
+    "next": "Next lab",
+    "loadError": "Could not load lab.",
+    "serveHint": "Serve the web/ folder over HTTP."
+  },
+  "ui": {
+    "copy": "Copy",
+    "copied": "Copied",
+    "failed": "Failed",
+    "progress": "{current} / {total}",
+    "progressLab": "{current} / {total} · {level}"
+  },
+  "levels": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced"
+  },
+  "chapterMatch": {
+    "howToUse": "^## How to use this guide$",
+    "toc": "^## Table of contents$"
+  },
+  "chapters": {
+    "how-to-use": "How to use this guide",
+    "1": "What problem does Git solve?",
+    "2": "Core mental model",
+    "3": "Install & first config",
+    "4": "Your first repository",
+    "5": "Staging, commits, and history",
+    "6": "Branching",
+    "7": "Merging",
+    "8": "Conflicts",
+    "9": "Rebase (carefully)",
+    "10": "Undoing mistakes",
+    "11": "Remotes & GitHub",
+    "12": "Pull requests",
+    "13": "Team workflows",
+    "14": "Stash",
+    "15": "Tags & releases",
+    "16": "Cherry-pick",
+    "17": "Interactive rebase",
+    "18": "Bisect",
+    "19": "Worktrees & detached HEAD",
+    "20": "Inspecting history",
+    "21": "Hooks",
+    "22": "Signing commits",
+    "23": "Forks & multiple remotes",
+    "24": "Submodules & Git LFS",
+    "25": "How Git works inside",
+    "26": "Cheat sheet",
+    "27": "Learning path checklist"
+  },
+  "labs": {
+    "01-first-repo": {
+      "title": "First repo",
+      "teaser": "Init, stage, commit.",
+      "summary": "Init, stage, commit — your first real history."
+    },
+    "02-branch-merge": {
+      "title": "Branch & merge",
+      "teaser": "Split work, then join it.",
+      "summary": "Split work safely, then bring it back together."
+    },
+    "03-conflict": {
+      "title": "Conflict",
+      "teaser": "Resolve a merge conflict.",
+      "summary": "Meet a merge conflict and resolve it calmly."
+    },
+    "04-rebase": {
+      "title": "Rebase",
+      "teaser": "Replay commits cleanly.",
+      "summary": "Replay commits and keep history readable."
+    },
+    "05-undo": {
+      "title": "Undo",
+      "teaser": "Restore, reset, revert.",
+      "summary": "Restore, amend, reset, and revert with intent."
+    },
+    "06-remote-pr": {
+      "title": "Remote & PR",
+      "teaser": "Push and open a PR.",
+      "summary": "Push a branch and open a clean pull request."
+    },
+    "07-team-workflow": {
+      "title": "Team workflow",
+      "teaser": "Habits that scale.",
+      "summary": "Ignore junk, sync often, write reviewable PRs."
+    },
+    "08-stash": {
+      "title": "Stash",
+      "teaser": "Shelf WIP, switch context.",
+      "summary": "Shelf unfinished work, switch context, restore it."
+    },
+    "09-tags": {
+      "title": "Tags",
+      "teaser": "Label releases.",
+      "summary": "Annotate releases and check out a version tag."
+    },
+    "10-cherry-pick": {
+      "title": "Cherry-pick",
+      "teaser": "Copy one commit over.",
+      "summary": "Bring one commit onto another branch."
+    },
+    "11-interactive-rebase": {
+      "title": "Interactive rebase",
+      "teaser": "Squash a clean story.",
+      "summary": "Squash messy commits into a clear story."
+    },
+    "12-bisect": {
+      "title": "Bisect",
+      "teaser": "Find the breaking commit.",
+      "summary": "Binary-search history for the breaking commit."
+    },
+    "13-internals": {
+      "title": "Internals",
+      "teaser": "Commits, trees, blobs.",
+      "summary": "Walk commits, trees, blobs, and refs."
+    }
+  }
+}

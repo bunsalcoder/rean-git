@@ -3,15 +3,20 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Learn — rean-git</title>
-    <meta name="description" content="Read the rean-git Git curriculum chapter by chapter." />
+    <title data-i18n="meta.learnTitle">Learn — rean-git</title>
+    <meta
+      name="description"
+      data-i18n="meta.learnDescription"
+      data-i18n-attr="content"
+      content="Read the rean-git Git curriculum chapter by chapter."
+    />
     <link rel="icon" href="./assets/img/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="./assets/img/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="./assets/img/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Khmer:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <script>
@@ -19,6 +24,11 @@
         var t = localStorage.getItem("rean-git-theme");
         if (!t) t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
         document.documentElement.setAttribute("data-theme", t);
+        var l = localStorage.getItem("rean-git-lang");
+        if (l === "km" || l === "en") {
+          document.documentElement.setAttribute("lang", l);
+          document.documentElement.setAttribute("data-lang", l);
+        }
       })();
     </script>
     <link rel="stylesheet" href="./assets/css/styles.css" />
@@ -28,12 +38,16 @@
       <div class="wrap header-inner">
         <a class="logo" href="./index.html">rean<span>-git</span></a>
         <nav class="nav" data-nav>
-          <a href="./index.html">Home</a>
-          <a href="./learn.html" aria-current="page">Learn</a>
-          <a href="./labs.html">Labs</a>
-          <a href="./learn.html?c=26">Cheat sheet</a>
+          <a href="./index.html" data-i18n="nav.home">Home</a>
+          <a href="./learn.html" aria-current="page" data-i18n="nav.learn">Learn</a>
+          <a href="./labs.html" data-i18n="nav.labs">Labs</a>
+          <a href="./learn.html?c=26" data-i18n="nav.cheatSheet">Cheat sheet</a>
         </nav>
         <div class="header-actions">
+          <div class="lang-switch" role="group" data-i18n="nav.language" data-i18n-attr="aria-label" aria-label="Language">
+            <button type="button" data-set-lang="en" aria-pressed="true">EN</button>
+            <button type="button" data-set-lang="km" aria-pressed="false">ខ្មែរ</button>
+          </div>
           <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle dark mode">
             <svg class="theme-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <g class="theme-sun">
@@ -48,7 +62,7 @@
               />
             </svg>
           </button>
-          <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Menu">
+          <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" data-i18n="nav.menu" data-i18n-attr="aria-label" aria-label="Menu">
             <span></span><span></span><span></span>
           </button>
         </div>
@@ -59,29 +73,30 @@
 
     <div class="app-shell">
       <aside class="sidebar" data-sidebar>
-        <h2>Chapters</h2>
+        <h2 data-i18n="learn.chapters">Chapters</h2>
         <ul class="side-nav" data-chapter-nav>
-          <li class="status">Loading…</li>
+          <li class="status" data-i18n="learn.loading">Loading…</li>
         </ul>
       </aside>
 
       <article class="content-pane">
         <div class="toolbar">
-          <button class="btn btn-ghost side-toggle" type="button" data-side-toggle aria-expanded="false">
+          <button class="btn btn-ghost side-toggle" type="button" data-side-toggle aria-expanded="false" data-i18n="learn.chapters">
             Chapters
           </button>
-          <p class="progress-pill" data-progress>Loading</p>
+          <p class="progress-pill" data-progress data-i18n="learn.loadingShort">Loading</p>
         </div>
-        <p class="eyebrow">Curriculum</p>
-        <h1 data-chapter-title>Loading…</h1>
+        <p class="eyebrow" data-i18n="learn.curriculum">Curriculum</p>
+        <h1 data-chapter-title data-i18n="learn.loading">Loading…</h1>
         <div class="md-body" data-chapter-body>
-          <p class="status">Fetching handbook…</p>
+          <p class="status" data-i18n="learn.fetching">Fetching handbook…</p>
         </div>
-        <nav class="pager" data-pager aria-label="Chapter navigation"></nav>
+        <nav class="pager" data-pager data-i18n="learn.pagerLabel" data-i18n-attr="aria-label" aria-label="Chapter navigation"></nav>
       </article>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="./assets/js/i18n.js"></script>
     <script src="./assets/js/site.js"></script>
     <script src="./assets/js/learn.js"></script>
   </body>

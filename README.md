@@ -13,8 +13,10 @@ python3 -m http.server 4173
 
 Then visit [http://localhost:4173](http://localhost:4173).
 
-- **Learn:** [/learn.html](http://localhost:4173/learn.html) — handbook chapters from `web/content/guide.md`
+- **Learn:** [/learn.html](http://localhost:4173/learn.html) — handbook chapters from `web/content/en/guide.md`
 - **Labs:** [/labs.html](http://localhost:4173/labs.html) — practice instructions
+
+The site UI supports **English** and **Khmer** (header language switch). Handbook/lab Markdown currently falls back to English until `web/content/km/` translations exist.
 
 ## Repo layout
 
@@ -23,6 +25,8 @@ Then visit [http://localhost:4173](http://localhost:4173).
 | `docs/GIT_FROM_ZERO.md` | Handbook (source of truth) |
 | `labs/` | Hands-on Git practice folders |
 | `web/` | Static site (GitHub Pages) |
-| `web/content/` | Markdown mirrored for the site reader |
+| `web/content/en/` | English Markdown for the site reader |
+| `web/content/km/` | Optional Khmer Markdown (falls back to `en`) |
+| `web/locales/` | UI string dictionaries (`en.json`, `km.json`) |
 
-Edit `docs/GIT_FROM_ZERO.md` and the lab `README.md` files, then copy into `web/content/` when you publish updates (same pattern as rean-docker).
+Edit `docs/GIT_FROM_ZERO.md` and the lab `README.md` files, then copy into `web/content/en/` when you publish updates (same pattern as rean-docker).
