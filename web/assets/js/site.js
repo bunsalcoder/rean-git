@@ -559,4 +559,19 @@
   navMotionQuery.addEventListener("change", () => syncIndicator());
   window.addEventListener("resize", () => syncIndicator());
   window.addEventListener("pageshow", () => syncIndicator());
+
+  // Remeasure after locale text/font changes — Khmer labels are longer and taller.
+  const resyncNavPill = () => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => syncIndicator({ animate: false }));
+    });
+  };
+  window.ReanGitI18n?.ready?.then(resyncNavPill);
+  window.ReanGitI18n?.onChange?.(resyncNavPill);
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(resyncNavPill).catch(() => {});
+  }
+  if (document.fonts?.addEventListener) {
+    document.fonts.addEventListener("loadingdone", resyncNavPill);
+  }
 })();
