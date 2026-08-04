@@ -172,14 +172,10 @@ a {
   isolation: isolate;
 }
 
+/* Dark track: quiet well behind the selected chip. */
 [data-theme="dark"] .lang-switch {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 55%),
-    rgba(18, 22, 30, 0.85);
-  box-shadow:
-    0 0 0 1px rgba(232, 93, 4, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    inset 0 1px 3px rgba(0, 0, 0, 0.45);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
 }
 
 /* Sliding thumb — sits under the active locale */
@@ -207,17 +203,10 @@ a {
   pointer-events: none;
 }
 
+/* Dark selected: flat accent chip (same family as active nav, no glow). */
 [data-theme="dark"] .lang-switch::before {
-  background-color: var(--accent);
-  background-image: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.18),
-    transparent 48%
-  );
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.4),
-    0 2px 6px rgba(232, 93, 4, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  background: var(--accent);
+  box-shadow: none;
 }
 
 html[data-lang="km"] .lang-switch:not([data-pending="en"])::before,
@@ -235,9 +224,8 @@ html[data-lang="km"] .lang-switch:not([data-pending="en"])::before,
 }
 
 [data-theme="dark"] .lang-switch:has(button:active)::before {
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  box-shadow: none;
+  background: var(--accent-deep);
 }
 
 .lang-switch button {
@@ -271,7 +259,7 @@ html[data-lang="km"] .lang-switch:not([data-pending="en"])::before,
 }
 
 [data-theme="dark"] .lang-switch button:hover:not(.is-active) {
-  color: var(--accent-deep);
+  color: #fff;
 }
 
 .lang-switch button:active {
