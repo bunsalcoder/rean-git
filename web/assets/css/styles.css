@@ -32,6 +32,7 @@
   --error-fg: #5c2418;
   --surface-hover: #ffffff;
   --font: "Epilogue", "Segoe UI", sans-serif;
+  --font-khmer: "Hanuman", "Epilogue", "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -277,7 +278,7 @@ html[data-lang="km"] .lang-switch:not([data-pending="en"])::before,
 }
 
 .lang-switch button[data-set-lang="km"] {
-  font-family: "Noto Sans Khmer", var(--font);
+  font-family: var(--font-khmer);
   font-size: 0.78rem;
   letter-spacing: 0;
   font-weight: 600;
@@ -297,7 +298,7 @@ html[data-lang="km"] .lang-switch:not([data-pending="en"])::before,
 
 html[data-lang="km"] body,
 html[lang="km"] body {
-  font-family: "Noto Sans Khmer", var(--font);
+  font-family: var(--font-khmer);
   line-height: 1.7;
 }
 
