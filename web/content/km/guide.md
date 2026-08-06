@@ -403,7 +403,8 @@ Get started
 ### ដោះស្រាយដោយស្ងប់ស្ងាត់ (ដូចនៅកន្លែងធ្វើការ)
 
 1. បើកឯកសារ
-2. ជ្រើសរើសអត្ថបទចុងក្រោយ (ឬផ្សំគំនិត) ហើយ**លុបសញ្ញាសម្គាល់**3. បញ្ចប់ការmerge៖
+2. ជ្រើសរើសអត្ថបទចុងក្រោយ (ឬផ្សំគំនិត) ហើយ **លុបសញ្ញាសម្គាល់**
+3. បញ្ចប់ការ merge៖
 
 ```bash
 git add index.html
@@ -422,7 +423,9 @@ git merge --abort
 - និយាយនៅពេលដែលមនុស្សពីរនាក់ជាម្ចាស់ឯកសារក្តៅដូចគ្នា។
 - `git status` បញ្ជីឯកសារនៅតែមិនត្រូវបានបញ្ចូល
 
-### មន្ទីរពិសោធន៍**[មន្ទីរពិសោធន៍ 03 — Conflict](./lab.html?id=03-conflict)**
+### មន្ទីរពិសោធន៍
+
+**[មន្ទីរពិសោធន៍ 03 — Conflict](./lab.html?id=03-conflict)**
 
 ---
 
@@ -430,7 +433,9 @@ git merge --abort
 
 ### បញ្ហាពិភពពិត
 
-branch featureរបស់អ្នកមានcommitចំនួនបី។ ទន្ទឹមនឹងនេះ `main` បានទទួលការជួសជុលសុវត្ថិភាព។ មុនពេលអ្នកបើក PR អ្នកចង់ឲ្យការងាររបស់អ្នកអង្គុយ**នៅលើ**ចុងក្រោយបំផុត `main` — ប្រវត្តិស្អាត ការភ្ញាក់ផ្អើលតិចជាងនៅក្នុងការពិនិត្យ។**Rebase**= ចាក់ឡើងវិញ * your* commits on top of another branch .
+Branch feature របស់អ្នកមាន commit ចំនួនបី។ ទន្ទឹមនឹងនេះ `main` បានទទួលការជួសជុលសុវត្ថិភាព។ មុនពេលអ្នកបើក PR អ្នកចង់ឲ្យការងាររបស់អ្នកអង្គុយ **នៅលើ** `main` ចុងក្រោយ — ប្រវត្តិស្អាត ការភ្ញាក់ផ្អើលតិចជាងនៅក្នុងការពិនិត្យ។
+
+**Rebase** = ចាក់ឡើងវិញ *commits របស់អ្នក* នៅលើ branch មួយទៀត។
 
 ```bash
 git switch feat/contact-page
@@ -446,7 +451,9 @@ git rebase main
 | branch ចែករំលែក | សុវត្ថិភាពជាងមុន | ប្រថុយប្រសិនបើអ្នកផ្សេងទាញcommitរបស់អ្នករួចហើយ |
 | ការប្រើប្រាស់ធម្មតា | featuremerge → `main` | ធ្វើបច្ចុប្បន្នភាពលក្ខណៈពិសេស *របស់អ្នក* ទៅកាន់ `main` |
 
-### ច្បាប់មាស (ចងចាំនេះ)**កុំធ្វើបាបអ្នកដ៏ទៃដែលបានបង្កើតរួចហើយ**— ជាពិសេសចែករំលែក `main`។
+### ច្បាប់មាស (ចងចាំនេះ)
+
+**កុំធ្វើបាបអ្នកដ៏ទៃដែលបានបង្កើតរួចហើយ** — ជាពិសេសចែករំលែក `main`។
 
 បង្កើត branch feature *local* របស់អ្នកឡើងវិញ។ ចូលចិត្តការmerge (ឬត្រឡប់) សម្រាប់ប្រវត្តិដែលមនុស្សគ្រប់គ្នាចែករំលែក។
 
@@ -458,7 +465,9 @@ git rebase -i HEAD~3
 
 Squash "oops" ចូលទៅក្នុងរឿងច្បាស់លាស់មួយ។ អ្នកនឹងកាន់តែស៊ីជម្រៅនៅក្នុង**ជំពូកទី 17**។ អនុវត្តលើ branch បោះចោលជាមុនសិន។
 
-### មន្ទីរពិសោធន៍**[មន្ទីរពិសោធន៍ 04 — Rebase](./lab.html?id=04-rebase)**
+### មន្ទីរពិសោធន៍
+
+**[មន្ទីរពិសោធន៍ 04 — Rebase](./lab.html?id=04-rebase)**
 
 ---
 
@@ -523,7 +532,9 @@ git reflog
 git switch -c recover HASH       # bring it back on a new branch
 ```
 
-### មន្ទីរពិសោធន៍**[មន្ទីរពិសោធន៍ 05 — ត្រឡប់វិញ](./lab.html?id=05-undo)**
+### មន្ទីរពិសោធន៍
+
+**[មន្ទីរពិសោធន៍ 05 — ត្រឡប់វិញ](./lab.html?id=05-undo)**
 
 ---
 
@@ -566,7 +577,9 @@ git push                  # upload your commits
 - HTTPS + personal access token ឬ
 - SSH (`git@github.com:YOU/REPO.git`)
 
-### មន្ទីរពិសោធន៍**[មន្ទីរពិសោធន៍ 06 — Remote និង PR](./lab.html?id=06-remote-pr)**(ត្រូវការគណនី GitHub)
+### មន្ទីរពិសោធន៍
+
+**[មន្ទីរពិសោធន៍ 06 — Remote និង PR](./lab.html?id=06-remote-pr)** (ត្រូវការគណនី GitHub)
 
 ---
 
@@ -608,7 +621,7 @@ git push origin --delete fix/login-redirect   # optional cleanup
 
 ### មន្ទីរពិសោធន៍
 
-បញ្ចប់ការអនុវត្តពីចម្ងាយ៖**[មន្ទីរពិសោធន៍ 06 — Remote និង PR](./lab.html?id=06-remote-pr)**
+បញ្ចប់ការអនុវត្តពីចម្ងាយ៖ **[មន្ទីរពិសោធន៍ 06 — Remote និង PR](./lab.html?id=06-remote-pr)**
 
 ---
 
@@ -654,7 +667,9 @@ git merge main                 # or: git rebase main (local only)
 
 ធ្វើបច្ចុប្បន្នភាព branch របស់អ្នកជាមួយនឹង `main` ចុងក្រោយបំផុតជាមុនសិន — អ្នកត្រួតពិនិត្យមិនគួរជួសជុលconflictmergeរបស់អ្នកសម្រាប់អ្នកទេ។
 
-### មន្ទីរពិសោធន៍**[មន្ទីរពិសោធន៍ 07 — លំហូរការងារក្រុម](./lab.html?id=07-team-workflow)**
+### មន្ទីរពិសោធន៍
+
+**[មន្ទីរពិសោធន៍ 07 — លំហូរការងារក្រុម](./lab.html?id=07-team-workflow)**
 
 ---
 
@@ -691,7 +706,9 @@ git stash show -p stash@{0}                # preview
 - ចូលចិត្តដាក់ឈ្មោះ stashes (`-m`) ដូច្នេះអ្នកចងចាំពួកគេ។
 - កុំទុកចោលច្រើនសប្តាហ៍
 
-### មន្ទីរពិសោធន៍**[មន្ទីរពិសោធន៍ 08 — Stash](./lab.html?id=08-stash)**
+### មន្ទីរពិសោធន៍
+
+**[មន្ទីរពិសោធន៍ 08 — Stash](./lab.html?id=08-stash)**
 
 ---
 
@@ -732,7 +749,9 @@ git push origin --delete v1.0.0     # delete remote
 
 `MAJOR.MINOR.PATCH` — breaking / feature / fix។ ហុទាហរណ៍៖ `v2.1.0`។
 
-### មន្ទីរពិសោធន៍**[មន្ទីរពិសោធន៍ 09 — Tags](./lab.html?id=09-tags)**
+### មន្ទីរពិសោធន៍
+
+**[មន្ទីរពិសោធន៍ 09 — Tags](./lab.html?id=09-tags)**
 
 ---
 
@@ -768,9 +787,9 @@ git cherry-pick --abort
 - ចូលចិត្ត merge/rebase នៅពេលអ្នកចង់បាន *ទាំងមូល* branch
 - Cherry-picking ការជួសជុលដូចគ្នាទៅនឹង branches ដែលមានអាយុកាលយូរជាច្រើនអាចបង្កើត commits ស្ទួន — ទំនាក់ទំនងជាមួយក្រុម
 
-### Lab
+### មន្ទីរពិសោធន៍
 
-**[Lab 10 — Cherry-pick](./lab.html?id=10-cherry-pick)**
+**[មន្ទីរពិសោធន៍ 10 — Cherry-pick](./lab.html?id=10-cherry-pick)**
 
 ---
 
@@ -813,9 +832,9 @@ pick c333 typo
 - បន្ទាប់ពីសរសេរ branch ដែលបានរុញឡើងវិញ៖ `git push --force-with-lease` (មានសុវត្ថិភាពជាង `--force`)
 - មិនដែល force-push `main`
 
-### Lab
+### មន្ទីរពិសោធន៍
 
-**[Lab 11 — Interactive rebase](./lab.html?id=11-interactive-rebase)**
+**[មន្ទីរពិសោធន៍ 11 — Interactive rebase](./lab.html?id=11-interactive-rebase)**
 
 ---
 
@@ -846,9 +865,9 @@ git bisect run ./scripts/check-login.sh
 
 លេខកូដចេញ `0` = ល្អ មិនមែនសូន្យ = អាក្រក់។
 
-### Lab
+### មន្ទីរពិសោធន៍
 
-**[Lab 12 — Bisect](./lab.html?id=12-bisect)**
+**[មន្ទីរពិសោធន៍ 12 — Bisect](./lab.html?id=12-bisect)**
 
 ---
 
@@ -1159,9 +1178,9 @@ A **branch** គឺជាឯកសារយោងដែលអាចចល័ត�
 
 ការជ្រមុជទឹកជ្រៅជាផ្លូវការ៖ [សៀវភៅ Pro Git](https://git-scm.com/book/en/v2) (ឥតគិតថ្លៃ)។
 
-### Lab
+### មន្ទីរពិសោធន៍
 
-**[Lab 13 — Internals](./lab.html?id=13-internals)**
+**[មន្ទីរពិសោធន៍ 13 — ផ្នែកខាងក្នុង](./lab.html?id=13-internals)**
 
 ---
 
@@ -1256,26 +1275,26 @@ git show-ref
 
 - [ ] Git បានដំឡើង ហើយ `user.name` / `user.email` បានកំណត់
 - [ ] អ្នកអាចពន្យល់ working tree vs staging vs commit (រឿងវ៉ាលី)
-- [ ] Lab 01 បានបញ្ចប់
+- [ ] មន្ទីរពិសោធន៍ 01 បានបញ្ចប់
 
 ### សហការជាមួយខ្លួនឯងក្នុងមូលដ្ឋាន
 
 - [ ] បង្កើត branches សម្រាប់ features និង bug fixes
 - [ ] Merge ការងាររួចទៅក្នុង `main`
 - [ ] ដោះស្រាយ conflict មួយដោយចេតនា
-- [ ] Labs 02–03 បានបញ្ចប់
+- [ ] មន្ទីរពិសោធន៍ 02–03 បានបញ្ចប់
 
 ### ជំនាញប្រវត្តិ
 
 - [ ] Rebase feature *local* ទៅលើ `main` ចុងក្រោយ
 - [ ] ជ្រើស restore / reset / revert តាមស្ថានការណ៍
-- [ ] Labs 04–05 បានបញ្ចប់
+- [ ] មន្ទីរពិសោធន៍ 04–05 បានបញ្ចប់
 
 ### Remote និងក្រុម
 
 - [ ] Push branch ហើយបើក PR
 - [ ] ប្រើ `.gitignore` និង branches រយៈពេលខ្លី
-- [ ] Labs 06–07 បានបញ្ចប់
+- [ ] មន្ទីរពិសោធន៍ 06–07 បានបញ្ចប់
 
 ### ឧបករណ៍មានថាមពល
 
@@ -1284,7 +1303,7 @@ git show-ref
 - [ ] Cherry-pick commit មួយទៅ branch ផ្សេង
 - [ ] Squash commits ដោយ interactive rebase
 - [ ] រក commit អាក្រក់ដោយ bisect
-- [ ] Labs 08–12 បានបញ្ចប់
+- [ ] មន្ទីរពិសោធន៍ 08–12 បានបញ្ចប់
 
 ### Git វិជ្ជាជីវៈ
 
@@ -1297,7 +1316,7 @@ git show-ref
 ### ជំនាញជាន់ខ្ពស់
 
 - [ ] ពណ៌នា blob / tree / commit / ref ដោយភាសាសាមញ្ញ
-- [ ] Lab 13 បានបញ្ចប់
+- [ ] មន្ទីរពិសោធន៍ 13 បានបញ្ចប់
 - [ ] អ្នកចាប់ `git status` មុនពេលទាយ
 
 ---
