@@ -4,6 +4,8 @@ Hands-on Git from zero to hero — chapters, commands, and labs you run yourself
 
 A guided path from absolute beginner through advanced Git: everyday workflow, power tools (stash, rebase, bisect), collaboration patterns, and how Git stores history under the hood.
 
+**Live site:** [https://bunsalcoder.github.io/rean-git/](https://bunsalcoder.github.io/rean-git/)
+
 ## Open the site locally
 
 ```bash
