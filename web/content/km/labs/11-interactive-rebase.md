@@ -1,10 +1,10 @@
-# Lab 11 — Interactive rebase
+# មន្ទីរពិសោធន៍ 11 — Interactive rebase
 
 ## គោលដៅ
 
 Squash commits local រញ៉េរញ៉ៃទៅជា commit មួយច្បាស់ មុន “ពិនិត្យ”។
 
-## Setup
+## ការរៀបចំ
 
 ```bash
 cd labs/11-interactive-rebase
@@ -66,7 +66,7 @@ unset GIT_SEQUENCE_EDITOR GIT_EDITOR
 - [ ] អ្នកយល់ `pick` vs `squash`
 - [ ] អ្នកសរសេរឡើងវិញតែប្រវត្តិ *local*
 
-## Cleanup (ស្រេចចិត្ត)
+## សម្អាត (ស្រេចចិត្ត)
 
 ```bash
 cd ..

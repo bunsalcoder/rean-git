@@ -1,10 +1,10 @@
-# Lab 09 — Tags
+# មន្ទីរពិសោធន៍ 09 — Tags
 
 ## គោលដៅ
 
 បង្កើត annotated tags សម្រាប់ការចេញផ្សាយ ហើយពិនិត្យវា។
 
-## Setup
+## ការរៀបចំ
 
 ```bash
 cd labs/09-tags
@@ -54,7 +54,7 @@ git switch main
 - [ ] `git show` បង្ខាញ tag metadata
 - [ ] អ្នកបានទៅមើល tag និង ត្រឡប់ទៅ `main`
 
-## Cleanup (ស្រេចចិត្ត)
+## សម្អាត (ស្រេចចិត្ត)
 
 ```bash
 cd ..

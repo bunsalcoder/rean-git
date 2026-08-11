@@ -1,10 +1,10 @@
-# Lab 10 — Cherry-pick
+# មន្ទីរពិសោធន៍ 10 — Cherry-pick
 
 ## គោលដៅ
 
 ចម្លង commit មួយពី feature branch ទៅ `main` ដោយមិន merge ទាំង branch។
 
-## Setup
+## ការរៀបចំ
 
 ```bash
 cd labs/10-cherry-pick
@@ -52,7 +52,7 @@ ls
 - [ ] `main` ទទួលបានតែ fix commit តាម cherry-pick
 - [ ] Graph បង្ខាញការរើសយ៉ាងច្បាស់
 
-## Cleanup (ស្រេចចិត្ត)
+## សម្អាត (ស្រេចចិត្ត)
 
 ```bash
 cd ..

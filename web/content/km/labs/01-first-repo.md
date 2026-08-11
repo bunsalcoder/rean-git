@@ -1,10 +1,10 @@
-# Lab 01 — Repo ដំបូង
+# មន្ទីរពិសោធន៍ 01 — Repo ដំបូង
 
 ## គោលដៅ
 
 បង្កើត Git repository ធ្វើ commits ដំបូងរបស់អ្នក ហើយអានប្រវត្តិ។
 
-## Setup
+## ការរៀបចំ
 
 ```bash
 cd labs/01-first-repo
@@ -59,7 +59,7 @@ git status
 - [ ] `git log --oneline` បង្ហាញយ៉ាងហោចណាស់ពីរ commits
 - [ ] អ្នកអាចពន្យល់ថា `git add` ធ្វើអ្វីមុន commit នីមួយៗ
 
-## Cleanup (ស្រេចចិត្ត)
+## សម្អាត (ស្រេចចិត្ត)
 
 ```bash
 cd ..
