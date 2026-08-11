@@ -1,10 +1,10 @@
-# Lab 04 — Rebase
+# មន្ទីរពិសោធន៍ 04 — Rebase
 
 ## គោលដៅ
 
 Rebase feature branch ទៅលើ `main` ដែលបានធ្វើបច្ចុប្បន្នភាព ហើយមើលប្រវត្តិលីនេអ៊ែរ។
 
-## Setup
+## ការរៀបចំ
 
 ```bash
 cd labs/04-rebase
@@ -75,7 +75,7 @@ git log --oneline --graph --all
 - [ ] Graph មើលទៅលីនេអ៊ែរ បើប្រៀបនឹងលំហូរ merge commit
 - [ ] អ្នកអាចនិយាយបានថាពេលណា *មិន* គួរ rebase (shared published commits)
 
-## Cleanup (ស្រេចចិត្ត)
+## សម្អាត (ស្រេចចិត្ត)
 
 ```bash
 cd ..

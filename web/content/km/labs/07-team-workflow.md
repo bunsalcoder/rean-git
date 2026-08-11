@@ -1,12 +1,12 @@
-# Lab 07 — លំហូរការងារក្រុម
+# មន្ទីរពិសោធន៍ 07 — លំហូរការងារក្រុម
 
 ## គោលដៅ
 
 អនុវត្តទម្លាប់ដែលអ្នកនឹងប្រើក្នុងក្រុមពិត៖ ignore junk, branches ខ្លី, sync ជាមួយ `main` និងសរសេរ PR description ច្បាស់។
 
-## Setup
+## ការរៀបចំ
 
-ប្រើ GitHub repo ដូចគ្នាពី Lab 06 ឬបង្កើត repo ទទេមួយទៀត។
+ប្រើ GitHub repo ដូចគ្នាពី មន្ទីរពិសោធន៍ 06 ឬបង្កើត repo ទទេមួយទៀត។
 
 ```bash
 cd labs/07-team-workflow
@@ -97,6 +97,6 @@ git branch -d chore/team-checklist
 - [ ] PR description ពន្យល់ *ហេតុអ្វី* និង រប័បសាកល្បង
 - [ ] Branches local ត្រូវបានសម្រាតបន្ទាប់ពី merge
 
-## Cleanup (ស្រេចចិត្ត)
+## សម្អាត (ស្រេចចិត្ត)
 
 លុប GitHub repo បោះចោលពេលរួច។

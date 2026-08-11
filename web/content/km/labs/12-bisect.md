@@ -1,10 +1,10 @@
-# Lab 12 — Bisect
+# មន្ទីរពិសោធន៍ 12 — Bisect
 
 ## គោលដៅ
 
 ស្វែងរកប្រវត្តិតាម binary search រក commit ដែលនាំមកនូវ bug។
 
-## Setup
+## ការរៀបចំ
 
 ```bash
 cd labs/12-bisect
@@ -67,7 +67,7 @@ git log --oneline
 - [ ] Bisect រកឃើញ commit ដែលនាំមក `BROKEN`
 - [ ] អ្នកត្រឡប់ទៅ branch របស់អ្នកដោយ `git bisect reset`
 
-## Cleanup (ស្រេចចិត្ត)
+## សម្អាត (ស្រេចចិត្ត)
 
 ```bash
 cd ..

@@ -1,10 +1,10 @@
-# Lab 02 — Branch និង merge
+# មន្ទីរពិសោធន៍ 02 — Branch និង merge
 
 ## គោលដៅ
 
 បង្កើត feature branch ធ្វើ commit លើវា ហើយ merge ត្រឡប់ទៅ `main`។
 
-## Setup
+## ការរៀបចំ
 
 ```bash
 cd labs/02-branch-merge
@@ -59,7 +59,7 @@ git branch
 - [ ] Merge បាននាំ greeting ចូល `main`
 - [ ] Feature branch ត្រូវបានលុបក្នុងមូលដ្ឋាន
 
-## Cleanup (ស្រេចចិត្ត)
+## សម្អាត (ស្រេចចិត្ត)
 
 ```bash
 cd ..

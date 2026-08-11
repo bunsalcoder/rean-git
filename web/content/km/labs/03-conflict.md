@@ -1,10 +1,10 @@
-# Lab 03 — Conflict
+# មន្ទីរពិសោធន៍ 03 — Conflict
 
 ## គោលដៅ
 
 បង្កើត merge conflict ដោយចេតនា ដោះស្រាយវា ហើយបញ្ចប់ merge។
 
-## Setup
+## ការរៀបចំ
 
 ```bash
 cd labs/03-conflict
@@ -80,7 +80,7 @@ git merge --abort
 - [ ] Markers បាត់ហើយ file អានបានត្រឹមត្រូវ
 - [ ] Merge បានបញ្ចប់ដោយ `git status` ស្អាត
 
-## Cleanup (ស្រេចចិត្ត)
+## សម្អាត (ស្រេចចិត្ត)
 
 ```bash
 cd ..

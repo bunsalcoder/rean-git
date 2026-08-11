@@ -1,10 +1,10 @@
-# Lab 05 — ត្រឡប់វិញ
+# មន្ទីរពិសោធន៍ 05 — ត្រឡប់វិញ
 
 ## គោលដៅ
 
 អនុវត្តការត្រឡប់វិញដោយសុវត្ថិភាព៖ restore, unstage, amend, soft reset និង revert។
 
-## Setup
+## ការរៀបចំ
 
 ```bash
 cd labs/05-undo
@@ -80,7 +80,7 @@ git log --oneline
 - [ ] អ្នក amend សារ commit local
 - [ ] អ្នកប្រើ `revert` ហើយនៅតែមានរឿង log ស្អាត
 
-## Cleanup (ស្រេចចិត្ត)
+## សម្អាត (ស្រេចចិត្ត)
 
 ```bash
 cd ..

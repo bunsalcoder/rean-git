@@ -1,4 +1,4 @@
-# Lab 06 — Remote និង PR
+# មន្ទីរពិសោធន៍ 06 — Remote និង PR
 
 ## គោលដៅ
 
@@ -71,6 +71,6 @@ git branch -d feat/hello-pr
 - [ ] PR ត្រូវបានបើក (ហើយជាឧត្តមគតិបាន merge)
 - [ ] `main` local ត្រូវគ្នានឹង remote បន្ទាប់ពី `git pull`
 
-## Cleanup (ស្រេចចិត្ត)
+## សម្អាត (ស្រេចចិត្ត)
 
 លុប GitHub repo បោះចោលពេលរួច។

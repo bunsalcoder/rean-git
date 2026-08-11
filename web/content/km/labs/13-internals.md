@@ -1,10 +1,10 @@
-# Lab 13 — ផ្នែកខាងក្នុង
+# មន្ទីរពិសោធន៍ 13 — ផ្នែកខាងក្នុង
 
 ## គោលដៅ
 
 មើលខាងក្រោម៖ commits, trees, blobs និង refs — គ្រប់គ្រាន់ដើម្បីធ្វើឲ្យ Git ច្បាស់។
 
-## Setup
+## ការរៀបចំ
 
 ```bash
 cd labs/13-internals
@@ -62,7 +62,7 @@ ls .git/objects
 - [ ] `git cat-file -p` បង្ខាញខ្លីមសារ commit, tree និង blob
 - [ ] អ្នកដឹងថា branch គី pointer file ដែលផ្លាស់ទីបាននៅក្រោម `.git/refs`
 
-## Cleanup (ស្រេចចិត្ត)
+## សម្អាត (ស្រេចចិត្ត)
 
 ```bash
 cd ..
