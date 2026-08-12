@@ -22,7 +22,7 @@
   "home": {
     "introLabel": "Introduction",
     "headline": "Learn Git with your hands on the keyboard.",
-    "lede": "Twenty-seven chapters and thirteen labs — from first commit to Git internals.",
+    "lede": "Twenty-seven chapters and sixteen labs — from first commit to Git internals.",
     "startLearning": "Start learning",
     "openLabs": "Open labs",
     "methodEyebrow": "How you learn",
@@ -34,7 +34,7 @@
     "step3Title": "Level up",
     "step3Body": "From first commit through rebase, remotes, and Git internals.",
     "pathEyebrow": "Practice track",
-    "pathTitle": "Thirteen labs in order",
+    "pathTitle": "Sixteen labs in order",
     "pathBody": "Read a chapter, then practice. Lab folders live under labs/ — keep a terminal open beside this site.",
     "footerTagline": "rean-git — hands-on Git from zero to hero.",
     "footerLink": "Read the handbook"
@@ -182,6 +182,21 @@
       "title": "Internals",
       "teaser": "Commits, trees, blobs.",
       "summary": "Walk commits, trees, blobs, and refs."
+    },
+    "14-worktrees": {
+      "title": "Worktrees",
+      "teaser": "Second folder, same repo.",
+      "summary": "Use detached HEAD safely and work in a second worktree."
+    },
+    "15-inspect-history": {
+      "title": "Inspect history",
+      "teaser": "Blame, pickaxe, ranges.",
+      "summary": "Trace changes with blame, pickaxe search, and branch ranges."
+    },
+    "16-hooks": {
+      "title": "Hooks",
+      "teaser": "Block bad commits locally.",
+      "summary": "Install a pre-commit hook and see it catch a bad commit."
     }
   }
 }

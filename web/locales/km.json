@@ -22,7 +22,7 @@
   "home": {
     "introLabel": "សេចក្តីណែនឳ",
     "headline": "រៀន Git ដោយដៃនៅលើក្តារចុច។",
-    "lede": "ម្ភៃប្រាំពីរជំពូក និងដប់បីមន្ទីរពិសោធន៍ — ពី commit ដំបូងដល់ផ្នែកខាងគ្នុងរបស់ Git។",
+    "lede": "ម្ភៃប្រាំពីរជំពូក និងដប់ប្រាំមួយមន្ទីរពិសោធន៍ — ពី commit ដំបូងដល់ផ្នែកខាងគ្នុងរបស់ Git។",
     "startLearning": "ចាប់ផ្តើមរៀន",
     "openLabs": "បើកមន្ទីរពិសោធន៍",
     "methodEyebrow": "វិធីរៀន",
@@ -34,7 +34,7 @@
     "step3Title": "ឡើងកម្រិត",
     "step3Body": "ពី commit ដំបូង តាមរយៈ rebase, remotes និងផ្នែកខាងគ្នុងរបស់ Git។",
     "pathEyebrow": "ផ្លូវអនុវត្ត",
-    "pathTitle": "ដប់បីមន្ទីរពិសោធន៍តាមលំដាប់",
+    "pathTitle": "ដប់ប្រាំមួយមន្ទីរពិសោធន៍តាមលំដាប់",
     "pathBody": "អានជំពូក បន្ទាប់មកអនុវត្ត។ ថតមន្ទីរពិសោធន៍ស្ថិតនៅគ្នុង labs/ — រក្សា terminal ឲយបើកក្បែរវេបសាយនេះ។",
     "footerTagline": "rean-git — រៀន Git ពីដើមដល់ចុង តាមការអនុវត្ត។",
     "footerLink": "អានសៀវភាវណែនឳ"
@@ -182,6 +182,21 @@
       "title": "ផ្នែកខាងគ្នុង",
       "teaser": "Commits, trees, blobs។",
       "summary": "ដើរតាម commits, trees, blobs និង refs។"
+    },
+    "14-worktrees": {
+      "title": "Worktrees",
+      "teaser": "ថតទីពីរ repo តែមួយ។",
+      "summary": "ប្រើ detached HEAD ដោយសុវត្ថិភាព ហើយធ្វើការក្នុង worktree ទីពីរ។"
+    },
+    "15-inspect-history": {
+      "title": "ពិនិត្យប្រវត្តិ",
+      "teaser": "Blame, pickaxe, ranges។",
+      "summary": "តាមដានការផ្លាស់ប្តូរដោយ blame, pickaxe search និង branch ranges។"
+    },
+    "16-hooks": {
+      "title": "Hooks",
+      "teaser": "រារាំង commit អាក្រក់ក្នុងស្រុក។",
+      "summary": "ដំឡើង pre-commit hook ហើយមើលវាចាប់ commit អាក្រក់។"
     }
   }
 }

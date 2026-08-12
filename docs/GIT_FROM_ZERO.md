@@ -915,6 +915,10 @@ Each worktree has its own files; they share the same `.git` object database.
 | Worktree | Parallel work for hours/days |
 | New clone | Heavy isolation (different remotes/config) |
 
+### Lab
+
+**[Lab 14 — Worktrees](../labs/14-worktrees/)**
+
 ---
 
 ## 20. Inspecting history
@@ -960,6 +964,10 @@ git range-diff main...feat/login  # compare two histories after rebase
 
 Master these and GitHub’s UI becomes optional for investigation.
 
+### Lab
+
+**[Lab 15 — Inspect history](../labs/15-inspect-history/)**
+
 ---
 
 ## 21. Hooks
@@ -993,6 +1001,10 @@ Commit a `scripts/hooks/` or use a tool ([Husky](https://typicode.github.io/husk
 ### Server / platform hooks
 
 GitHub **branch protection** + required checks is the modern “server hook.” Classic `update` hooks exist on bare servers you host yourself.
+
+### Lab
+
+**[Lab 16 — Hooks](../labs/16-hooks/)**
 
 ---
 
@@ -1314,6 +1326,7 @@ Use this as your progress board — foundations first, then hero skills.
 - [ ] Know what hooks and signed commits are for
 - [ ] Add an `upstream` remote on a fork
 - [ ] Explain when to use submodules vs LFS vs packages
+- [ ] Labs 14–16 complete
 
 ### Mastery
 

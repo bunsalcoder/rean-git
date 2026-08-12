@@ -44,6 +44,9 @@ const LAB_META = [
   { id: "11-interactive-rebase", level: "advanced" },
   { id: "12-bisect", level: "advanced" },
   { id: "13-internals", level: "advanced" },
+  { id: "14-worktrees", level: "advanced" },
+  { id: "15-inspect-history", level: "advanced" },
+  { id: "16-hooks", level: "advanced" },
 ];
 
 function t(key, vars) {
