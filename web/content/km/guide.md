@@ -913,6 +913,10 @@ worktree នីមួយៗមានឯកសារផ្ទាល់ខ្ល�
 | Worktree | ការងារស្របគ្នាសម្រាប់ម៉ោង/ថ្ងៃ |
 | New clone | ភាពឯកោខ្លាំង (remotes/config ផ្សេងគ្នា) |
 
+### មន្ទីរពិសោធន៍
+
+**[មន្ទីរពិសោធន៍ 14 — Worktrees](./lab.html?id=14-worktrees)**
+
 ---
 
 ## 20. ពិនិត្យប្រវត្តិ
@@ -958,6 +962,10 @@ git range-diff main...feat/login  # compare two histories after rebase
 
 គ្រប់គ្រងទាំងនេះ ហើយ UI របស់ GitHub ក្លាយជាជម្រើសសម្រាប់ការស៊ើបអង្កេត។
 
+### មន្ទីរពិសោធន៍
+
+**[មន្ទីរពិសោធន៍ 15 — ពិនិត្យប្រវត្តិ](./lab.html?id=15-inspect-history)**
+
 ---
 
 ## 21. Hooks
@@ -991,6 +999,10 @@ Commit a `scripts/hooks/` ឬប្រើឧបករណ៍ ([Husky](https://typ
 ### Server / platform hooks
 
 ការត្រួតពិនិត្យដែលត្រូវការ GitHub **branch protection** + គឺជា "ម៉ាស៊ីនមេ hook" ទំនើប។ `update` hooks បុរាណមាននៅលើម៉ាស៊ីនមេទទេដែលអ្នកបង្ហោះដោយខ្លួនឯង។
+
+### មន្ទីរពិសោធន៍
+
+**[មន្ទីរពិសោធន៍ 16 — Hooks](./lab.html?id=16-hooks)**
 
 ---
 
@@ -1312,6 +1324,7 @@ git show-ref
 - [ ] ដឹងថា hooks និង signed commits សម្រាប់អ្វី
 - [ ] បន្ថែម remote `upstream` លើ fork
 - [ ] ពន្យល់ពេលណាគួរប្រើ submodules vs LFS vs packages
+- [ ] មន្ទីរពិសោធន៍ 14–16 បានបញ្ចប់
 
 ### ជំនាញជាន់ខ្ពស់
 
