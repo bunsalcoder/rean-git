@@ -30,13 +30,14 @@ The site UI supports **English** and **Khmer** (header language switch). Handboo
 | `web/content/en/` | English Markdown for the site reader |
 | `web/content/km/` | Optional Khmer Markdown (falls back to `en`) |
 | `web/locales/` | UI string dictionaries (`en.json`, `km.json`) |
-| `scripts/` | Sync/check English site copies from `docs/` + `labs/` |
+| `scripts/` | Sync/check English copies, locale parity, and link checks |
 
 Edit `docs/GIT_FROM_ZERO.md` and the lab `README.md` files, then sync into `web/content/en/`:
 
 ```bash
-./scripts/sync_en_content.sh    # copy sources → web/content/en/
-./scripts/check_content_sync.sh # fail if anything drifted
+./scripts/sync_en_content.sh     # copy sources → web/content/en/
+./scripts/check_content_sync.sh  # fail if English copies drifted
+./scripts/check_site_quality.sh  # locale parity, chapters/labs, internal links
 ```
 
-The sync rewrites handbook lab links (`../labs/<id>/` → `./lab.html?id=<id>`) for the site reader. CI runs the check on every push/PR to `main` or `develop`.
+The sync rewrites handbook lab links (`../labs/<id>/` → `./lab.html?id=<id>`) for the site reader. CI runs both checks on every push/PR to `main` or `develop`.
