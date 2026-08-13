@@ -266,6 +266,41 @@ def check_seo() -> int:
     return fail(msgs, "SEO meta, robots, sitemap, og-image")
 
 
+MARKED_PIN = "cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"
+PURIFY_PIN = "cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"
+MARKED_SRI = "sha384-948ahk4ZmxYVYOc+rxN1H2gM1EJ2Duhp7uHtZ4WSLkV4Vtx5MUqnV+l7u9B+jFv+"
+PURIFY_SRI = "sha384-JEyTNhjM6R1ElGoJns4U2Ln4ofPcqzSsynQkmEc/KGy6336qAZl70tDLufbkla+3"
+
+
+def check_markdown_hardening() -> int:
+    msgs: list[str] = []
+    learn_js = LEARN_JS.read_text(encoding="utf-8")
+    site_js = (WEB / "assets" / "js" / "site.js").read_text(encoding="utf-8")
+
+    if "sanitizeMarkdownHtml" not in learn_js or "DOMPurify.sanitize" not in learn_js:
+        msgs.append("learn.js must sanitize marked HTML with DOMPurify")
+    if "marked.parse(md)" in learn_js and "innerHTML = marked.parse" in learn_js:
+        msgs.append("learn.js still assigns marked.parse output directly to innerHTML")
+
+    if MARKED_PIN not in site_js or MARKED_SRI not in site_js:
+        msgs.append("site.js missing pinned marked URL/SRI")
+    if PURIFY_PIN not in site_js or PURIFY_SRI not in site_js:
+        msgs.append("site.js missing pinned DOMPurify URL/SRI")
+    if "PURIFY_INTEGRITY" not in site_js:
+        msgs.append("site.js soft-nav should load DOMPurify with integrity")
+
+    for name in ("learn.html", "lab.html"):
+        text = (WEB / name).read_text(encoding="utf-8")
+        if MARKED_PIN not in text or f'integrity="{MARKED_SRI}"' not in text:
+            msgs.append(f"{name}: marked must be version-pinned with SRI")
+        if PURIFY_PIN not in text or f'integrity="{PURIFY_SRI}"' not in text:
+            msgs.append(f"{name}: DOMPurify must be version-pinned with SRI")
+        if 'crossorigin="anonymous"' not in text:
+            msgs.append(f"{name}: CDN scripts need crossorigin=anonymous for SRI")
+
+    return fail(msgs, "Markdown CDN pin + DOMPurify hardening")
+
+
 def main() -> int:
     chapters, labs = parse_learn_meta()
     print(f"Curriculum: {len(chapters)} chapters, {len(labs)} labs")
@@ -282,6 +317,8 @@ def main() -> int:
     failures += check_html_assets()
     print()
     failures += check_seo()
+    print()
+    failures += check_markdown_hardening()
     print()
     if failures:
         print("Site quality check failed.")

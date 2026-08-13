@@ -7,7 +7,12 @@
   const navMotionQuery = window.matchMedia("(min-width: 721px)");
   const themeQuery = window.matchMedia("(prefers-color-scheme: dark)");
   const THEME_KEY = "rean-git-theme";
-  const MARKED_SRC = "https://cdn.jsdelivr.net/npm/marked/marked.min.js";
+  const MARKED_SRC = "https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js";
+  const MARKED_INTEGRITY =
+    "sha384-948ahk4ZmxYVYOc+rxN1H2gM1EJ2Duhp7uHtZ4WSLkV4Vtx5MUqnV+l7u9B+jFv+";
+  const PURIFY_SRC = "https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js";
+  const PURIFY_INTEGRITY =
+    "sha384-JEyTNhjM6R1ElGoJns4U2Ln4ofPcqzSsynQkmEc/KGy6336qAZl70tDLufbkla+3";
   const LEARN_SRC = new URL("./assets/js/learn.js", location.href).href;
   const MAIN_SRC = new URL("./assets/js/main.js", location.href).href;
   const PILL_MS = 340;
@@ -329,7 +334,7 @@
     return pending;
   }
 
-  function loadScript(src) {
+  function loadScript(src, integrity) {
     const absolute = new URL(src, location.href).href;
     if ([...document.scripts].some((script) => script.src === absolute)) {
       return Promise.resolve();
@@ -338,6 +343,10 @@
     return new Promise((resolve, reject) => {
       const script = document.createElement("script");
       script.src = absolute;
+      if (integrity) {
+        script.integrity = integrity;
+        script.crossOrigin = "anonymous";
+      }
       script.onload = () => resolve();
       script.onerror = () => reject(new Error(`Failed to load ${absolute}`));
       document.body.appendChild(script);
@@ -353,7 +362,12 @@
     window.__reanGitDeferHomeMount = true;
 
     try {
-      if (needsMarked && !window.marked) await loadScript(MARKED_SRC);
+      if (needsMarked && !window.marked) {
+        await loadScript(MARKED_SRC, MARKED_INTEGRITY);
+      }
+      if (needsMarked && !window.DOMPurify) {
+        await loadScript(PURIFY_SRC, PURIFY_INTEGRITY);
+      }
       if (needsLearn) await loadScript(LEARN_SRC);
       if (needsMain) await loadScript(MAIN_SRC);
     } finally {
