@@ -295,16 +295,34 @@ async function loadLocalizedContent(relativePath) {
   throw lastError || new Error(`Could not load ${relativePath}`);
 }
 
+function sanitizeMarkdownHtml(html) {
+  if (!window.DOMPurify) return null;
+  // Task-list checkboxes from GFM need <input type="checkbox">.
+  return DOMPurify.sanitize(html, {
+    USE_PROFILES: { html: true },
+    ADD_TAGS: ["input"],
+    ADD_ATTR: ["checked", "disabled", "type"],
+  });
+}
+
 function renderMarkdown(target, md) {
-  if (window.marked) {
-    marked.setOptions({
-      gfm: true,
-      breaks: false,
-    });
-    target.innerHTML = marked.parse(md);
-  } else {
-    target.innerHTML = `<pre>${md.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]))}</pre>`;
+  if (!window.marked) {
+    target.innerHTML = `<pre>${escapeHtml(md)}</pre>`;
+    return;
   }
+
+  marked.setOptions({
+    gfm: true,
+    breaks: false,
+  });
+
+  const safe = sanitizeMarkdownHtml(marked.parse(md));
+  if (safe == null) {
+    target.innerHTML = `<pre>${escapeHtml(md)}</pre>`;
+    return;
+  }
+
+  target.innerHTML = safe;
   enhanceCodeBlocks(target);
   enhanceCheckboxes(target);
 }
