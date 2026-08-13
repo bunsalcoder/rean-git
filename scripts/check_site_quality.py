@@ -13,6 +13,13 @@ WEB = ROOT / "web"
 LOCALES = WEB / "locales"
 CONTENT = WEB / "content"
 LEARN_JS = WEB / "assets" / "js" / "learn.js"
+SITE_ORIGIN = "https://bunsalcoder.github.io/rean-git"
+PAGE_CANONICALS = {
+    "index.html": f"{SITE_ORIGIN}/",
+    "learn.html": f"{SITE_ORIGIN}/learn.html",
+    "labs.html": f"{SITE_ORIGIN}/labs.html",
+    "lab.html": f"{SITE_ORIGIN}/lab.html",
+}
 
 CHAPTER_IDS_RE = re.compile(
     r"const CHAPTER_IDS\s*=\s*\[(.*?)\];",
@@ -206,6 +213,59 @@ def check_html_assets() -> int:
     return fail(msgs, "HTML href/src assets + lab ids")
 
 
+def check_seo() -> int:
+    msgs: list[str] = []
+    robots = WEB / "robots.txt"
+    sitemap = WEB / "sitemap.xml"
+    og_image = WEB / "assets" / "img" / "og-image.png"
+
+    if not robots.is_file():
+        msgs.append("missing web/robots.txt")
+    else:
+        robots_text = robots.read_text(encoding="utf-8")
+        if f"{SITE_ORIGIN}/sitemap.xml" not in robots_text:
+            msgs.append("robots.txt missing Sitemap URL")
+
+    if not sitemap.is_file():
+        msgs.append("missing web/sitemap.xml")
+    else:
+        sitemap_text = sitemap.read_text(encoding="utf-8")
+        for loc in PAGE_CANONICALS.values():
+            if f"<loc>{loc}</loc>" not in sitemap_text:
+                msgs.append(f"sitemap.xml missing {loc}")
+
+    if not og_image.is_file():
+        msgs.append("missing web/assets/img/og-image.png")
+
+    og_image_url = f"{SITE_ORIGIN}/assets/img/og-image.png"
+    for name, canonical in PAGE_CANONICALS.items():
+        path = WEB / name
+        if not path.is_file():
+            msgs.append(f"missing {name}")
+            continue
+        text = path.read_text(encoding="utf-8")
+        if f'rel="canonical" href="{canonical}"' not in text:
+            msgs.append(f"{name}: missing or wrong canonical")
+        if f'property="og:url" content="{canonical}"' not in text:
+            msgs.append(f"{name}: missing or wrong og:url")
+        if f'property="og:image" content="{og_image_url}"' not in text:
+            msgs.append(f"{name}: missing or wrong og:image")
+        if 'name="twitter:card" content="summary_large_image"' not in text:
+            msgs.append(f"{name}: missing twitter:card")
+        if 'property="og:title"' not in text:
+            msgs.append(f"{name}: missing og:title")
+        if 'property="og:description"' not in text:
+            msgs.append(f"{name}: missing og:description")
+
+    home = WEB / "index.html"
+    if home.is_file() and 'type="application/ld+json"' not in home.read_text(
+        encoding="utf-8"
+    ):
+        msgs.append("index.html: missing JSON-LD WebSite schema")
+
+    return fail(msgs, "SEO meta, robots, sitemap, og-image")
+
+
 def main() -> int:
     chapters, labs = parse_learn_meta()
     print(f"Curriculum: {len(chapters)} chapters, {len(labs)} labs")
@@ -220,6 +280,8 @@ def main() -> int:
     failures += check_markdown_links(labs)
     print()
     failures += check_html_assets()
+    print()
+    failures += check_seo()
     print()
     if failures:
         print("Site quality check failed.")
