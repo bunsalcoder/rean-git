@@ -30,27 +30,12 @@ const CHAPTER_IDS = [
   "27",
 ];
 
-const LAB_META = [
-  { id: "01-first-repo", level: "beginner" },
-  { id: "02-branch-merge", level: "beginner" },
-  { id: "03-conflict", level: "intermediate" },
-  { id: "04-rebase", level: "intermediate" },
-  { id: "05-undo", level: "intermediate" },
-  { id: "06-remote-pr", level: "intermediate" },
-  { id: "07-team-workflow", level: "advanced" },
-  { id: "08-stash", level: "advanced" },
-  { id: "09-tags", level: "advanced" },
-  { id: "10-cherry-pick", level: "advanced" },
-  { id: "11-interactive-rebase", level: "advanced" },
-  { id: "12-bisect", level: "advanced" },
-  { id: "13-internals", level: "advanced" },
-  { id: "14-worktrees", level: "advanced" },
-  { id: "15-inspect-history", level: "advanced" },
-  { id: "16-hooks", level: "advanced" },
-];
-
 function t(key, vars) {
   return window.ReanGitI18n?.t?.(key, vars) ?? key;
+}
+
+function getLabMeta() {
+  return window.ReanGitCatalog?.getLabs?.() || [];
 }
 
 function getChapters() {
@@ -80,7 +65,7 @@ function getChapters() {
 }
 
 function getLabs() {
-  return LAB_META.map((lab) => ({
+  return getLabMeta().map((lab) => ({
     id: lab.id,
     title: t(`labs.${lab.id}.title`),
     level: t(`levels.${lab.level}`),
@@ -225,7 +210,7 @@ function writeLastChapter(id) {
 function readLastLab() {
   const saved = readStorageItem(LAST_LAB_KEY);
   if (!saved) return null;
-  return LAB_META.some((l) => l.id === saved) ? saved : null;
+  return getLabMeta().some((l) => l.id === saved) ? saved : null;
 }
 
 function writeLastLab(id) {
@@ -608,7 +593,14 @@ async function initLabPage(signal, { animate = true } = {}) {
 
   setupSidebarToggle(signal);
 
+  await window.ReanGitCatalog?.ready;
+  if (signal?.aborted) return null;
+
   const labs = getLabs();
+  if (!labs.length) {
+    bodyEl.innerHTML = `<div class="error"><strong>${escapeHtml(t("lab.loadError"))}</strong><br>${escapeHtml(t("lab.serveHint"))}</div>`;
+    return null;
+  }
   let currentIndex = -1;
   let transitionToken = 0;
   const paneEl = bodyEl.closest(".content-pane");
@@ -798,6 +790,7 @@ async function initLabPage(signal, { animate = true } = {}) {
     const controller = new AbortController();
     abortController = controller;
     await window.ReanGitI18n?.ready;
+    await window.ReanGitCatalog?.ready;
     if (controller.signal.aborted || abortController !== controller) return;
 
     if (document.body.dataset.page === "learn") {
