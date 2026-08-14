@@ -7,3 +7,7 @@ dist/
 *.log
 .DS_Store
 py_compile
+
+# Student sandboxes created by the labs
+labs/**/playground/
+labs/**/review/

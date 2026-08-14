@@ -113,6 +113,47 @@ a {
   margin-inline: auto;
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: 0;
+  z-index: 100;
+  padding: 0.55rem 0.9rem;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border-radius: var(--radius);
+  transform: translateY(-150%);
+}
+
+.skip-link:focus {
+  transform: translateY(0.75rem);
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+#main-content:focus {
+  outline: none;
+}
+
+#main-content {
+  scroll-margin-top: calc(var(--header-h) + 0.5rem);
+}
+
 /* —— Header —— */
 .site-header-bar {
   position: sticky;
@@ -745,6 +786,10 @@ html.theme-animate body *::after {
   gap: 0.7rem;
 }
 
+.cta-row .btn {
+  max-width: min(100%, 24rem);
+}
+
 .hero-stage {
   position: relative;
   display: grid;
@@ -1363,6 +1408,33 @@ html.theme-animate body *::after {
   letter-spacing: 0.12em;
   color: var(--ink-soft);
   margin: 0.4rem 0.65rem 0.85rem;
+}
+
+.side-search {
+  margin: 0 0.4rem 0.75rem;
+}
+
+.side-search input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.86rem;
+}
+
+.side-search input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.side-search-empty {
+  margin: 0.35rem 0.65rem 0.75rem;
+  color: var(--ink-soft);
+  font-size: 0.86rem;
 }
 
 .sidebar-foot {

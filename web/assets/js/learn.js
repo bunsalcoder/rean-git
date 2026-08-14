@@ -337,22 +337,52 @@ function escapeHtml(text) {
   );
 }
 
+function setupSideSearch(navEl, signal) {
+  const input = document.querySelector("[data-side-search]");
+  const empty = document.querySelector("[data-side-search-empty]");
+  if (!input || !navEl) return;
+
+  const filter = () => {
+    const query = input.value.trim().toLowerCase();
+    let shown = 0;
+    navEl.querySelectorAll(":scope > li").forEach((item) => {
+      if (item.classList.contains("status")) return;
+      const match = !query || (item.textContent || "").toLowerCase().includes(query);
+      item.hidden = !match;
+      if (match) shown += 1;
+    });
+    if (empty) empty.hidden = shown > 0;
+  };
+
+  input.addEventListener("input", filter, { signal });
+  filter();
+}
+
 function setupSidebarToggle(signal) {
   const sidebar = document.querySelector("[data-sidebar]");
   const toggle = document.querySelector("[data-side-toggle]");
   const backdrop = document.querySelector("[data-backdrop]");
   if (!sidebar || !toggle) return { close: () => {} };
 
+  const drawerQuery = window.matchMedia("(max-width: 900px)");
+  let trap = null;
+
   const close = () => {
     sidebar.classList.remove("is-open");
     backdrop?.classList.remove("is-on");
     toggle.setAttribute("aria-expanded", "false");
+    trap?.deactivate();
+    trap = null;
   };
 
   const open = () => {
     sidebar.classList.add("is-open");
     backdrop?.classList.add("is-on");
     toggle.setAttribute("aria-expanded", "true");
+    if (drawerQuery.matches && window.ReanGitA11y?.createFocusTrap) {
+      trap = window.ReanGitA11y.createFocusTrap(sidebar);
+      trap.activate();
+    }
   };
 
   toggle.addEventListener(
@@ -510,6 +540,8 @@ async function initLearnPage(signal, { animate = true } = {}) {
         return `<li><a href="${chapterHref(c.id)}" data-chapter-id="${c.id}"><small style="display:block;opacity:.55;font-size:.72rem;font-weight:700;letter-spacing:.06em">${n}</small>${escapeHtml(c.title)}</a></li>`;
       })
       .join("");
+
+    setupSideSearch(navEl, signal);
 
     const goToChapter = (id, opts) => {
       if (!id) return;
@@ -697,6 +729,8 @@ async function initLabPage(signal, { animate = true } = {}) {
         `<li><a href="${labHref(l.id)}" data-lab-id="${l.id}">${escapeHtml(l.title)}<br><span style="opacity:.6;font-weight:500;font-size:.8rem">${escapeHtml(l.level)}</span></a></li>`
     )
     .join("");
+
+  setupSideSearch(navEl, signal);
 
   const goToLab = (id, opts) => {
     if (!id) return;

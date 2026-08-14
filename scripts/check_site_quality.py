@@ -116,7 +116,7 @@ def check_locale_vs_code(chapters: list[str], labs: list[str]) -> int:
     return fail(msgs, "locale keys vs learn.js / HTML / JS")
 
 
-def check_content_files(labs: list[str]) -> int:
+def check_content_files(chapters: list[str], labs: list[str]) -> int:
     msgs: list[str] = []
     for locale in ("en", "km"):
         guide = CONTENT / locale / "guide.md"
@@ -124,9 +124,13 @@ def check_content_files(labs: list[str]) -> int:
             msgs.append(f"missing {guide.relative_to(ROOT)}")
             continue
         text = guide.read_text(encoding="utf-8")
-        for n in range(1, 28):
-            if not re.search(rf"^## {n}\. ", text, re.M):
-                msgs.append(f"{guide.relative_to(ROOT)} missing chapter heading ## {n}.")
+        for chapter_id in chapters:
+            if not chapter_id.isdigit():
+                continue
+            if not re.search(rf"^## {chapter_id}\. ", text, re.M):
+                msgs.append(
+                    f"{guide.relative_to(ROOT)} missing chapter heading ## {chapter_id}."
+                )
         for lab_id in labs:
             lab_path = CONTENT / locale / "labs" / f"{lab_id}.md"
             if not lab_path.is_file():
@@ -213,7 +217,7 @@ def check_html_assets() -> int:
     return fail(msgs, "HTML href/src assets + lab ids")
 
 
-def check_seo() -> int:
+def check_seo(chapters: list[str], labs: list[str]) -> int:
     msgs: list[str] = []
     robots = WEB / "robots.txt"
     sitemap = WEB / "sitemap.xml"
@@ -231,6 +235,14 @@ def check_seo() -> int:
     else:
         sitemap_text = sitemap.read_text(encoding="utf-8")
         for loc in PAGE_CANONICALS.values():
+            if f"<loc>{loc}</loc>" not in sitemap_text:
+                msgs.append(f"sitemap.xml missing {loc}")
+        for chapter_id in chapters:
+            loc = f"{SITE_ORIGIN}/learn.html?c={chapter_id}"
+            if f"<loc>{loc}</loc>" not in sitemap_text:
+                msgs.append(f"sitemap.xml missing {loc}")
+        for lab_id in labs:
+            loc = f"{SITE_ORIGIN}/lab.html?id={lab_id}"
             if f"<loc>{loc}</loc>" not in sitemap_text:
                 msgs.append(f"sitemap.xml missing {loc}")
 
@@ -266,8 +278,8 @@ def check_seo() -> int:
     return fail(msgs, "SEO meta, robots, sitemap, og-image")
 
 
-MARKED_PIN = "cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"
-PURIFY_PIN = "cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"
+MARKED_PIN = "assets/vendor/marked.min.js"
+PURIFY_PIN = "assets/vendor/purify.min.js"
 MARKED_SRI = "sha384-948ahk4ZmxYVYOc+rxN1H2gM1EJ2Duhp7uHtZ4WSLkV4Vtx5MUqnV+l7u9B+jFv+"
 PURIFY_SRI = "sha384-JEyTNhjM6R1ElGoJns4U2Ln4ofPcqzSsynQkmEc/KGy6336qAZl70tDLufbkla+3"
 
@@ -276,6 +288,13 @@ def check_markdown_hardening() -> int:
     msgs: list[str] = []
     learn_js = LEARN_JS.read_text(encoding="utf-8")
     site_js = (WEB / "assets" / "js" / "site.js").read_text(encoding="utf-8")
+    marked_file = WEB / "assets" / "vendor" / "marked.min.js"
+    purify_file = WEB / "assets" / "vendor" / "purify.min.js"
+
+    if not marked_file.is_file():
+        msgs.append("missing web/assets/vendor/marked.min.js")
+    if not purify_file.is_file():
+        msgs.append("missing web/assets/vendor/purify.min.js")
 
     if "sanitizeMarkdownHtml" not in learn_js or "DOMPurify.sanitize" not in learn_js:
         msgs.append("learn.js must sanitize marked HTML with DOMPurify")
@@ -283,22 +302,22 @@ def check_markdown_hardening() -> int:
         msgs.append("learn.js still assigns marked.parse output directly to innerHTML")
 
     if MARKED_PIN not in site_js or MARKED_SRI not in site_js:
-        msgs.append("site.js missing pinned marked URL/SRI")
+        msgs.append("site.js missing vendored marked path/SRI")
     if PURIFY_PIN not in site_js or PURIFY_SRI not in site_js:
-        msgs.append("site.js missing pinned DOMPurify URL/SRI")
+        msgs.append("site.js missing vendored DOMPurify path/SRI")
     if "PURIFY_INTEGRITY" not in site_js:
         msgs.append("site.js soft-nav should load DOMPurify with integrity")
 
     for name in ("learn.html", "lab.html"):
         text = (WEB / name).read_text(encoding="utf-8")
         if MARKED_PIN not in text or f'integrity="{MARKED_SRI}"' not in text:
-            msgs.append(f"{name}: marked must be version-pinned with SRI")
+            msgs.append(f"{name}: marked must be vendored with SRI")
         if PURIFY_PIN not in text or f'integrity="{PURIFY_SRI}"' not in text:
-            msgs.append(f"{name}: DOMPurify must be version-pinned with SRI")
-        if 'crossorigin="anonymous"' not in text:
-            msgs.append(f"{name}: CDN scripts need crossorigin=anonymous for SRI")
+            msgs.append(f"{name}: DOMPurify must be vendored with SRI")
+        if "cdn.jsdelivr.net" in text:
+            msgs.append(f"{name}: markdown libraries should be local, not CDN")
 
-    return fail(msgs, "Markdown CDN pin + DOMPurify hardening")
+    return fail(msgs, "Markdown vendor pin + DOMPurify hardening")
 
 
 def main() -> int:
@@ -310,13 +329,13 @@ def main() -> int:
     print()
     failures += check_locale_vs_code(chapters, labs)
     print()
-    failures += check_content_files(labs)
+    failures += check_content_files(chapters, labs)
     print()
     failures += check_markdown_links(labs)
     print()
     failures += check_html_assets()
     print()
-    failures += check_seo()
+    failures += check_seo(chapters, labs)
     print()
     failures += check_markdown_hardening()
     print()

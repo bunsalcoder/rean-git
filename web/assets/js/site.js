@@ -7,10 +7,10 @@
   const navMotionQuery = window.matchMedia("(min-width: 721px)");
   const themeQuery = window.matchMedia("(prefers-color-scheme: dark)");
   const THEME_KEY = "rean-git-theme";
-  const MARKED_SRC = "https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js";
+  const MARKED_SRC = new URL("./assets/vendor/marked.min.js", location.href).href;
   const MARKED_INTEGRITY =
     "sha384-948ahk4ZmxYVYOc+rxN1H2gM1EJ2Duhp7uHtZ4WSLkV4Vtx5MUqnV+l7u9B+jFv+";
-  const PURIFY_SRC = "https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js";
+  const PURIFY_SRC = new URL("./assets/vendor/purify.min.js", location.href).href;
   const PURIFY_INTEGRITY =
     "sha384-JEyTNhjM6R1ElGoJns4U2Ln4ofPcqzSsynQkmEc/KGy6336qAZl70tDLufbkla+3";
   const LEARN_SRC = new URL("./assets/js/learn.js", location.href).href;
@@ -18,6 +18,52 @@
   const PILL_MS = 340;
   const PAGE_OUT_MS = 360;
   const PAGE_IN_MS = 720;
+
+  function getFocusable(root) {
+    return [...root.querySelectorAll(
+      'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )].filter((el) => el.getClientRects().length > 0);
+  }
+
+  function createFocusTrap(container, extras = []) {
+    let previous = null;
+    const itemsOf = () => {
+      const found = getFocusable(container);
+      const extra = extras.filter(
+        (el) => el && !found.includes(el) && el.getClientRects().length > 0
+      );
+      return [...found, ...extra];
+    };
+    const onKey = (event) => {
+      if (event.key !== "Tab") return;
+      const items = itemsOf();
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    return {
+      activate() {
+        previous = document.activeElement;
+        document.addEventListener("keydown", onKey);
+        const items = itemsOf();
+        (items[0] || container).focus();
+      },
+      deactivate() {
+        document.removeEventListener("keydown", onKey);
+        if (previous && typeof previous.focus === "function") previous.focus();
+        previous = null;
+      },
+    };
+  }
+
+  window.ReanGitA11y = { getFocusable, createFocusTrap };
 
   let lastPageKey = pageKey(location.href);
   let navToken = 0;
@@ -145,23 +191,40 @@
   }
 
   if (toggle && nav) {
+    let navTrap = null;
+
+    const setNavOpen = (open) => {
+      toggle.setAttribute("aria-expanded", String(open));
+      nav.classList.toggle("is-open", open);
+      const mobile = !navMotionQuery.matches;
+      if (open && mobile) {
+        if (!navTrap) {
+          navTrap = createFocusTrap(nav, [toggle]);
+          navTrap.activate();
+        }
+      } else if (navTrap) {
+        navTrap.deactivate();
+        navTrap = null;
+      }
+    };
+
     toggle.addEventListener("click", () => {
       const open = toggle.getAttribute("aria-expanded") === "true";
-      toggle.setAttribute("aria-expanded", String(!open));
-      nav.classList.toggle("is-open", !open);
+      setNavOpen(!open);
     });
 
     nav.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", () => {
-        toggle.setAttribute("aria-expanded", "false");
-        nav.classList.remove("is-open");
-      });
+      link.addEventListener("click", () => setNavOpen(false));
     });
 
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape") return;
-      toggle.setAttribute("aria-expanded", "false");
-      nav.classList.remove("is-open");
+      if (toggle.getAttribute("aria-expanded") !== "true") return;
+      setNavOpen(false);
+    });
+
+    navMotionQuery.addEventListener("change", () => {
+      if (navMotionQuery.matches) setNavOpen(false);
     });
   }
 
