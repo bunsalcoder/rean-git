@@ -1,0 +1,20 @@
+{
+  "labs": [
+    { "id": "01-first-repo", "level": "beginner" },
+    { "id": "02-branch-merge", "level": "beginner" },
+    { "id": "03-conflict", "level": "intermediate" },
+    { "id": "04-rebase", "level": "intermediate" },
+    { "id": "05-undo", "level": "intermediate" },
+    { "id": "06-remote-pr", "level": "intermediate" },
+    { "id": "07-team-workflow", "level": "advanced" },
+    { "id": "08-stash", "level": "advanced" },
+    { "id": "09-tags", "level": "advanced" },
+    { "id": "10-cherry-pick", "level": "advanced" },
+    { "id": "11-interactive-rebase", "level": "advanced" },
+    { "id": "12-bisect", "level": "advanced" },
+    { "id": "13-internals", "level": "advanced" },
+    { "id": "14-worktrees", "level": "advanced" },
+    { "id": "15-inspect-history", "level": "advanced" },
+    { "id": "16-hooks", "level": "advanced" }
+  ]
+}

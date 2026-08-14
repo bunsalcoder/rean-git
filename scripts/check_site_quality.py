@@ -13,6 +13,8 @@ WEB = ROOT / "web"
 LOCALES = WEB / "locales"
 CONTENT = WEB / "content"
 LEARN_JS = WEB / "assets" / "js" / "learn.js"
+LABS_JSON = WEB / "data" / "labs.json"
+VALID_LAB_LEVELS = {"beginner", "intermediate", "advanced"}
 SITE_ORIGIN = "https://bunsalcoder.github.io/rean-git"
 PAGE_CANONICALS = {
     "index.html": f"{SITE_ORIGIN}/",
@@ -25,12 +27,7 @@ CHAPTER_IDS_RE = re.compile(
     r"const CHAPTER_IDS\s*=\s*\[(.*?)\];",
     re.S,
 )
-LAB_META_RE = re.compile(
-    r"const LAB_META\s*=\s*\[(.*?)\];",
-    re.S,
-)
 STRING_RE = re.compile(r'"([^"]+)"')
-LAB_ID_RE = re.compile(r'id:\s*"([^"]+)"')
 MD_LINK_RE = re.compile(r"!\[[^\]]*\]\(([^)]+)\)|\[[^\]]*\]\(([^)]+)\)")
 HTML_HREF_RE = re.compile(r"""(?:href|src)=["']([^"']+)["']""")
 DATA_I18N_RE = re.compile(r'data-i18n="([^"]+)"')
@@ -53,14 +50,37 @@ def load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def parse_learn_meta() -> tuple[list[str], list[str]]:
+def parse_curriculum() -> tuple[list[str], list[str]]:
     text = LEARN_JS.read_text(encoding="utf-8")
     chapters_m = CHAPTER_IDS_RE.search(text)
-    labs_m = LAB_META_RE.search(text)
-    if not chapters_m or not labs_m:
-        raise SystemExit("Could not parse CHAPTER_IDS / LAB_META from learn.js")
+    if not chapters_m:
+        raise SystemExit("Could not parse CHAPTER_IDS from learn.js")
+    if re.search(r"\bLAB_META\b", text):
+        raise SystemExit("learn.js still defines LAB_META; labs belong in web/data/labs.json")
     chapters = STRING_RE.findall(chapters_m.group(1))
-    labs = LAB_ID_RE.findall(labs_m.group(1))
+
+    if not LABS_JSON.is_file():
+        raise SystemExit("missing web/data/labs.json")
+    payload = load_json(LABS_JSON)
+    raw = payload.get("labs")
+    if not isinstance(raw, list) or not raw:
+        raise SystemExit("web/data/labs.json must have a non-empty labs array")
+
+    labs: list[str] = []
+    seen: set[str] = set()
+    for index, lab in enumerate(raw):
+        if not isinstance(lab, dict):
+            raise SystemExit(f"labs.json entry {index} is not an object")
+        lab_id = lab.get("id")
+        level = lab.get("level")
+        if not isinstance(lab_id, str) or not re.fullmatch(r"[a-z0-9-]+", lab_id):
+            raise SystemExit(f"labs.json entry {index} has an invalid id")
+        if level not in VALID_LAB_LEVELS:
+            raise SystemExit(f"labs.json {lab_id} has invalid level {level!r}")
+        if lab_id in seen:
+            raise SystemExit(f"labs.json duplicate id {lab_id}")
+        seen.add(lab_id)
+        labs.append(lab_id)
     return chapters, labs
 
 
@@ -135,6 +155,16 @@ def check_content_files(chapters: list[str], labs: list[str]) -> int:
             lab_path = CONTENT / locale / "labs" / f"{lab_id}.md"
             if not lab_path.is_file():
                 msgs.append(f"missing {lab_path.relative_to(ROOT)}")
+
+    lab_root = ROOT / "labs"
+    if lab_root.is_dir():
+        folders = sorted(p.name for p in lab_root.iterdir() if p.is_dir())
+        if folders != sorted(labs):
+            msgs.append(f"labs/ folders {folders} do not match catalog {labs}")
+        for lab_id in labs:
+            readme = lab_root / lab_id / "README.md"
+            if not readme.is_file():
+                msgs.append(f"missing {readme.relative_to(ROOT)}")
     return fail(msgs, "handbook chapters + lab markdown files")
 
 
@@ -191,12 +221,30 @@ def check_markdown_links(labs: list[str]) -> int:
     return fail(msgs, "markdown internal links")
 
 
-def check_html_assets() -> int:
+def check_html_assets(labs: list[str]) -> int:
     msgs: list[str] = []
-    known_labs = {
-        m.group(1)
-        for m in LAB_ID_RE.finditer(LEARN_JS.read_text(encoding="utf-8"))
-    }
+    known_labs = set(labs)
+    catalog_js = WEB / "assets" / "js" / "catalog.js"
+    if not catalog_js.is_file():
+        msgs.append("missing web/assets/js/catalog.js")
+    elif "data/labs.json" not in catalog_js.read_text(encoding="utf-8"):
+        msgs.append("catalog.js must load web/data/labs.json")
+
+    for name, marker in (
+        ("index.html", "data-lab-track"),
+        ("labs.html", "data-lab-grid"),
+    ):
+        text = (WEB / name).read_text(encoding="utf-8")
+        if marker not in text:
+            msgs.append(f"{name}: missing {marker} catalog mount point")
+        if "catalog.js" not in text:
+            msgs.append(f"{name}: missing catalog.js")
+
+    for name in ("learn.html", "lab.html"):
+        text = (WEB / name).read_text(encoding="utf-8")
+        if "catalog.js" not in text:
+            msgs.append(f"{name}: missing catalog.js")
+
     for path in sorted(WEB.glob("*.html")):
         text = path.read_text(encoding="utf-8")
         for target in HTML_HREF_RE.findall(text):
@@ -321,7 +369,7 @@ def check_markdown_hardening() -> int:
 
 
 def main() -> int:
-    chapters, labs = parse_learn_meta()
+    chapters, labs = parse_curriculum()
     print(f"Curriculum: {len(chapters)} chapters, {len(labs)} labs")
     print()
     failures = 0
@@ -333,7 +381,7 @@ def main() -> int:
     print()
     failures += check_markdown_links(labs)
     print()
-    failures += check_html_assets()
+    failures += check_html_assets(labs)
     print()
     failures += check_seo(chapters, labs)
     print()

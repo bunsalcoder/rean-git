@@ -109,7 +109,14 @@
     }
   }
 
-  const mount = () => {
+  const mount = async () => {
+    try {
+      await window.ReanGitI18n?.ready;
+      await window.ReanGitCatalog?.ready;
+      window.ReanGitCatalog?.mountLists?.();
+    } catch {
+      /* catalog missing — leave empty lists */
+    }
     reveal(".lab-track li", { stagger: 45 });
     reveal(".lab-grid a", { stagger: 50 });
     reveal(".method-step", { stagger: 90 });

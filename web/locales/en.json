@@ -39,7 +39,7 @@
     "step3Title": "Level up",
     "step3Body": "From first commit through rebase, remotes, and Git internals.",
     "pathEyebrow": "Practice track",
-    "pathTitle": "Sixteen labs in order",
+    "pathTitle": "{count} labs in order",
     "pathBody": "Read a chapter, then practice. Lab folders live under labs/ — keep a terminal open beside this site.",
     "footerTagline": "rean-git — hands-on Git from zero to hero.",
     "footerLink": "Read the handbook"

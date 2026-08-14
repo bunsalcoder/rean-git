@@ -15,6 +15,7 @@
     "sha384-JEyTNhjM6R1ElGoJns4U2Ln4ofPcqzSsynQkmEc/KGy6336qAZl70tDLufbkla+3";
   const LEARN_SRC = new URL("./assets/js/learn.js", location.href).href;
   const MAIN_SRC = new URL("./assets/js/main.js", location.href).href;
+  const CATALOG_SRC = new URL("./assets/js/catalog.js", location.href).href;
   const PILL_MS = 340;
   const PAGE_OUT_MS = 360;
   const PAGE_IN_MS = 720;
@@ -420,6 +421,10 @@
     const needsMarked = Boolean(doc.querySelector('script[src*="marked"]'));
     const needsLearn = Boolean(doc.querySelector('script[src*="learn.js"]'));
     const needsMain = Boolean(doc.querySelector('script[src*="main.js"]'));
+    const needsCatalog =
+      needsLearn ||
+      needsMain ||
+      Boolean(doc.querySelector('script[src*="catalog.js"]'));
 
     window.__reanGitDeferContentMount = true;
     window.__reanGitDeferHomeMount = true;
@@ -431,6 +436,7 @@
       if (needsMarked && !window.DOMPurify) {
         await loadScript(PURIFY_SRC, PURIFY_INTEGRITY);
       }
+      if (needsCatalog) await loadScript(CATALOG_SRC);
       if (needsLearn) await loadScript(LEARN_SRC);
       if (needsMain) await loadScript(MAIN_SRC);
     } finally {
