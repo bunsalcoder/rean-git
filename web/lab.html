@@ -69,10 +69,11 @@
     <link rel="stylesheet" href="./assets/css/styles.css" />
   </head>
   <body data-page="lab" class="page-lab">
+    <a class="skip-link" href="#main-content" data-i18n="a11y.skipToContent">Skip to content</a>
     <header class="site-header site-header-bar">
       <div class="wrap header-inner">
         <a class="logo" href="./index.html">rean<span>-git</span></a>
-        <nav class="nav" data-nav>
+        <nav class="nav" data-nav id="site-nav">
           <a href="./index.html" data-i18n="nav.home">Home</a>
           <a href="./learn.html" data-i18n="nav.learn">Learn</a>
           <a href="./labs.html" aria-current="page" data-i18n="nav.labs">Labs</a>
@@ -97,7 +98,7 @@
               />
             </svg>
           </button>
-          <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" data-i18n="nav.menu" data-i18n-attr="aria-label" aria-label="Menu">
+          <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav" data-i18n="nav.menu" data-i18n-attr="aria-label" aria-label="Menu">
             <span></span><span></span><span></span>
           </button>
         </div>
@@ -107,19 +108,32 @@
     <div class="backdrop" data-backdrop></div>
 
     <div class="app-shell">
-      <aside class="sidebar" data-sidebar>
+      <aside class="sidebar" data-sidebar id="side-panel">
         <h2 data-i18n="lab.labs">Labs</h2>
+        <div class="side-search">
+          <label class="visually-hidden" for="lab-search" data-i18n="lab.search">Search labs</label>
+          <input
+            id="lab-search"
+            type="search"
+            data-side-search
+            autocomplete="off"
+            data-i18n="lab.search"
+            data-i18n-attr="placeholder"
+            placeholder="Search labs"
+          />
+        </div>
         <ul class="side-nav" data-lab-nav>
           <li class="status" data-i18n="lab.loading">Loading…</li>
         </ul>
+        <p class="side-search-empty" data-side-search-empty hidden data-i18n="lab.searchEmpty">No matching labs</p>
         <p class="sidebar-foot">
           <a href="./labs.html" data-i18n="lab.allLabs">All labs</a>
         </p>
       </aside>
 
-      <article class="content-pane">
+      <article class="content-pane" id="main-content" tabindex="-1">
         <div class="toolbar">
-          <button class="btn btn-ghost side-toggle" type="button" data-side-toggle aria-expanded="false" data-i18n="lab.menu">
+          <button class="btn btn-ghost side-toggle" type="button" data-side-toggle aria-expanded="false" aria-controls="side-panel" data-i18n="lab.menu">
             Labs menu
           </button>
           <p class="progress-pill" data-progress data-i18n="lab.loadingShort">Loading</p>
@@ -133,16 +147,8 @@
       </article>
     </div>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"
-      integrity="sha384-948ahk4ZmxYVYOc+rxN1H2gM1EJ2Duhp7uHtZ4WSLkV4Vtx5MUqnV+l7u9B+jFv+"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"
-      integrity="sha384-JEyTNhjM6R1ElGoJns4U2Ln4ofPcqzSsynQkmEc/KGy6336qAZl70tDLufbkla+3"
-      crossorigin="anonymous"
-    ></script>
+    <script src="./assets/vendor/marked.min.js" integrity="sha384-948ahk4ZmxYVYOc+rxN1H2gM1EJ2Duhp7uHtZ4WSLkV4Vtx5MUqnV+l7u9B+jFv+" crossorigin="anonymous"></script>
+    <script src="./assets/vendor/purify.min.js" integrity="sha384-JEyTNhjM6R1ElGoJns4U2Ln4ofPcqzSsynQkmEc/KGy6336qAZl70tDLufbkla+3" crossorigin="anonymous"></script>
     <script src="./assets/js/i18n.js"></script>
     <script src="./assets/js/site.js"></script>
     <script src="./assets/js/learn.js"></script>

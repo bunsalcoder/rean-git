@@ -19,11 +19,16 @@
     "themeToLight": "Switch to light mode",
     "themeToDark": "Switch to dark mode"
   },
+  "a11y": {
+    "skipToContent": "Skip to content"
+  },
   "home": {
     "introLabel": "Introduction",
     "headline": "Learn Git with your hands on the keyboard.",
     "lede": "Twenty-seven chapters and sixteen labs — from first commit to Git internals.",
     "startLearning": "Start learning",
+    "continueChapter": "Continue — {title}",
+    "continueLab": "Lab — {title}",
     "openLabs": "Open labs",
     "methodEyebrow": "How you learn",
     "methodTitle": "Read a chapter. Run the commands. Keep going.",
@@ -51,6 +56,8 @@
     "loadingShort": "Loading",
     "curriculum": "Curriculum",
     "fetching": "Fetching handbook…",
+    "search": "Search chapters",
+    "searchEmpty": "No matching chapters",
     "pagerLabel": "Chapter navigation",
     "previous": "Previous",
     "next": "Next",
@@ -63,6 +70,8 @@
     "loadingShort": "Loading",
     "handsOn": "Hands-on",
     "fetching": "Fetching lab…",
+    "search": "Search labs",
+    "searchEmpty": "No matching labs",
     "menu": "Labs menu",
     "allLabs": "All labs",
     "pagerLabel": "Lab navigation",
