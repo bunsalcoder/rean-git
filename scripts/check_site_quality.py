@@ -338,6 +338,16 @@ def check_seo(chapters: list[str], labs: list[str]) -> int:
             msgs.append(f"{name}: missing og:title")
         if 'property="og:description"' not in text:
             msgs.append(f"{name}: missing og:description")
+        if 'hreflang="en"' not in text:
+            msgs.append(f"{name}: missing hreflang en")
+        if 'hreflang="km"' not in text:
+            msgs.append(f"{name}: missing hreflang km")
+        if 'hreflang="x-default"' not in text:
+            msgs.append(f"{name}: missing hreflang x-default")
+        if "fonts.googleapis.com" in text or "fonts.gstatic.com" in text:
+            msgs.append(f"{name}: fonts should be local, not Google Fonts")
+        if "data-search-toggle" not in text:
+            msgs.append(f"{name}: missing search toggle")
 
     home = WEB / "index.html"
     if home.is_file() and 'type="application/ld+json"' not in home.read_text(
@@ -346,6 +356,37 @@ def check_seo(chapters: list[str], labs: list[str]) -> int:
         msgs.append("index.html: missing JSON-LD WebSite schema")
 
     return fail(msgs, "SEO meta, robots, sitemap, og-image")
+
+
+LOCAL_FONTS = (
+    "epilogue-latin.woff2",
+    "epilogue-latin-ext.woff2",
+    "ibm-plex-mono-400-latin.woff2",
+    "ibm-plex-mono-500-latin.woff2",
+    "kantumruy-pro-khmer.woff2",
+    "kantumruy-pro-latin.woff2",
+)
+
+
+def check_local_fonts() -> int:
+    msgs: list[str] = []
+    fonts_dir = WEB / "assets" / "fonts"
+    css = WEB / "assets" / "css" / "styles.css"
+    css_text = css.read_text(encoding="utf-8") if css.is_file() else ""
+
+    if "@font-face" not in css_text:
+        msgs.append("styles.css missing @font-face")
+    if "fonts.googleapis.com" in css_text or "fonts.gstatic.com" in css_text:
+        msgs.append("styles.css still references Google Fonts")
+
+    for name in LOCAL_FONTS:
+        path = fonts_dir / name
+        if not path.is_file():
+            msgs.append(f"missing web/assets/fonts/{name}")
+        elif f"../fonts/{name}" not in css_text:
+            msgs.append(f"styles.css missing @font-face for {name}")
+
+    return fail(msgs, "self-hosted fonts")
 
 
 MARKED_PIN = "assets/vendor/marked.min.js"
@@ -417,6 +458,8 @@ def main() -> int:
     failures += check_html_assets(labs)
     print()
     failures += check_seo(chapters, labs)
+    print()
+    failures += check_local_fonts()
     print()
     failures += check_markdown_hardening()
     print()

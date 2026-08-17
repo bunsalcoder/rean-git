@@ -10,6 +10,31 @@ test("language switch updates html lang", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "ខ្មែរ" }).click();
   await expect(page.locator("html")).toHaveAttribute("lang", "km");
+  await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute(
+    "content",
+    "km_KH"
+  );
+});
+
+test("pages advertise English and Khmer alternates", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator('link[rel="alternate"][hreflang="km"]')).toHaveAttribute(
+    "href",
+    /lang=km/
+  );
+  await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveCount(1);
+});
+
+test("global search finds chapters and labs", async ({ page }) => {
+  await page.goto("/");
+  await page.locator("[data-search-toggle]").click();
+  const input = page.locator("[data-search-input]");
+  await expect(input).toBeVisible();
+  await input.fill("rebase");
+  const results = page.locator("[data-search-results] a");
+  await expect(results.first()).toBeVisible();
+  const titles = await results.allTextContents();
+  expect(titles.some((text) => /rebase/i.test(text))).toBeTruthy();
 });
 
 test("learn page loads a chapter", async ({ page }) => {
