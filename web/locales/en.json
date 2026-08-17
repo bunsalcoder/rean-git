@@ -30,6 +30,10 @@
     "continueChapter": "Continue — {title}",
     "continueLab": "Lab — {title}",
     "openLabs": "Open labs",
+    "progressEyebrow": "Your path",
+    "progressTitle": "Pick up where you left off",
+    "chapterProgress": "Chapter {current} of {total} — {title}",
+    "labProgress": "Lab {current} of {total} — {title}",
     "methodEyebrow": "How you learn",
     "methodTitle": "Read a chapter. Run the commands. Keep going.",
     "step1Title": "Read",
@@ -48,6 +52,8 @@
     "eyebrow": "Practice",
     "title": "Labs",
     "intro": "Work through these in order. Each lab lives under labs/ in the repo — open a terminal next to this page.",
+    "filterByLevel": "Filter by level",
+    "filterAll": "All levels",
     "footerLink": "Back to curriculum"
   },
   "learn": {

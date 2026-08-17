@@ -39,6 +39,7 @@ Edit `docs/GIT_FROM_ZERO.md` and the lab `README.md` files, then sync into `web/
 ./scripts/sync_en_content.sh     # copy sources → web/content/en/
 ./scripts/check_content_sync.sh  # fail if English copies drifted
 ./scripts/check_site_quality.sh  # locale parity, chapters/labs, internal links
+python3 scripts/check_site_quality.py --write-sitemap  # regenerate web/sitemap.xml when curriculum changes
 ```
 
-The sync rewrites handbook lab links (`../labs/<id>/` → `./lab.html?id=<id>`) for the site reader. CI runs both checks on every push/PR to `main` or `develop`.
+The sync rewrites handbook lab links (`../labs/<id>/` → `./lab.html?id=<id>`) for the site reader. CI runs content checks, site quality checks, and Playwright smoke tests on every push/PR to `main` or `develop`.

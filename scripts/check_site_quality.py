@@ -265,11 +265,42 @@ def check_html_assets(labs: list[str]) -> int:
     return fail(msgs, "HTML href/src assets + lab ids")
 
 
+def build_sitemap(chapters: list[str], labs: list[str]) -> str:
+    entries: list[tuple[str, str, str]] = [
+        (f"{SITE_ORIGIN}/", "weekly", "1.0"),
+        (f"{SITE_ORIGIN}/learn.html", "weekly", "0.9"),
+        (f"{SITE_ORIGIN}/labs.html", "weekly", "0.9"),
+        (f"{SITE_ORIGIN}/lab.html", "weekly", "0.7"),
+    ]
+    for chapter_id in chapters:
+        entries.append((f"{SITE_ORIGIN}/learn.html?c={chapter_id}", "weekly", "0.8"))
+    for lab_id in labs:
+        entries.append((f"{SITE_ORIGIN}/lab.html?id={lab_id}", "weekly", "0.7"))
+
+    lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ]
+    for loc, changefreq, priority in entries:
+        lines.extend(
+            [
+                "  <url>",
+                f"    <loc>{loc}</loc>",
+                f"    <changefreq>{changefreq}</changefreq>",
+                f"    <priority>{priority}</priority>",
+                "  </url>",
+            ]
+        )
+    lines.append("</urlset>")
+    return "\n".join(lines) + "\n"
+
+
 def check_seo(chapters: list[str], labs: list[str]) -> int:
     msgs: list[str] = []
     robots = WEB / "robots.txt"
     sitemap = WEB / "sitemap.xml"
     og_image = WEB / "assets" / "img" / "og-image.png"
+    expected_sitemap = build_sitemap(chapters, labs)
 
     if not robots.is_file():
         msgs.append("missing web/robots.txt")
@@ -280,19 +311,10 @@ def check_seo(chapters: list[str], labs: list[str]) -> int:
 
     if not sitemap.is_file():
         msgs.append("missing web/sitemap.xml")
-    else:
-        sitemap_text = sitemap.read_text(encoding="utf-8")
-        for loc in PAGE_CANONICALS.values():
-            if f"<loc>{loc}</loc>" not in sitemap_text:
-                msgs.append(f"sitemap.xml missing {loc}")
-        for chapter_id in chapters:
-            loc = f"{SITE_ORIGIN}/learn.html?c={chapter_id}"
-            if f"<loc>{loc}</loc>" not in sitemap_text:
-                msgs.append(f"sitemap.xml missing {loc}")
-        for lab_id in labs:
-            loc = f"{SITE_ORIGIN}/lab.html?id={lab_id}"
-            if f"<loc>{loc}</loc>" not in sitemap_text:
-                msgs.append(f"sitemap.xml missing {loc}")
+    elif sitemap.read_text(encoding="utf-8") != expected_sitemap:
+        msgs.append(
+            "sitemap.xml is out of date — run: python3 scripts/check_site_quality.py --write-sitemap"
+        )
 
     if not og_image.is_file():
         msgs.append("missing web/assets/img/og-image.png")
@@ -368,8 +390,19 @@ def check_markdown_hardening() -> int:
     return fail(msgs, "Markdown vendor pin + DOMPurify hardening")
 
 
+def write_sitemap(chapters: list[str], labs: list[str]) -> None:
+    path = WEB / "sitemap.xml"
+    path.write_text(build_sitemap(chapters, labs), encoding="utf-8")
+    print(f"Wrote {path.relative_to(ROOT)}")
+
+
 def main() -> int:
+    write_mode = "--write-sitemap" in sys.argv
     chapters, labs = parse_curriculum()
+    if write_mode:
+        write_sitemap(chapters, labs)
+        return 0
+
     print(f"Curriculum: {len(chapters)} chapters, {len(labs)} labs")
     print()
     failures = 0

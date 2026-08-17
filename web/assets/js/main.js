@@ -109,6 +109,50 @@
     }
   }
 
+  function paintHomeProgress() {
+    const panel = document.querySelector("[data-home-progress]");
+    const chapterEl = document.querySelector("[data-home-chapter-progress]");
+    const labEl = document.querySelector("[data-home-lab-progress]");
+    if (!panel || !chapterEl || !labEl) return;
+
+    const i18n = window.ReanGitI18n;
+    const chapters = Object.keys(i18n?.getDict?.()?.chapters || {});
+    const catalogLabs = window.ReanGitCatalog?.getLabs?.() || [];
+    const chapterId = readStorage(LAST_CHAPTER_KEY);
+    const labId = readStorage(LAST_LAB_KEY);
+    const chapterIndex = chapterId ? chapters.indexOf(chapterId) + 1 : 0;
+    const labIndex = labId ? catalogLabs.findIndex((lab) => lab.id === labId) + 1 : 0;
+
+    if (!chapterIndex && !labIndex) {
+      panel.hidden = true;
+      return;
+    }
+
+    panel.hidden = false;
+
+    if (chapterIndex > 0) {
+      chapterEl.hidden = false;
+      chapterEl.textContent = i18n.t("home.chapterProgress", {
+        current: String(chapterIndex),
+        total: String(chapters.length),
+        title: i18n.t(`chapters.${chapterId}`),
+      });
+    } else {
+      chapterEl.hidden = true;
+    }
+
+    if (labIndex > 0) {
+      labEl.hidden = false;
+      labEl.textContent = i18n.t("home.labProgress", {
+        current: String(labIndex),
+        total: String(catalogLabs.length),
+        title: i18n.t(`labs.${labId}.title`),
+      });
+    } else {
+      labEl.hidden = true;
+    }
+  }
+
   const mount = async () => {
     try {
       await window.ReanGitI18n?.ready;
@@ -122,11 +166,18 @@
     reveal(".method-step", { stagger: 90 });
     typeTerminal();
     paintHomeResume();
+    paintHomeProgress();
   };
 
   window.ReanGitHome = { mount };
-  window.ReanGitI18n?.ready?.then(paintHomeResume);
-  window.ReanGitI18n?.onChange?.(paintHomeResume);
+  window.ReanGitI18n?.ready?.then(() => {
+    paintHomeResume();
+    paintHomeProgress();
+  });
+  window.ReanGitI18n?.onChange?.(() => {
+    paintHomeResume();
+    paintHomeProgress();
+  });
 
   const start = () => {
     if (window.__reanGitDeferHomeMount) return;

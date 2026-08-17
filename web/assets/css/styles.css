@@ -1317,6 +1317,81 @@ html.theme-animate body *::after {
   color: var(--ink-soft);
 }
 
+.lab-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 1.25rem 0 1rem;
+}
+
+.lab-filter {
+  appearance: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.42rem 0.85rem;
+  cursor: pointer;
+  transition:
+    border-color 0.2s var(--ease),
+    color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+
+.lab-filter:hover {
+  border-color: var(--accent-border);
+  color: var(--ink);
+}
+
+.lab-filter.is-active {
+  border-color: var(--accent-border);
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+.progress-panel {
+  padding: 2.5rem 0 0;
+}
+
+.progress-panel-inner {
+  display: grid;
+  gap: 1rem;
+  padding: 1.35rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: var(--surface);
+}
+
+@media (min-width: 720px) {
+  .progress-panel-inner {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+}
+
+.progress-panel h2 {
+  margin: 0.35rem 0 0;
+  font-size: clamp(1.35rem, 2.5vw, 1.65rem);
+}
+
+.progress-stats {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.progress-stat {
+  margin: 0;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.55rem;
+  background: var(--bg);
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
 .lab-grid {
   display: grid;
   gap: 0.7rem;
