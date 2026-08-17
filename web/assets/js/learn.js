@@ -478,6 +478,7 @@ async function initLearnPage(signal, { animate = true } = {}) {
       document.title = `${chapter.title} — rean-git`;
       renderMarkdown(bodyEl, chapter.body);
       renderPager(index);
+      window.ReanGitI18n?.syncSeo?.();
     };
 
     const showChapter = async (id, { push = false, animate = true } = {}) => {
@@ -665,6 +666,7 @@ async function initLabPage(signal, { animate = true } = {}) {
     }
     document.title = `${lab.title} — rean-git`;
     renderPager(index);
+    window.ReanGitI18n?.syncSeo?.();
 
     try {
       const md = await loadLabMarkdown(lab.id);

@@ -275,6 +275,193 @@
 
   syncActiveLinks();
 
+  function escapeSearchHtml(text) {
+    return String(text).replace(/[&<>"']/g, (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
+    );
+  }
+
+  function setupSearch() {
+    const toggle = document.querySelector("[data-search-toggle]");
+    if (!toggle) return;
+
+    let modal = document.querySelector("[data-search-modal]");
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.className = "search-modal";
+      modal.hidden = true;
+      modal.setAttribute("data-search-modal", "");
+      modal.innerHTML = `
+        <div class="search-dialog" role="dialog" aria-modal="true" aria-labelledby="site-search-title">
+          <h2 id="site-search-title" class="visually-hidden" data-i18n="nav.search">Search</h2>
+          <input
+            type="search"
+            data-search-input
+            autocomplete="off"
+            data-i18n="nav.searchPlaceholder"
+            data-i18n-attr="placeholder"
+            placeholder="Search chapters and labs"
+          />
+          <ul class="search-results" data-search-results role="listbox"></ul>
+          <p class="search-empty" data-search-empty hidden data-i18n="nav.searchEmpty">No matching chapters or labs</p>
+          <p class="search-hint" data-i18n="nav.searchHint">Type to search · Esc to close</p>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    const dialog = modal.querySelector(".search-dialog");
+    const input = modal.querySelector("[data-search-input]");
+    const list = modal.querySelector("[data-search-results]");
+    const empty = modal.querySelector("[data-search-empty]");
+    if (!dialog || !input || !list) return;
+
+    let trap = null;
+    let activeIndex = 0;
+
+    function isOpen() {
+      return !modal.hidden;
+    }
+
+    function collectItems() {
+      const i18n = window.ReanGitI18n;
+      const dict = i18n?.getDict?.() || {};
+      const chapters = Object.entries(dict.chapters || {}).map(([id, title]) => ({
+        href: `./learn.html?c=${encodeURIComponent(id)}`,
+        title: String(title),
+        haystack: String(title).toLowerCase(),
+        kind: i18n?.t?.("learn.chapters") || "Chapters",
+      }));
+      const labs = (window.ReanGitCatalog?.getLabs?.() || []).map((lab) => {
+        const title = i18n?.t?.(`labs.${lab.id}.title`) || lab.id;
+        const teaser = i18n?.t?.(`labs.${lab.id}.teaser`) || "";
+        const summary = i18n?.t?.(`labs.${lab.id}.summary`) || "";
+        return {
+          href: `./lab.html?id=${encodeURIComponent(lab.id)}`,
+          title: String(title),
+          haystack: `${title} ${teaser} ${summary} ${lab.id}`.toLowerCase(),
+          kind: i18n?.t?.("lab.labs") || "Labs",
+        };
+      });
+      return [...chapters, ...labs];
+    }
+
+    function resultLinks() {
+      return [...list.querySelectorAll("a")];
+    }
+
+    function setActive(index) {
+      const links = resultLinks();
+      if (!links.length) {
+        activeIndex = 0;
+        return;
+      }
+      activeIndex = (index + links.length) % links.length;
+      links.forEach((link, i) => link.classList.toggle("is-active", i === activeIndex));
+      links[activeIndex].scrollIntoView({ block: "nearest" });
+    }
+
+    function render(query) {
+      const needle = query.trim().toLowerCase();
+      const matches = collectItems().filter((item) => !needle || item.haystack.includes(needle));
+      const limited = matches.slice(0, 12);
+      list.innerHTML = limited
+        .map(
+          (item) =>
+            `<li><a href="${escapeSearchHtml(item.href)}"><strong>${escapeSearchHtml(item.title)}</strong><small>${escapeSearchHtml(item.kind)}</small></a></li>`
+        )
+        .join("");
+      if (empty) empty.hidden = limited.length > 0;
+      setActive(0);
+    }
+
+    function open() {
+      modal.hidden = false;
+      window.ReanGitI18n?.apply?.(modal);
+      render(input.value);
+      trap = createFocusTrap(dialog);
+      trap.activate();
+      input.focus();
+      input.select();
+    }
+
+    function close() {
+      if (modal.hidden) return;
+      modal.hidden = true;
+      trap?.deactivate();
+      trap = null;
+      toggle.focus();
+    }
+
+    toggle.addEventListener("click", () => {
+      if (isOpen()) close();
+      else open();
+    });
+
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) close();
+    });
+
+    list.addEventListener("click", (event) => {
+      if (event.target.closest("a")) close();
+    });
+
+    input.addEventListener("input", () => render(input.value));
+
+    modal.addEventListener("keydown", (event) => {
+      if (!isOpen()) return;
+      if (event.key === "Escape") {
+        event.preventDefault();
+        close();
+        return;
+      }
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        setActive(activeIndex + 1);
+        return;
+      }
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        setActive(activeIndex - 1);
+        return;
+      }
+      if (event.key === "Enter") {
+        const current = resultLinks()[activeIndex];
+        if (!current) return;
+        event.preventDefault();
+        close();
+        current.click();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.defaultPrevented) return;
+      const typing =
+        event.target instanceof HTMLElement &&
+        (event.target.closest("input, textarea, select, [contenteditable='true']"));
+      if ((event.key === "k" || event.key === "K") && (event.metaKey || event.ctrlKey)) {
+        event.preventDefault();
+        if (isOpen()) close();
+        else open();
+        return;
+      }
+      if (event.key !== "/" || typing || event.metaKey || event.ctrlKey || event.altKey) return;
+      event.preventDefault();
+      open();
+    });
+
+    window.ReanGitI18n?.onChange?.(() => {
+      if (!isOpen()) return;
+      window.ReanGitI18n?.apply?.(modal);
+      render(input.value);
+    });
+    window.ReanGitCatalog?.ready?.then(() => {
+      if (isOpen()) render(input.value);
+    });
+  }
+
+  setupSearch();
+
   if (!nav) return;
 
   const links = [...nav.querySelectorAll("a")];
@@ -504,6 +691,7 @@
     await nextFrame();
     await bootPage({ animate: false });
     window.scrollTo(0, 0);
+    window.ReanGitI18n?.syncSeo?.();
 
     if (animate) {
       await nextFrame();
@@ -527,6 +715,7 @@
       syncActiveLinks();
       if (!animatePill) syncIndicator({ animate: false });
       window.ReanGitContent?.goLearn?.(chapterId, { push: false, animate });
+      window.ReanGitI18n?.syncSeo?.();
       return;
     }
 
@@ -537,6 +726,7 @@
       syncActiveLinks();
       if (!animatePill) syncIndicator({ animate: false });
       window.ReanGitContent?.goLab?.(labId, { push: false, animate });
+      window.ReanGitI18n?.syncSeo?.();
       return;
     }
 

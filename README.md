@@ -18,7 +18,7 @@ Then visit [http://localhost:4173](http://localhost:4173).
 - **Learn:** [/learn.html](http://localhost:4173/learn.html) — handbook chapters from `web/content/en/guide.md`
 - **Labs:** [/labs.html](http://localhost:4173/labs.html) — practice instructions
 
-The site UI supports **English** and **Khmer** (header language switch). Handbook and lab Markdown load from `web/content/km/` when Khmer is selected, with fallback to `web/content/en/`.
+The site UI supports **English** and **Khmer** (header language switch). Handbook and lab Markdown load from `web/content/km/` when Khmer is selected, with fallback to `web/content/en/`. Search chapters and labs from the header, or press `/` / `Ctrl+K`.
 
 ## Repo layout
 
