@@ -3,6 +3,8 @@
   const VALID_LEVELS = new Set(["beginner", "intermediate", "advanced"]);
 
   let labs = [];
+  let filterLevel = "all";
+  let filtersWired = false;
 
   function escapeHtml(text) {
     return String(text).replace(/[&<>"']/g, (c) =>
@@ -17,6 +19,11 @@
 
   function labHref(id) {
     return `./lab.html?id=${encodeURIComponent(id)}`;
+  }
+
+  function visibleLabs() {
+    if (filterLevel === "all") return labs;
+    return labs.filter((lab) => lab.level === filterLevel);
   }
 
   function renderTrack(root) {
@@ -37,10 +44,12 @@
 
   function renderGrid(root) {
     if (!root) return;
-    root.innerHTML = labs
-      .map((lab, index) => {
+    const list = visibleLabs();
+    root.innerHTML = list
+      .map((lab) => {
         const id = escapeHtml(lab.id);
-        return `<a href="${labHref(lab.id)}">
+        const index = labs.indexOf(lab);
+        return `<a href="${labHref(lab.id)}" class="is-visible">
           <span class="num">${escapeHtml(labNum(lab, index))}</span>
           <div>
             <h3 data-i18n="labs.${id}.title"></h3>
@@ -49,6 +58,33 @@
         </a>`;
       })
       .join("");
+    window.ReanGitI18n?.apply?.(root);
+  }
+
+  function syncFilterButtons() {
+    document.querySelectorAll("[data-lab-filter]").forEach((btn) => {
+      const active = btn.getAttribute("data-lab-filter") === filterLevel;
+      btn.setAttribute("aria-pressed", String(active));
+      btn.classList.toggle("is-active", active);
+    });
+  }
+
+  function setFilter(level) {
+    filterLevel = VALID_LEVELS.has(level) || level === "all" ? level : "all";
+    syncFilterButtons();
+    renderGrid(document.querySelector("[data-lab-grid]"));
+  }
+
+  function wireFilters() {
+    if (filtersWired) return;
+    const bar = document.querySelector("[data-lab-filters]");
+    if (!bar) return;
+    filtersWired = true;
+    bar.addEventListener("click", (event) => {
+      const btn = event.target.closest("[data-lab-filter]");
+      if (!btn) return;
+      setFilter(btn.getAttribute("data-lab-filter"));
+    });
   }
 
   function paintCountTitle() {
@@ -62,10 +98,11 @@
     const track = document.querySelector("[data-lab-track]");
     const grid = document.querySelector("[data-lab-grid]");
     renderTrack(track);
+    wireFilters();
+    syncFilterButtons();
     renderGrid(grid);
     paintCountTitle();
     if (track) window.ReanGitI18n?.apply?.(track);
-    if (grid) window.ReanGitI18n?.apply?.(grid);
   }
 
   const ready = fetch(DATA_URL, { credentials: "same-origin" })
@@ -85,6 +122,7 @@
     ready,
     getLabs: () => labs,
     mountLists,
+    setFilter,
   };
 
   window.ReanGitI18n?.onChange?.(paintCountTitle);

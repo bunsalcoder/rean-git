@@ -545,18 +545,19 @@
     await applyDocument(targetUrl.href, html, { push, animate });
   }
 
-  async function navigateFromLink(link) {
-    const href = link.href;
+  async function navigateTo(href, { animatePill = false } = {}) {
     if (href === location.href) return;
 
     const token = ++navToken;
-    const shouldAnimatePill = navMotionQuery.matches && !prefersReducedMotion;
+    const shouldAnimatePill = animatePill && navMotionQuery.matches && !prefersReducedMotion;
     const shouldAnimatePage = !prefersReducedMotion;
 
-    // Paint the pill immediately — before any network/DOM work.
-    selectTab(link, { animate: shouldAnimatePill });
-    await nextFrame();
-    if (token !== navToken) return;
+    if (shouldAnimatePill) {
+      const navLink = links.find((item) => item.href === href);
+      if (navLink) selectTab(navLink, { animate: true });
+      await nextFrame();
+      if (token !== navToken) return;
+    }
 
     const targetUrl = new URL(href, location.href);
     const sameDocument = pageKey(targetUrl) === pageKey(location.href);
@@ -565,7 +566,6 @@
       (document.body.dataset.page === "learn" || document.body.dataset.page === "lab");
     const prefetch = sameDocument ? null : prefetchPage(href);
 
-    // Fade outgoing page while the pill travels (same-doc chapter/lab handles its own leave).
     const leavePromise =
       shouldAnimatePage && !sameLearnOrLab ? leavePage() : Promise.resolve();
 
@@ -575,12 +575,12 @@
 
     try {
       if (sameDocument && document.body.dataset.page === "learn") {
-        await softNavigate(href, { push: true, animatePill: true, animate: true });
+        await softNavigate(href, { push: true, animatePill, animate: true });
         return;
       }
 
       if (sameDocument && document.body.dataset.page === "lab") {
-        await softNavigate(href, { push: true, animatePill: true, animate: true });
+        await softNavigate(href, { push: true, animatePill, animate: true });
         return;
       }
 
@@ -592,6 +592,36 @@
     }
   }
 
+  function shouldSoftNavigate(event, link) {
+    if (event.defaultPrevented) return false;
+    if (event.button !== 0) return false;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return false;
+    if (link.target === "_blank" || link.hasAttribute("download")) return false;
+
+    const raw = link.getAttribute("href");
+    if (!raw || raw.startsWith("#") || /^(mailto:|tel:|javascript:)/i.test(raw)) {
+      return false;
+    }
+
+    const targetUrl = new URL(link.href, location.href);
+    if (targetUrl.origin !== location.origin) return false;
+
+    const currentUrl = new URL(location.href);
+    if (
+      targetUrl.pathname === currentUrl.pathname &&
+      targetUrl.search === currentUrl.search &&
+      targetUrl.hash
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  async function navigateFromLink(link) {
+    await navigateTo(link.href, { animatePill: true });
+  }
+
   links.forEach((link) => {
     link.addEventListener("pointerenter", () => {
       if (link.href === location.href) return;
@@ -601,17 +631,7 @@
     });
 
     link.addEventListener("click", (event) => {
-      if (
-        event.defaultPrevented ||
-        event.button !== 0 ||
-        event.metaKey ||
-        event.ctrlKey ||
-        event.shiftKey ||
-        event.altKey ||
-        link.target === "_blank"
-      ) {
-        return;
-      }
+      if (!shouldSoftNavigate(event, link)) return;
 
       if (link.href === location.href) {
         event.preventDefault();
@@ -622,6 +642,33 @@
       navigateFromLink(link);
     });
   });
+
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest("a[href]");
+    if (!link || nav?.contains(link) || !shouldSoftNavigate(event, link)) return;
+
+    if (link.href === location.href) {
+      event.preventDefault();
+      return;
+    }
+
+    event.preventDefault();
+    navigateTo(link.href);
+  });
+
+  document.addEventListener(
+    "mouseover",
+    (event) => {
+      const link = event.target.closest("a[href]");
+      if (!link || nav?.contains(link)) return;
+      if (link.href === location.href) return;
+      const targetUrl = new URL(link.href, location.href);
+      if (targetUrl.origin !== location.origin) return;
+      if (pageKey(targetUrl) === pageKey(location.href)) return;
+      prefetchPage(link.href).catch(() => {});
+    },
+    true
+  );
 
   window.addEventListener("popstate", () => {
     const nextKey = pageKey(location.href);

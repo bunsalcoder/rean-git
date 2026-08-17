@@ -237,17 +237,17 @@ function enhanceCheckboxes(root) {
       item.parentElement?.classList.add("contains-task-list");
     }
 
-    const label = (item?.textContent || "").replace(/\s+/g, " ").trim() || String(index);
+    const key = String(index);
     input.disabled = false;
     input.removeAttribute("disabled");
 
-    if (Object.prototype.hasOwnProperty.call(saved, label)) {
-      input.checked = Boolean(saved[label]);
+    if (Object.prototype.hasOwnProperty.call(saved, key)) {
+      input.checked = Boolean(saved[key]);
     }
 
     input.addEventListener("change", () => {
       const next = readChecklistState();
-      next[label] = input.checked;
+      next[key] = input.checked;
       writeChecklistState(next);
       item?.classList.toggle("is-checked", input.checked);
     });

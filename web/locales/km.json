@@ -30,6 +30,10 @@
     "continueChapter": "បន្ត — {title}",
     "continueLab": "មន្ទីរពិសោធន៍ — {title}",
     "openLabs": "បើកមន្ទីរពិសោធន៍",
+    "progressEyebrow": "ផ្លូវរបស់អ្នក",
+    "progressTitle": "បន្តពីកន្លែងដែលអ្នកបានឈប់",
+    "chapterProgress": "ជំពូក {current} នៃ {total} — {title}",
+    "labProgress": "មន្ទីរពិសោធន៍ {current} នៃ {total} — {title}",
     "methodEyebrow": "វិធីរៀន",
     "methodTitle": "អានជំពូក។ រត់ពាក្យបញ្ជា។ បន្តទៅមុខ។",
     "step1Title": "អាន",
@@ -48,6 +52,8 @@
     "eyebrow": "អនុវត្ត",
     "title": "មន្ទីរពិសោធន៍",
     "intro": "ធ្វើតាមលំដាប់។ មន្ទីរពិសោធន៍នីមួយៗស្ថិតនៅក្នុង labs/ ក្នុង repo — បើក terminal ក្បែរទំព័រនេះ។",
+    "filterByLevel": "តម្រងតាមកម្រិត",
+    "filterAll": "កម្រិតទាំងអស់",
     "footerLink": "ត្រឡប់ទៅកម្មវិធីសិក្សា"
   },
   "learn": {
