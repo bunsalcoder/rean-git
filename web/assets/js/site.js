@@ -16,6 +16,7 @@
   const LEARN_SRC = new URL("./assets/js/learn.js", location.href).href;
   const MAIN_SRC = new URL("./assets/js/main.js", location.href).href;
   const CATALOG_SRC = new URL("./assets/js/catalog.js", location.href).href;
+  const UTIL_SRC = new URL("./assets/js/util.js", location.href).href;
   const PILL_MS = 340;
   const PAGE_OUT_MS = 360;
   const PAGE_IN_MS = 720;
@@ -65,6 +66,13 @@
   }
 
   window.ReanGitA11y = { getFocusable, createFocusTrap };
+
+  function registerServiceWorker() {
+    if (!("serviceWorker" in navigator) || navigator.webdriver) return;
+    const src = new URL("./sw.js", location.href);
+    const scope = new URL("./", location.href).pathname;
+    navigator.serviceWorker.register(src, { scope }).catch(() => {});
+  }
 
   let lastPageKey = pageKey(location.href);
   let navToken = 0;
@@ -276,9 +284,7 @@
   syncActiveLinks();
 
   function escapeSearchHtml(text) {
-    return String(text).replace(/[&<>"']/g, (c) =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
-    );
+    return window.ReanGitUtil.escapeHtml(text);
   }
 
   function setupSearch() {
@@ -461,6 +467,7 @@
   }
 
   setupSearch();
+  registerServiceWorker();
 
   if (!nav) return;
 
@@ -623,6 +630,7 @@
       if (needsMarked && !window.DOMPurify) {
         await loadScript(PURIFY_SRC, PURIFY_INTEGRITY);
       }
+      if (!window.ReanGitUtil) await loadScript(UTIL_SRC);
       if (needsCatalog) await loadScript(CATALOG_SRC);
       if (needsLearn) await loadScript(LEARN_SRC);
       if (needsMain) await loadScript(MAIN_SRC);

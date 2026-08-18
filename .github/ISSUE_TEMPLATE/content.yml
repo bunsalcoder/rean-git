@@ -1,0 +1,30 @@
+name: Content
+description: Handbook, lab, or translation issue
+title: "[content] "
+labels: ["content"]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What needs work?
+      options:
+        - Handbook chapter
+        - Lab instructions
+        - Khmer translation
+        - UI locale string
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      description: Chapter number, lab id (`01-first-repo`), or locale key
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: What is wrong or missing, and what should it say instead?
+    validations:
+      required: true
