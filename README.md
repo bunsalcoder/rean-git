@@ -31,9 +31,9 @@ The site UI supports **English** and **Khmer** (header language switch). Handboo
 | `web/content/km/` | Optional Khmer Markdown (falls back to `en`) |
 | `web/locales/` | UI string dictionaries (`en.json`, `km.json`) |
 | `web/data/labs.json` | Lab catalog (ids + levels) for Home, Labs, and the reader |
-| `scripts/` | Sync/check English copies, locale parity, and link checks |
+| `scripts/` | Sync/check English copies, locale parity, Khmer structure, and link checks |
 
-Edit `docs/GIT_FROM_ZERO.md` and the lab `README.md` files, then sync into `web/content/en/`:
+Edit `docs/GIT_FROM_ZERO.md` and the lab `README.md` files, then sync into `web/content/en/`. See [CONTRIBUTING.md](CONTRIBUTING.md) for Khmer updates, locale keys, and the full check list.
 
 ```bash
 ./scripts/sync_en_content.sh     # copy sources → web/content/en/
