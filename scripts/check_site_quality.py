@@ -14,6 +14,11 @@ LOCALES = WEB / "locales"
 CONTENT = WEB / "content"
 LEARN_JS = WEB / "assets" / "js" / "learn.js"
 LABS_JSON = WEB / "data" / "labs.json"
+GUIDE_EN = CONTENT / "en" / "guide.md"
+NUMBERED_H2_RE = re.compile(r"^## (\d+)\.\s+")
+H2_RE = re.compile(r"^## .+$", re.M)
+HOW_TO_FALLBACK_RE = re.compile(r"^## How to use this guide$")
+KM_LINE_RATIO = 0.85
 VALID_LAB_LEVELS = {"beginner", "intermediate", "advanced"}
 SITE_ORIGIN = "https://bunsalcoder.github.io/rean-git"
 PAGE_CANONICALS = {
@@ -23,11 +28,6 @@ PAGE_CANONICALS = {
     "lab.html": f"{SITE_ORIGIN}/lab.html",
 }
 
-CHAPTER_IDS_RE = re.compile(
-    r"const CHAPTER_IDS\s*=\s*\[(.*?)\];",
-    re.S,
-)
-STRING_RE = re.compile(r'"([^"]+)"')
 MD_LINK_RE = re.compile(r"!\[[^\]]*\]\(([^)]+)\)|\[[^\]]*\]\(([^)]+)\)")
 HTML_HREF_RE = re.compile(r"""(?:href|src)=["']([^"']+)["']""")
 DATA_I18N_RE = re.compile(r'data-i18n="([^"]+)"')
@@ -50,14 +50,58 @@ def load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def heading_pattern(raw: object, fallback: re.Pattern[str]) -> re.Pattern[str]:
+    if isinstance(raw, str) and raw.strip():
+        try:
+            return re.compile(raw)
+        except re.error:
+            return fallback
+    return fallback
+
+
+def how_to_pattern(locale: str) -> re.Pattern[str]:
+    match = load_json(LOCALES / f"{locale}.json").get("chapterMatch", {})
+    return heading_pattern(match.get("howToUse"), HOW_TO_FALLBACK_RE)
+
+
+def parse_guide_chapter_ids(text: str, locale: str = "en") -> list[str]:
+    how_to = how_to_pattern(locale)
+    ids: list[str] = []
+    seen: set[str] = set()
+    for line in text.splitlines():
+        chapter_id = None
+        if how_to.search(line) or HOW_TO_FALLBACK_RE.fullmatch(line):
+            chapter_id = "how-to-use"
+        else:
+            numbered = NUMBERED_H2_RE.match(line)
+            if numbered:
+                chapter_id = numbered.group(1)
+        if not chapter_id or chapter_id in seen:
+            continue
+        seen.add(chapter_id)
+        ids.append(chapter_id)
+    return ids
+
+
 def parse_curriculum() -> tuple[list[str], list[str]]:
-    text = LEARN_JS.read_text(encoding="utf-8")
-    chapters_m = CHAPTER_IDS_RE.search(text)
-    if not chapters_m:
-        raise SystemExit("Could not parse CHAPTER_IDS from learn.js")
-    if re.search(r"\bLAB_META\b", text):
+    learn_js = LEARN_JS.read_text(encoding="utf-8")
+    if re.search(r"\bCHAPTER_IDS\b", learn_js):
+        raise SystemExit(
+            "learn.js still defines CHAPTER_IDS; parse handbook headings instead"
+        )
+    if re.search(r"\bLAB_META\b", learn_js):
         raise SystemExit("learn.js still defines LAB_META; labs belong in web/data/labs.json")
-    chapters = STRING_RE.findall(chapters_m.group(1))
+    if "chapterIdFromHeading" not in learn_js:
+        raise SystemExit("learn.js must derive chapters from handbook headings")
+
+    if not GUIDE_EN.is_file():
+        raise SystemExit("missing web/content/en/guide.md")
+    chapters = parse_guide_chapter_ids(GUIDE_EN.read_text(encoding="utf-8"), "en")
+    if not chapters:
+        raise SystemExit("web/content/en/guide.md has no chapter headings")
+    numbered = [int(cid) for cid in chapters if cid.isdigit()]
+    if numbered != list(range(1, len(numbered) + 1)):
+        raise SystemExit(f"numbered chapters are not consecutive: {numbered}")
 
     if not LABS_JSON.is_file():
         raise SystemExit("missing web/data/labs.json")
@@ -113,6 +157,14 @@ def check_locale_vs_code(chapters: list[str], labs: list[str]) -> int:
         if key not in en:
             msgs.append(f"missing locale key {key}")
 
+    locale_chapters = sorted(
+        key.split(".", 1)[1] for key in en if key.startswith("chapters.")
+    )
+    if locale_chapters != sorted(chapters):
+        msgs.append(
+            f"locale chapters {locale_chapters} do not match handbook {sorted(chapters)}"
+        )
+
     for lab_id in labs:
         for field in ("title", "teaser", "summary"):
             key = f"labs.{lab_id}.{field}"
@@ -133,7 +185,7 @@ def check_locale_vs_code(chapters: list[str], labs: list[str]) -> int:
         if key not in en:
             msgs.append(f"JS t() missing in locales: {key}")
 
-    return fail(msgs, "locale keys vs learn.js / HTML / JS")
+    return fail(msgs, "locale keys vs handbook / HTML / JS")
 
 
 def check_content_files(chapters: list[str], labs: list[str]) -> int:
@@ -144,13 +196,11 @@ def check_content_files(chapters: list[str], labs: list[str]) -> int:
             msgs.append(f"missing {guide.relative_to(ROOT)}")
             continue
         text = guide.read_text(encoding="utf-8")
-        for chapter_id in chapters:
-            if not chapter_id.isdigit():
-                continue
-            if not re.search(rf"^## {chapter_id}\. ", text, re.M):
-                msgs.append(
-                    f"{guide.relative_to(ROOT)} missing chapter heading ## {chapter_id}."
-                )
+        found = parse_guide_chapter_ids(text, locale)
+        if found != chapters:
+            msgs.append(
+                f"{guide.relative_to(ROOT)} chapters {found} do not match English {chapters}"
+            )
         for lab_id in labs:
             lab_path = CONTENT / locale / "labs" / f"{lab_id}.md"
             if not lab_path.is_file():
@@ -166,6 +216,45 @@ def check_content_files(chapters: list[str], labs: list[str]) -> int:
             if not readme.is_file():
                 msgs.append(f"missing {readme.relative_to(ROOT)}")
     return fail(msgs, "handbook chapters + lab markdown files")
+
+
+def nonempty_line_count(text: str) -> int:
+    return sum(1 for line in text.splitlines() if line.strip())
+
+
+def check_km_content(chapters: list[str], labs: list[str]) -> int:
+    msgs: list[str] = []
+    en_guide = CONTENT / "en" / "guide.md"
+    km_guide = CONTENT / "km" / "guide.md"
+    if en_guide.is_file() and km_guide.is_file():
+        en_text = en_guide.read_text(encoding="utf-8")
+        km_text = km_guide.read_text(encoding="utf-8")
+        en_lines = nonempty_line_count(en_text)
+        km_lines = nonempty_line_count(km_text)
+        minimum = max(1, int(en_lines * KM_LINE_RATIO))
+        if km_lines < minimum:
+            msgs.append(
+                f"km/guide.md is too short ({km_lines} nonempty lines; "
+                f"need at least {minimum} to match {en_lines} in English)"
+            )
+        km_ids = parse_guide_chapter_ids(km_text, "km")
+        if km_ids != chapters:
+            msgs.append(f"km/guide.md chapter order {km_ids} != {chapters}")
+
+    for lab_id in labs:
+        en_lab = CONTENT / "en" / "labs" / f"{lab_id}.md"
+        km_lab = CONTENT / "km" / "labs" / f"{lab_id}.md"
+        if not en_lab.is_file() or not km_lab.is_file():
+            continue
+        en_h2 = H2_RE.findall(en_lab.read_text(encoding="utf-8"))
+        km_h2 = H2_RE.findall(km_lab.read_text(encoding="utf-8"))
+        if len(en_h2) != len(km_h2):
+            msgs.append(
+                f"km/labs/{lab_id}.md has {len(km_h2)} ## headings; "
+                f"English has {len(en_h2)}"
+            )
+
+    return fail(msgs, "Khmer handbook + lab structure")
 
 
 def is_external(url: str) -> bool:
@@ -452,6 +541,8 @@ def main() -> int:
     failures += check_locale_vs_code(chapters, labs)
     print()
     failures += check_content_files(chapters, labs)
+    print()
+    failures += check_km_content(chapters, labs)
     print()
     failures += check_markdown_links(labs)
     print()

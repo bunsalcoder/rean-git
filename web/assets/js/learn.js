@@ -1,35 +1,4 @@
 /* Chapter & lab markdown reader — rean-git */
-const CHAPTER_IDS = [
-  "how-to-use",
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  "10",
-  "11",
-  "12",
-  "13",
-  "14",
-  "15",
-  "16",
-  "17",
-  "18",
-  "19",
-  "20",
-  "21",
-  "22",
-  "23",
-  "24",
-  "25",
-  "26",
-  "27",
-];
-
 function t(key, vars) {
   return window.ReanGitI18n?.t?.(key, vars) ?? key;
 }
@@ -38,30 +7,33 @@ function getLabMeta() {
   return window.ReanGitCatalog?.getLabs?.() || [];
 }
 
-function getChapters() {
-  const howToUse = t("chapterMatch.howToUse");
-  const howToPatterns = [
-    howToUse !== "chapterMatch.howToUse" ? new RegExp(howToUse, "m") : null,
-    /^## How to use this guide$/m,
+function matchesHeading(line, key, fallback) {
+  const localized = t(key);
+  const patterns = [
+    localized !== key ? new RegExp(localized) : null,
+    fallback,
   ].filter(Boolean);
+  return patterns.some((re) => re.test(line));
+}
 
-  return CHAPTER_IDS.map((id) => {
-    const title = t(`chapters.${id}`);
-    if (id === "how-to-use") {
-      return {
-        id,
-        title,
-        matchLine: (line) => howToPatterns.some((re) => re.test(line)),
-      };
-    }
-    const num = id;
-    const match = new RegExp(`^## ${num}\\. `, "m");
-    return {
-      id,
-      title,
-      matchLine: (line) => match.test(line),
-    };
-  });
+function isHowToUseHeading(line) {
+  return matchesHeading(line, "chapterMatch.howToUse", /^## How to use this guide$/);
+}
+
+function isTocHeading(line) {
+  return matchesHeading(line, "chapterMatch.toc", /^## Table of contents$/);
+}
+
+function chapterIdFromHeading(line) {
+  if (isHowToUseHeading(line)) return "how-to-use";
+  const numbered = /^## (\d+)\. /.exec(line);
+  return numbered ? numbered[1] : null;
+}
+
+function chapterTitle(id, headingLine) {
+  const title = t(`chapters.${id}`);
+  if (title && title !== `chapters.${id}`) return title;
+  return headingLine.replace(/^##\s+/, "").replace(/^\d+\.\s+/, "");
 }
 
 function getLabs() {
@@ -70,15 +42,6 @@ function getLabs() {
     title: t(`labs.${lab.id}.title`),
     level: t(`levels.${lab.level}`),
   }));
-}
-
-function tocMatchLine(line) {
-  const localized = t("chapterMatch.toc");
-  const patterns = [
-    localized !== "chapterMatch.toc" ? new RegExp(localized, "m") : null,
-    /^## Table of contents$/m,
-  ].filter(Boolean);
-  return patterns.some((re) => re.test(line));
 }
 
 function getParam(name) {
@@ -99,29 +62,25 @@ function labHref(id) {
   return `./lab.html?id=${encodeURIComponent(id)}`;
 }
 
-function splitGuide(markdown, chapters) {
+function splitGuide(markdown) {
   const lines = markdown.split("\n");
   const starts = [];
 
   lines.forEach((line, index) => {
-    chapters.forEach((ch, ci) => {
-      if (ch.matchLine(line)) {
-        starts.push({ ci, index, title: ch.title, id: ch.id });
-      }
-    });
+    const id = chapterIdFromHeading(line);
+    if (!id) return;
+    starts.push({ index, id, title: chapterTitle(id, line) });
   });
-
-  starts.sort((a, b) => a.index - b.index);
 
   return starts.map((s, i) => {
     let end = i + 1 < starts.length ? starts[i + 1].index : lines.length;
-    if (chapters[s.ci].id === "how-to-use") {
-      const tocAt = lines.findIndex((line, idx) => idx > s.index && tocMatchLine(line));
+    if (s.id === "how-to-use") {
+      const tocAt = lines.findIndex((line, idx) => idx > s.index && isTocHeading(line));
       if (tocAt !== -1) end = tocAt;
     }
     let body = lines.slice(s.index, end).join("\n").trim();
     body = body.replace(/^##\s.+\n+/, "");
-    return { ...chapters[s.ci], body };
+    return { id: s.id, title: s.title, body };
   });
 }
 
@@ -418,8 +377,7 @@ async function initLearnPage(signal, { animate = true } = {}) {
   try {
     const raw = await loadLocalizedContent("guide.md");
     if (signal?.aborted) return null;
-    const chapterDefs = getChapters();
-    const chapters = splitGuide(raw, chapterDefs);
+    const chapters = splitGuide(raw);
     if (!chapters.length) throw new Error("No chapters found");
 
     let currentIndex = -1;

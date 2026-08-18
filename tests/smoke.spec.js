@@ -41,6 +41,15 @@ test("learn page loads a chapter", async ({ page }) => {
   await page.goto("/learn.html");
   await expect(page.locator("[data-chapter-body]")).toBeVisible();
   await expect(page.locator("[data-chapter-title]")).not.toHaveText("");
+  await expect(page.locator("[data-chapter-nav] > li:not(.status)")).toHaveCount(
+    await page.evaluate(async () => {
+      const res = await fetch("./content/en/guide.md");
+      const md = await res.text();
+      const howTo = (md.match(/^## How to use this guide$/m) || []).length;
+      const numbered = (md.match(/^## \d+\. /gm) || []).length;
+      return howTo + numbered;
+    })
+  );
 });
 
 test("lab page loads instructions", async ({ page }) => {
