@@ -276,9 +276,7 @@ function padNum(n) {
 }
 
 function escapeHtml(text) {
-  return String(text).replace(/[&<>"']/g, (c) =>
-    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
-  );
+  return window.ReanGitUtil.escapeHtml(text);
 }
 
 function setupSideSearch(navEl, signal) {

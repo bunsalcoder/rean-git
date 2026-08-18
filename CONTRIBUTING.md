@@ -50,6 +50,12 @@ npm run test:e2e                  # optional; Playwright smoke tests
 
 CI runs the first two (and Playwright) on pushes and PRs to `main` and `develop`.
 
+## Issues and pull requests
+
+Use the GitHub issue forms for **content** vs **site bugs**. PRs should include the checklist in `.github/pull_request_template.md`.
+
+If you change shell assets (CSS, JS, fonts) that the service worker precaches, bump `CACHE` in `web/sw.js` so browsers pick up the new files.
+
 ## Site UI
 
 Strings in `web/locales/*.json` cover chrome (nav, buttons, search). Keep `en.json` and `km.json` on the same keys.

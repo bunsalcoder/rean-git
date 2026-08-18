@@ -319,6 +319,12 @@ def check_html_assets(labs: list[str]) -> int:
     elif "data/labs.json" not in catalog_js.read_text(encoding="utf-8"):
         msgs.append("catalog.js must load web/data/labs.json")
 
+    util_js = WEB / "assets" / "js" / "util.js"
+    if not util_js.is_file():
+        msgs.append("missing web/assets/js/util.js")
+    elif "ReanGitUtil" not in util_js.read_text(encoding="utf-8"):
+        msgs.append("util.js must define ReanGitUtil")
+
     for name, marker in (
         ("index.html", "data-lab-track"),
         ("labs.html", "data-lab-grid"),
@@ -336,6 +342,8 @@ def check_html_assets(labs: list[str]) -> int:
 
     for path in sorted(WEB.glob("*.html")):
         text = path.read_text(encoding="utf-8")
+        if "util.js" not in text:
+            msgs.append(f"{path.name}: missing util.js")
         for target in HTML_HREF_RE.findall(text):
             lab_m = re.search(r"lab\.html\?id=([a-z0-9-]+)", target)
             if lab_m and lab_m.group(1) not in known_labs:
@@ -478,6 +486,42 @@ def check_local_fonts() -> int:
     return fail(msgs, "self-hosted fonts")
 
 
+def check_shared_runtime() -> int:
+    msgs: list[str] = []
+    util = WEB / "assets" / "js" / "util.js"
+    site_js = WEB / "assets" / "js" / "site.js"
+    sw = WEB / "sw.js"
+    entity_map = '"&amp;"'
+
+    if util.is_file():
+        util_text = util.read_text(encoding="utf-8")
+        if "function escapeHtml" not in util_text or entity_map not in util_text:
+            msgs.append("util.js must own the HTML-escape implementation")
+
+    for name in ("catalog.js", "learn.js", "site.js"):
+        path = WEB / "assets" / "js" / name
+        text = path.read_text(encoding="utf-8") if path.is_file() else ""
+        if "ReanGitUtil.escapeHtml" not in text:
+            msgs.append(f"{name} must call ReanGitUtil.escapeHtml")
+        if entity_map in text:
+            msgs.append(f"{name} still inlines HTML escaping")
+
+    if not sw.is_file():
+        msgs.append("missing web/sw.js")
+    else:
+        sw_text = sw.read_text(encoding="utf-8")
+        if "caches.open" not in sw_text or "addAll" not in sw_text:
+            msgs.append("sw.js must precache shell assets")
+
+    site_text = site_js.read_text(encoding="utf-8") if site_js.is_file() else ""
+    if "serviceWorker.register" not in site_text:
+        msgs.append("site.js must register the service worker")
+    if "UTIL_SRC" not in site_text:
+        msgs.append("site.js soft-nav should load util.js")
+
+    return fail(msgs, "shared util + service worker")
+
+
 MARKED_PIN = "assets/vendor/marked.min.js"
 PURIFY_PIN = "assets/vendor/purify.min.js"
 MARKED_SRI = "sha384-948ahk4ZmxYVYOc+rxN1H2gM1EJ2Duhp7uHtZ4WSLkV4Vtx5MUqnV+l7u9B+jFv+"
@@ -551,6 +595,8 @@ def main() -> int:
     failures += check_seo(chapters, labs)
     print()
     failures += check_local_fonts()
+    print()
+    failures += check_shared_runtime()
     print()
     failures += check_markdown_hardening()
     print()
