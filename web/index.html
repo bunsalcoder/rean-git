@@ -61,11 +61,15 @@
     <link rel="icon" href="./assets/img/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="./assets/img/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="./assets/img/apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <meta name="theme-color" content="#f3f5f7" />
     <script>
       (function () {
         var t = localStorage.getItem("rean-git-theme");
         if (!t) t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
         document.documentElement.setAttribute("data-theme", t);
+        var themeMeta = document.querySelector('meta[name="theme-color"]');
+        if (themeMeta) themeMeta.setAttribute("content", t === "dark" ? "#2f3644" : "#f3f5f7");
         var l = localStorage.getItem("rean-git-lang");
         if (l === "km" || l === "en") {
           document.documentElement.setAttribute("lang", l);
@@ -213,6 +217,7 @@
             <div class="progress-stats">
               <p class="progress-stat" data-home-chapter-progress hidden></p>
               <p class="progress-stat" data-home-lab-progress hidden></p>
+              <p class="progress-stat" data-home-labs-complete hidden></p>
             </div>
           </div>
         </div>

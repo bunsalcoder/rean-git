@@ -507,6 +507,14 @@ def check_shared_runtime() -> int:
         if entity_map in text:
             msgs.append(f"{name} still inlines HTML escaping")
 
+    util_text = util.read_text(encoding="utf-8") if util.is_file() else ""
+    if "recordLabChecklist" not in util_text or "completedLabCount" not in util_text:
+        msgs.append("util.js must track lab checklist completion")
+
+    learn_js = LEARN_JS.read_text(encoding="utf-8") if LEARN_JS.is_file() else ""
+    if "appendVerifyHint" not in learn_js or "lab-verify" not in learn_js:
+        msgs.append("learn.js must show the lab verify.sh hint")
+
     if not sw.is_file():
         msgs.append("missing web/sw.js")
     else:
@@ -563,6 +571,40 @@ def check_markdown_hardening() -> int:
             msgs.append(f"{name}: markdown libraries should be local, not CDN")
 
     return fail(msgs, "Markdown vendor pin + DOMPurify hardening")
+
+
+def check_pwa() -> int:
+    msgs: list[str] = []
+    manifest = WEB / "manifest.webmanifest"
+    if not manifest.is_file():
+        msgs.append("missing web/manifest.webmanifest")
+    else:
+        text = manifest.read_text(encoding="utf-8")
+        if '"start_url"' not in text:
+            msgs.append("manifest.webmanifest missing start_url")
+        if "standalone" not in text:
+            msgs.append("manifest.webmanifest should use display standalone")
+        if "icon-192.png" not in text or "icon-512.png" not in text:
+            msgs.append("manifest.webmanifest missing 192/512 icons")
+
+    for name in ("icon-192.png", "icon-512.png"):
+        if not (WEB / "assets" / "img" / name).is_file():
+            msgs.append(f"missing web/assets/img/{name}")
+
+    for name in PAGE_CANONICALS:
+        path = WEB / name
+        text = path.read_text(encoding="utf-8") if path.is_file() else ""
+        if 'rel="manifest"' not in text:
+            msgs.append(f"{name}: missing web app manifest")
+        if 'name="theme-color"' not in text:
+            msgs.append(f"{name}: missing theme-color")
+
+    sw = WEB / "sw.js"
+    sw_text = sw.read_text(encoding="utf-8") if sw.is_file() else ""
+    if "manifest.webmanifest" not in sw_text:
+        msgs.append("sw.js should precache the web app manifest")
+
+    return fail(msgs, "PWA manifest + theme-color")
 
 
 def check_lab_verifiers(labs: list[str]) -> int:
@@ -628,6 +670,8 @@ def main() -> int:
     failures += check_shared_runtime()
     print()
     failures += check_markdown_hardening()
+    print()
+    failures += check_pwa()
     print()
     failures += check_lab_verifiers(labs)
     print()

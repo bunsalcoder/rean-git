@@ -113,7 +113,8 @@
     const panel = document.querySelector("[data-home-progress]");
     const chapterEl = document.querySelector("[data-home-chapter-progress]");
     const labEl = document.querySelector("[data-home-lab-progress]");
-    if (!panel || !chapterEl || !labEl) return;
+    const completeEl = document.querySelector("[data-home-labs-complete]");
+    if (!panel || !chapterEl || !labEl || !completeEl) return;
 
     const i18n = window.ReanGitI18n;
     const chapters = Object.keys(i18n?.getDict?.()?.chapters || {});
@@ -122,8 +123,11 @@
     const labId = readStorage(LAST_LAB_KEY);
     const chapterIndex = chapterId ? chapters.indexOf(chapterId) + 1 : 0;
     const labIndex = labId ? catalogLabs.findIndex((lab) => lab.id === labId) + 1 : 0;
+    const completed = window.ReanGitUtil?.completedLabCount?.(
+      catalogLabs.map((lab) => lab.id)
+    ) || 0;
 
-    if (!chapterIndex && !labIndex) {
+    if (!chapterIndex && !labIndex && !completed) {
       panel.hidden = true;
       return;
     }
@@ -150,6 +154,16 @@
       });
     } else {
       labEl.hidden = true;
+    }
+
+    if (completed > 0) {
+      completeEl.hidden = false;
+      completeEl.textContent = i18n.t("home.labsComplete", {
+        current: String(completed),
+        total: String(catalogLabs.length),
+      });
+    } else {
+      completeEl.hidden = true;
     }
   }
 

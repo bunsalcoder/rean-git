@@ -1,10 +1,11 @@
-const CACHE = "rean-git-v1";
+const CACHE = "rean-git-v2";
 const PRECACHE = [
   "./",
   "./index.html",
   "./learn.html",
   "./labs.html",
   "./lab.html",
+  "./manifest.webmanifest",
   "./data/labs.json",
   "./locales/en.json",
   "./locales/km.json",
@@ -23,6 +24,8 @@ const PRECACHE = [
   "./assets/fonts/ibm-plex-mono-500-latin.woff2",
   "./assets/fonts/kantumruy-pro-khmer.woff2",
   "./assets/fonts/kantumruy-pro-latin.woff2",
+  "./assets/img/icon-192.png",
+  "./assets/img/icon-512.png",
 ];
 
 self.addEventListener("install", (event) => {

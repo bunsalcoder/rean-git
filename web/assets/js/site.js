@@ -102,6 +102,8 @@
   function paintTheme(theme) {
     const next = theme === "dark" ? "dark" : "light";
     document.documentElement.setAttribute("data-theme", next);
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+    if (themeMeta) themeMeta.setAttribute("content", next === "dark" ? "#2f3644" : "#f3f5f7");
     if (themeToggle) {
       const i18n = window.ReanGitI18n;
       const label =
