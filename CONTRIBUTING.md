@@ -50,6 +50,19 @@ npm run test:e2e                  # optional; Playwright smoke tests
 
 CI runs the first two (and Playwright) on pushes and PRs to `main` and `develop`.
 
+## Lab self-check
+
+Each lab folder has an optional `verify.sh` you can run after finishing the steps in `playground/`:
+
+```bash
+cd labs/01-first-repo
+./verify.sh
+```
+
+Shared helpers live in `scripts/lab_verify_lib.sh`. Verifiers inspect local git state (clean tree, branches, tags, hooks, etc.). Labs that use GitHub (06, 07) print warnings for steps that must be confirmed in the browser.
+
+When you add a lab, add `labs/<id>/verify.sh` and register checks in `scripts/check_site_quality.py` via `check_lab_verifiers()`.
+
 ## Issues and pull requests
 
 Use the GitHub issue forms for **content** vs **site bugs**. PRs should include the checklist in `.github/pull_request_template.md`.
