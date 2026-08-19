@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -564,6 +565,34 @@ def check_markdown_hardening() -> int:
     return fail(msgs, "Markdown vendor pin + DOMPurify hardening")
 
 
+def check_lab_verifiers(labs: list[str]) -> int:
+    msgs: list[str] = []
+    lib = ROOT / "scripts" / "lab_verify_lib.sh"
+    if not lib.is_file():
+        msgs.append("missing scripts/lab_verify_lib.sh")
+
+    for lab_id in labs:
+        path = ROOT / "labs" / lab_id / "verify.sh"
+        if not path.is_file():
+            msgs.append(f"labs/{lab_id}/verify.sh missing")
+            continue
+        if not path.stat().st_mode & 0o111:
+            msgs.append(f"labs/{lab_id}/verify.sh is not executable")
+        text = path.read_text(encoding="utf-8")
+        if "lab_verify_lib.sh" not in text:
+            msgs.append(f"labs/{lab_id}/verify.sh must source lab_verify_lib.sh")
+        result = subprocess.run(
+            ["bash", "-n", str(path)],
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode != 0:
+            detail = (result.stderr or result.stdout).strip()
+            msgs.append(f"labs/{lab_id}/verify.sh syntax error: {detail}")
+
+    return fail(msgs, "lab verify scripts")
+
+
 def write_sitemap(chapters: list[str], labs: list[str]) -> None:
     path = WEB / "sitemap.xml"
     path.write_text(build_sitemap(chapters, labs), encoding="utf-8")
@@ -599,6 +628,8 @@ def main() -> int:
     failures += check_shared_runtime()
     print()
     failures += check_markdown_hardening()
+    print()
+    failures += check_lab_verifiers(labs)
     print()
     if failures:
         print("Site quality check failed.")
