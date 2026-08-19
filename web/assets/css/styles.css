@@ -1422,8 +1422,26 @@ html.theme-animate body *::after {
 .lab-desc {
   margin: 0;
   color: var(--ink-soft);
-  font-size: 0.88rem;
-  line-height: 1.4;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.lab-track li.is-complete a,
+.lab-grid a.is-complete {
+  border-color: var(--accent-border);
+}
+
+.lab-done {
+  display: inline-block;
+  margin-top: 0.4rem;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  width: max-content;
 }
 
 .site-footer {
@@ -1972,6 +1990,28 @@ html.theme-animate body *::after {
   padding: 0.35rem 0 0.35rem 1rem;
   border-left: 3px solid var(--accent);
   color: var(--ink-soft);
+}
+
+.lab-verify {
+  margin-top: 2.25rem;
+  padding: 1.15rem 1.2rem 1.25rem;
+  border: 1px dashed var(--accent-border);
+  border-radius: 0.7rem;
+  background: var(--accent-soft);
+}
+
+.lab-verify-title {
+  margin: 0 0 0.3rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.lab-verify > p {
+  margin: 0 0 0.75rem;
+}
+
+.lab-verify .code-block {
+  margin: 0;
 }
 
 .md-body .code-block {

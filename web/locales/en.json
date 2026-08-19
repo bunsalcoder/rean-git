@@ -38,6 +38,7 @@
     "progressTitle": "Pick up where you left off",
     "chapterProgress": "Chapter {current} of {total} — {title}",
     "labProgress": "Lab {current} of {total} — {title}",
+    "labsComplete": "{current} of {total} labs complete",
     "methodEyebrow": "How you learn",
     "methodTitle": "Read a chapter. Run the commands. Keep going.",
     "step1Title": "Read",
@@ -88,14 +89,17 @@
     "previous": "Previous lab",
     "next": "Next lab",
     "loadError": "Could not load lab.",
-    "serveHint": "Serve the web/ folder over HTTP."
+    "serveHint": "Serve the web/ folder over HTTP.",
+    "verifyTitle": "Self-check (optional)",
+    "verifyBody": "After finishing the steps in playground/, run the verifier from this lab folder:"
   },
   "ui": {
     "copy": "Copy",
     "copied": "Copied",
     "failed": "Failed",
     "progress": "{current} / {total}",
-    "progressLab": "{current} / {total} · {level}"
+    "progressLab": "{current} / {total} · {level}",
+    "done": "Done"
   },
   "levels": {
     "beginner": "Beginner",

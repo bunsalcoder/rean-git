@@ -75,6 +75,36 @@ test("labs page filter narrows the grid", async ({ page }) => {
   await expect(grid).toHaveCount(total);
 });
 
+test("pages advertise a web app manifest", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator('link[rel="manifest"]')).toHaveAttribute(
+    "href",
+    /manifest\.webmanifest/
+  );
+  await expect(page.locator('meta[name="theme-color"]')).toHaveCount(1);
+});
+
+test("lab page offers a verify.sh self-check", async ({ page }) => {
+  await page.goto("/lab.html?id=01-first-repo");
+  await expect(page.locator(".lab-verify")).toBeVisible();
+  await expect(page.locator(".lab-verify")).toContainText("./verify.sh");
+});
+
+test("home shows completed lab count from local progress", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      "rean-git:lab-progress",
+      JSON.stringify({
+        "01-first-repo": { checked: 3, total: 3, complete: true },
+      })
+    );
+  });
+  await page.goto("/");
+  const complete = page.locator("[data-home-labs-complete]");
+  await expect(complete).toBeVisible();
+  await expect(complete).toContainText("1");
+});
+
 test("sidebar search filters chapters", async ({ page }) => {
   await page.goto("/learn.html");
   const items = page.locator("[data-chapter-nav] > li:not(.status)");

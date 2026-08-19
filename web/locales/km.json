@@ -38,6 +38,7 @@
     "progressTitle": "បន្តពីកន្លែងដែលអ្នកបានឈប់",
     "chapterProgress": "ជំពូក {current} នៃ {total} — {title}",
     "labProgress": "មន្ទីរពិសោធន៍ {current} នៃ {total} — {title}",
+    "labsComplete": "បានបញ្ចប់ {current} នៃ {total} មន្ទីរពិសោធន៍",
     "methodEyebrow": "វិធីរៀន",
     "methodTitle": "អានជំពូក។ រត់ពាក្យបញ្ជា។ បន្តទៅមុខ។",
     "step1Title": "អាន",
@@ -88,14 +89,17 @@
     "previous": "មន្ទីរពិសោធន៍មុន",
     "next": "មន្ទីរពិសោធន៍បន្ទាប់",
     "loadError": "មិនអាចផ្ទុកមន្ទីរពិសោធន៍បានទេ។",
-    "serveHint": "បម្រើថត web/ តាម HTTP។"
+    "serveHint": "បម្រើថត web/ តាម HTTP។",
+    "verifyTitle": "ពិនិត្យដោយខ្លួនឯង (ស្រេចចិត្ត)",
+    "verifyBody": "បន្ទាប់ពីបញ្ចប់ជំហានក្នុង playground/ សូមរត់ verifier ពីថតមន្ទីរពិសោធន៍នេះ៖"
   },
   "ui": {
     "copy": "ចម្លង",
     "copied": "បានចម្លង",
     "failed": "បរាជ័យ",
     "progress": "{current} / {total}",
-    "progressLab": "{current} / {total} · {level}"
+    "progressLab": "{current} / {total} · {level}",
+    "done": "រួចរាល់"
   },
   "levels": {
     "beginner": "ដំបូង",

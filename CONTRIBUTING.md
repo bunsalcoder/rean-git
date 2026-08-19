@@ -67,7 +67,7 @@ When you add a lab, add `labs/<id>/verify.sh` and register checks in `scripts/ch
 
 Use the GitHub issue forms for **content** vs **site bugs**. PRs should include the checklist in `.github/pull_request_template.md`.
 
-If you change shell assets (CSS, JS, fonts) that the service worker precaches, bump `CACHE` in `web/sw.js` so browsers pick up the new files.
+If you change shell assets (CSS, JS, fonts, icons) that the service worker precaches, bump `CACHE` in `web/sw.js` so browsers pick up the new files. Installable PWA metadata lives in `web/manifest.webmanifest`.
 
 ## Site UI
 

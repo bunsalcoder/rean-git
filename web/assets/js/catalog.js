@@ -27,11 +27,13 @@
     root.innerHTML = labs
       .map((lab, index) => {
         const id = escapeHtml(lab.id);
-        return `<li>
-          <a href="${labHref(lab.id)}">
+        const done = window.ReanGitUtil?.isLabComplete?.(lab.id);
+        return `<li${done ? ' class="is-complete"' : ""}>
+          <a href="${labHref(lab.id)}" data-lab-id="${id}">
             <span class="lab-num">${escapeHtml(labNum(lab, index))}</span>
             <h3 class="lab-title" data-i18n="labs.${id}.title"></h3>
             <p class="lab-desc" data-i18n="labs.${id}.teaser"></p>
+            ${done ? `<span class="lab-done" data-i18n="ui.done"></span>` : ""}
           </a>
         </li>`;
       })
@@ -45,11 +47,13 @@
       .map((lab) => {
         const id = escapeHtml(lab.id);
         const index = labs.indexOf(lab);
-        return `<a href="${labHref(lab.id)}" class="is-visible">
+        const done = window.ReanGitUtil?.isLabComplete?.(lab.id);
+        return `<a href="${labHref(lab.id)}" class="is-visible${done ? " is-complete" : ""}" data-lab-id="${id}">
           <span class="num">${escapeHtml(labNum(lab, index))}</span>
           <div>
             <h3 data-i18n="labs.${id}.title"></h3>
             <p data-i18n="labs.${id}.summary"></p>
+            ${done ? `<span class="lab-done" data-i18n="ui.done"></span>` : ""}
           </div>
         </a>`;
       })

@@ -209,10 +209,41 @@ function enhanceCheckboxes(root) {
       next[key] = input.checked;
       writeChecklistState(next);
       item?.classList.toggle("is-checked", input.checked);
+      syncLabChecklistProgress();
     });
 
     item?.classList.toggle("is-checked", input.checked);
   });
+
+  syncLabChecklistProgress();
+}
+
+function currentLabId() {
+  if (document.body.getAttribute("data-page") !== "lab") return null;
+  return getParam("id");
+}
+
+function syncLabChecklistProgress(labId) {
+  const id = labId || currentLabId();
+  if (!id || !window.ReanGitUtil?.recordLabChecklist) return;
+  const boxes = document.querySelectorAll('[data-lab-body] input[type="checkbox"]');
+  if (!boxes.length) return;
+  const checked = [...boxes].filter((el) => el.checked).length;
+  window.ReanGitUtil.recordLabChecklist(id, checked, boxes.length);
+}
+
+function appendVerifyHint(target, labId) {
+  if (!target || !labId) return;
+  const wrap = document.createElement("aside");
+  wrap.className = "lab-verify";
+  wrap.innerHTML = `
+    <p class="lab-verify-title">${escapeHtml(t("lab.verifyTitle"))}</p>
+    <p>${escapeHtml(t("lab.verifyBody"))}</p>
+    <pre><code>cd labs/${escapeHtml(labId)}
+./verify.sh</code></pre>
+  `;
+  target.appendChild(wrap);
+  enhanceCodeBlocks(wrap);
 }
 
 async function loadText(url) {
@@ -628,6 +659,8 @@ async function initLabPage(signal, { animate = true } = {}) {
       const md = await loadLabMarkdown(lab.id);
       renderMarkdown(bodyEl, md);
       bodyEl.querySelector("h1")?.remove();
+      appendVerifyHint(bodyEl, lab.id);
+      syncLabChecklistProgress(lab.id);
     } catch (err) {
       bodyEl.innerHTML = `<div class="error"><strong>${escapeHtml(t("lab.loadError"))}</strong><br>${escapeHtml(err.message)}<br><br>${escapeHtml(t("lab.serveHint"))}</div>`;
     }
