@@ -1,4 +1,4 @@
-const CACHE = "rean-git-v3";
+const CACHE = "rean-git-v4";
 const PRECACHE = [
   "./",
   "./index.html",
@@ -6,6 +6,7 @@ const PRECACHE = [
   "./labs.html",
   "./lab.html",
   "./manifest.webmanifest",
+  "./content-precache.json",
   "./data/labs.json",
   "./locales/en.json",
   "./locales/km.json",
@@ -28,11 +29,22 @@ const PRECACHE = [
   "./assets/img/icon-512.png",
 ];
 
+async function precacheContent(cache) {
+  const res = await fetch("./content-precache.json");
+  if (!res.ok) throw new Error("missing content-precache.json");
+  const urls = await res.json();
+  if (!Array.isArray(urls) || !urls.length) throw new Error("empty content precache list");
+  await cache.addAll(urls);
+}
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
       .open(CACHE)
-      .then((cache) => cache.addAll(PRECACHE))
+      .then(async (cache) => {
+        await cache.addAll(PRECACHE);
+        await precacheContent(cache);
+      })
       .then(() => self.skipWaiting())
   );
 });
