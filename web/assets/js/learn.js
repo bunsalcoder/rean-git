@@ -229,7 +229,12 @@ function syncLabChecklistProgress(labId) {
   const boxes = document.querySelectorAll('[data-lab-body] input[type="checkbox"]');
   if (!boxes.length) return;
   const checked = [...boxes].filter((el) => el.checked).length;
-  window.ReanGitUtil.recordLabChecklist(id, checked, boxes.length);
+  const total = boxes.length;
+  if (checked === 0) {
+    const existing = window.ReanGitUtil.labProgress?.(id);
+    if (existing && existing.total === total) return;
+  }
+  window.ReanGitUtil.recordLabChecklist(id, checked, total);
 }
 
 function appendVerifyHint(target, labId) {
@@ -244,6 +249,32 @@ function appendVerifyHint(target, labId) {
   `;
   target.appendChild(wrap);
   enhanceCodeBlocks(wrap);
+}
+
+function labNavItem(lab) {
+  const done = window.ReanGitUtil?.isLabComplete?.(lab.id);
+  const doneBadge = done
+    ? `<span class="side-done">${escapeHtml(t("ui.done"))}</span>`
+    : "";
+  return `<li${done ? ' class="is-complete"' : ""}><a href="${labHref(lab.id)}" data-lab-id="${lab.id}"${done ? ' class="is-complete"' : ""}>${doneBadge}${escapeHtml(lab.title)}<br><span style="opacity:.6;font-weight:500;font-size:.8rem">${escapeHtml(lab.level)}</span></a></li>`;
+}
+
+function paintLabNavCompletion(navEl) {
+  if (!navEl) return;
+  navEl.querySelectorAll("a[data-lab-id]").forEach((link) => {
+    const done = window.ReanGitUtil?.isLabComplete?.(link.dataset.labId);
+    link.classList.toggle("is-complete", done);
+    link.closest("li")?.classList.toggle("is-complete", done);
+    let badge = link.querySelector(".side-done");
+    if (done && !badge) {
+      badge = document.createElement("span");
+      badge.className = "side-done";
+      badge.textContent = t("ui.done");
+      link.prepend(badge);
+    } else if (!done && badge) {
+      badge.remove();
+    }
+  });
 }
 
 async function loadText(url) {
@@ -706,14 +737,17 @@ async function initLabPage(signal, { animate = true } = {}) {
     }
   };
 
-  navEl.innerHTML = labs
-    .map(
-      (l) =>
-        `<li><a href="${labHref(l.id)}" data-lab-id="${l.id}">${escapeHtml(l.title)}<br><span style="opacity:.6;font-weight:500;font-size:.8rem">${escapeHtml(l.level)}</span></a></li>`
-    )
-    .join("");
+  navEl.innerHTML = labs.map((l) => labNavItem(l)).join("");
 
   setupSideSearch(navEl, signal);
+
+  window.addEventListener(
+    "rean-git:lab-progress",
+    () => {
+      paintLabNavCompletion(navEl);
+    },
+    { signal }
+  );
 
   const goToLab = (id, opts) => {
     if (!id) return;

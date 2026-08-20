@@ -105,6 +105,43 @@ test("home shows completed lab count from local progress", async ({ page }) => {
   await expect(complete).toContainText("1");
 });
 
+test("labs page shows completed lab count from local progress", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      "rean-git:lab-progress",
+      JSON.stringify({
+        "01-first-repo": { checked: 3, total: 3, complete: true },
+      })
+    );
+  });
+  await page.goto("/labs.html");
+  const complete = page.locator("[data-labs-progress]");
+  await expect(complete).toBeVisible();
+  await expect(complete).toContainText("1");
+});
+
+test("lab sidebar marks completed labs", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      "rean-git:lab-progress",
+      JSON.stringify({
+        "01-first-repo": { checked: 3, total: 3, complete: true },
+      })
+    );
+  });
+  await page.goto("/lab.html?id=01-first-repo");
+  await expect(
+    page.locator('[data-lab-nav] a[data-lab-id="01-first-repo"].is-complete')
+  ).toBeVisible();
+});
+
+test("styles include print rules", async ({ page }) => {
+  const css = await page.goto("/assets/css/styles.css");
+  const text = await css.text();
+  expect(text).toContain("@media print");
+  expect(text).toContain(".copy-btn");
+});
+
 test("sidebar search filters chapters", async ({ page }) => {
   await page.goto("/learn.html");
   const items = page.locator("[data-chapter-nav] > li:not(.status)");
