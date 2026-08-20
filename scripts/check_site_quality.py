@@ -659,11 +659,56 @@ def write_sitemap(chapters: list[str], labs: list[str]) -> None:
     print(f"Wrote {path.relative_to(ROOT)}")
 
 
+def build_content_precache(labs: list[str]) -> list[str]:
+    paths = ["./content/en/guide.md", "./content/km/guide.md"]
+    for lab_id in labs:
+        paths.append(f"./content/en/labs/{lab_id}.md")
+        paths.append(f"./content/km/labs/{lab_id}.md")
+    return paths
+
+
+def write_content_precache(labs: list[str]) -> None:
+    path = WEB / "content-precache.json"
+    payload = build_content_precache(labs)
+    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    print(f"Wrote {path.relative_to(ROOT)} ({len(payload)} URLs)")
+
+
+def check_content_precache(labs: list[str]) -> int:
+    msgs: list[str] = []
+    path = WEB / "content-precache.json"
+    expected = build_content_precache(labs)
+    if not path.is_file():
+        msgs.append("missing web/content-precache.json")
+    else:
+        try:
+            actual = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            msgs.append("content-precache.json is not valid JSON")
+            actual = None
+        if isinstance(actual, list) and actual != expected:
+            msgs.append(
+                "content-precache.json is out of date — run: "
+                "python3 scripts/check_site_quality.py --write-content-precache"
+            )
+
+    sw = WEB / "sw.js"
+    sw_text = sw.read_text(encoding="utf-8") if sw.is_file() else ""
+    if "content-precache.json" not in sw_text:
+        msgs.append("sw.js must load content-precache.json for offline reading")
+
+    return fail(msgs, "offline content precache manifest")
+
+
 def main() -> int:
-    write_mode = "--write-sitemap" in sys.argv
+    write_sitemap_mode = "--write-sitemap" in sys.argv
+    write_precache_mode = "--write-content-precache" in sys.argv
     chapters, labs = parse_curriculum()
-    if write_mode:
-        write_sitemap(chapters, labs)
+    if write_sitemap_mode or write_precache_mode:
+        if write_sitemap_mode:
+            write_sitemap(chapters, labs)
+        if write_precache_mode:
+            write_content_precache(labs)
         return 0
 
     print(f"Curriculum: {len(chapters)} chapters, {len(labs)} labs")
@@ -692,6 +737,8 @@ def main() -> int:
     failures += check_pwa()
     print()
     failures += check_print_styles()
+    print()
+    failures += check_content_precache(labs)
     print()
     failures += check_lab_verifiers(labs)
     print()

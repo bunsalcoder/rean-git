@@ -22,10 +22,11 @@ If you add or remove a chapter or lab:
 
 1. Add matching keys in `web/locales/en.json` and `web/locales/km.json`
    (`chapters.<id>` or `labs.<id>.title` / `teaser` / `summary`).
-2. Regenerate the sitemap:
+2. Regenerate the sitemap and offline content manifest:
 
 ```bash
 python3 scripts/check_site_quality.py --write-sitemap
+python3 scripts/check_site_quality.py --write-content-precache
 ```
 
 Chapter IDs come from handbook headings (`## How to use this guide` and `## N. …`). You do not need to list them in JavaScript.
@@ -67,7 +68,7 @@ When you add a lab, add `labs/<id>/verify.sh` and register checks in `scripts/ch
 
 Use the GitHub issue forms for **content** vs **site bugs**. PRs should include the checklist in `.github/pull_request_template.md`.
 
-If you change shell assets (CSS, JS, fonts, icons) that the service worker precaches, bump `CACHE` in `web/sw.js` so browsers pick up the new files. Installable PWA metadata lives in `web/manifest.webmanifest`.
+If you change shell assets (CSS, JS, fonts, icons) that the service worker precaches, bump `CACHE` in `web/sw.js` so browsers pick up the new files. After adding or removing labs, regenerate `web/content-precache.json` (see above). Installable PWA metadata lives in `web/manifest.webmanifest`.
 
 ## Site UI
 

@@ -142,6 +142,27 @@ test("styles include print rules", async ({ page }) => {
   expect(text).toContain(".copy-btn");
 });
 
+test("content precache manifest lists handbook and labs", async ({ page }) => {
+  const res = await page.request.get("/content-precache.json");
+  expect(res.ok()).toBeTruthy();
+  const urls = await res.json();
+  expect(urls).toContain("./content/en/guide.md");
+  expect(urls).toContain("./content/en/labs/01-first-repo.md");
+  expect(urls).toContain("./content/km/guide.md");
+});
+
+test("copy button copies a code block", async ({ page, context }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await page.goto("/lab.html?id=01-first-repo");
+  const block = page.locator("[data-lab-body] .code-block").first();
+  await expect(block).toBeVisible();
+  const expected = await block.locator("pre").innerText();
+  await block.locator(".copy-btn").click();
+  await expect(page.locator("[data-lab-body] .copy-btn").first()).toHaveText(/Copied/i);
+  const copied = await page.evaluate(() => navigator.clipboard.readText());
+  expect(copied.trim()).toBe(expected.trim());
+});
+
 test("sidebar search filters chapters", async ({ page }) => {
   await page.goto("/learn.html");
   const items = page.locator("[data-chapter-nav] > li:not(.status)");
