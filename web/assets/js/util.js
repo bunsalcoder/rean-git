@@ -35,6 +35,9 @@
       complete: checked === total,
     };
     writeJson(LAB_PROGRESS_KEY, all);
+    window.dispatchEvent(
+      new CustomEvent("rean-git:lab-progress", { detail: { labId } })
+    );
   }
 
   function labProgress(labId) {
@@ -54,6 +57,7 @@
   window.ReanGitUtil = {
     escapeHtml,
     recordLabChecklist,
+    labProgress,
     isLabComplete,
     completedLabCount,
   };

@@ -1787,6 +1787,24 @@ html.theme-animate body *::after {
   transform: translateX(0);
 }
 
+.side-nav a.is-complete .side-done {
+  display: inline-block;
+  margin-bottom: 0.15rem;
+  padding: 0.08rem 0.38rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.labs-progress {
+  margin-top: 1rem;
+  max-width: 28rem;
+}
+
 .side-nav .status {
   margin: 0.4rem 0.65rem;
   color: var(--ink-soft);
@@ -2320,5 +2338,82 @@ main.is-page-entering,
     transform: none;
     animation: none;
     transition: none;
+  }
+}
+
+@media print {
+  :root {
+    color-scheme: light;
+  }
+
+  body {
+    background: #fff !important;
+    color: #111 !important;
+  }
+
+  .site-header,
+  .site-footer,
+  .sidebar,
+  .backdrop,
+  .toolbar,
+  .pager,
+  .skip-link,
+  .copy-btn,
+  .lab-verify,
+  .side-toggle,
+  .search-toggle,
+  .theme-toggle,
+  .nav-toggle,
+  .lang-switch,
+  .header-actions,
+  .side-search,
+  .sidebar-foot,
+  .lab-filters,
+  .progress-panel,
+  .labs-progress,
+  .lab-done,
+  .side-done,
+  .masthead,
+  .method,
+  .path,
+  .hero-stage,
+  .branch-caption {
+    display: none !important;
+  }
+
+  .app-shell {
+    display: block !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .content-pane,
+  .section .wrap {
+    max-width: none !important;
+    width: 100% !important;
+    padding-inline: 0 !important;
+  }
+
+  .md-body,
+  .md-body h2,
+  .md-body h3 {
+    color: #111 !important;
+  }
+
+  .md-body pre {
+    background: #f4f4f4 !important;
+    color: #111 !important;
+    border: 1px solid #ccc;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .md-body a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    color: #444;
+  }
+
+  .md-body a[href^="#"]::after {
+    content: "";
   }
 }

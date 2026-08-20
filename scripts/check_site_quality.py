@@ -510,10 +510,14 @@ def check_shared_runtime() -> int:
     util_text = util.read_text(encoding="utf-8") if util.is_file() else ""
     if "recordLabChecklist" not in util_text or "completedLabCount" not in util_text:
         msgs.append("util.js must track lab checklist completion")
+    if "rean-git:lab-progress" not in util_text:
+        msgs.append("util.js must dispatch lab progress updates")
 
     learn_js = LEARN_JS.read_text(encoding="utf-8") if LEARN_JS.is_file() else ""
     if "appendVerifyHint" not in learn_js or "lab-verify" not in learn_js:
         msgs.append("learn.js must show the lab verify.sh hint")
+    if "paintLabNavCompletion" not in learn_js:
+        msgs.append("learn.js must mark completed labs in the sidebar")
 
     if not sw.is_file():
         msgs.append("missing web/sw.js")
@@ -607,6 +611,20 @@ def check_pwa() -> int:
     return fail(msgs, "PWA manifest + theme-color")
 
 
+def check_print_styles() -> int:
+    msgs: list[str] = []
+    css = WEB / "assets" / "css" / "styles.css"
+    text = css.read_text(encoding="utf-8") if css.is_file() else ""
+    if "@media print" not in text:
+        msgs.append("styles.css missing @media print rules")
+    elif ".copy-btn" not in text.split("@media print", 1)[-1]:
+        msgs.append("print styles should hide copy buttons")
+    labs_html = WEB / "labs.html"
+    if labs_html.is_file() and "data-labs-progress" not in labs_html.read_text(encoding="utf-8"):
+        msgs.append("labs.html missing labs progress summary mount point")
+    return fail(msgs, "print styles + labs progress UI")
+
+
 def check_lab_verifiers(labs: list[str]) -> int:
     msgs: list[str] = []
     lib = ROOT / "scripts" / "lab_verify_lib.sh"
@@ -672,6 +690,8 @@ def main() -> int:
     failures += check_markdown_hardening()
     print()
     failures += check_pwa()
+    print()
+    failures += check_print_styles()
     print()
     failures += check_lab_verifiers(labs)
     print()

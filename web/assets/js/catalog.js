@@ -125,5 +125,9 @@
     setFilter,
   };
 
+  window.addEventListener("rean-git:lab-progress", () => {
+    mountLists();
+  });
+
   window.ReanGitI18n?.onChange?.(paintCountTitle);
 })();

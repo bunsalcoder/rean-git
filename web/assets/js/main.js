@@ -167,6 +167,27 @@
     }
   }
 
+  function paintLabsPageProgress() {
+    const el = document.querySelector("[data-labs-progress]");
+    if (!el) return;
+
+    const i18n = window.ReanGitI18n;
+    const catalogLabs = window.ReanGitCatalog?.getLabs?.() || [];
+    const completed =
+      window.ReanGitUtil?.completedLabCount?.(catalogLabs.map((lab) => lab.id)) || 0;
+
+    if (!completed) {
+      el.hidden = true;
+      return;
+    }
+
+    el.hidden = false;
+    el.textContent = i18n.t("home.labsComplete", {
+      current: String(completed),
+      total: String(catalogLabs.length),
+    });
+  }
+
   const mount = async () => {
     try {
       await window.ReanGitI18n?.ready;
@@ -181,16 +202,24 @@
     typeTerminal();
     paintHomeResume();
     paintHomeProgress();
+    paintLabsPageProgress();
   };
 
   window.ReanGitHome = { mount };
   window.ReanGitI18n?.ready?.then(() => {
     paintHomeResume();
     paintHomeProgress();
+    paintLabsPageProgress();
   });
   window.ReanGitI18n?.onChange?.(() => {
     paintHomeResume();
     paintHomeProgress();
+    paintLabsPageProgress();
+  });
+
+  window.addEventListener("rean-git:lab-progress", () => {
+    paintHomeProgress();
+    paintLabsPageProgress();
   });
 
   const start = () => {
