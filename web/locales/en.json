@@ -21,7 +21,8 @@
     "searchEmpty": "No matching chapters or labs",
     "searchHint": "Type to search · Esc to close",
     "themeToLight": "Switch to light mode",
-    "themeToDark": "Switch to dark mode"
+    "themeToDark": "Switch to dark mode",
+    "github": "GitHub"
   },
   "a11y": {
     "skipToContent": "Skip to content"
@@ -70,6 +71,7 @@
     "search": "Search chapters",
     "searchEmpty": "No matching chapters",
     "pagerLabel": "Chapter navigation",
+    "pagerHint": "← → or J / K to change chapters",
     "previous": "Previous",
     "next": "Next",
     "loadError": "Could not load lessons.",
@@ -86,6 +88,7 @@
     "menu": "Labs menu",
     "allLabs": "All labs",
     "pagerLabel": "Lab navigation",
+    "pagerHint": "← → or J / K to change labs",
     "previous": "Previous lab",
     "next": "Next lab",
     "loadError": "Could not load lab.",

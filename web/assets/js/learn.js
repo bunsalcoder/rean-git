@@ -341,6 +341,40 @@ function escapeHtml(text) {
   return window.ReanGitUtil.escapeHtml(text);
 }
 
+function isTypingTarget(el) {
+  if (!(el instanceof HTMLElement)) return false;
+  if (el.isContentEditable) return true;
+  return Boolean(el.closest("input, textarea, select, [contenteditable='true']"));
+}
+
+function searchModalOpen() {
+  const modal = document.querySelector("[data-search-modal]");
+  return Boolean(modal && !modal.hidden);
+}
+
+function setupPagerKeys(getNeighbors, goTo, signal) {
+  window.addEventListener(
+    "keydown",
+    (event) => {
+      if (event.defaultPrevented) return;
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      if (isTypingTarget(event.target)) return;
+      if (searchModalOpen()) return;
+
+      const goingPrev = event.key === "ArrowLeft" || event.key === "k" || event.key === "K";
+      const goingNext = event.key === "ArrowRight" || event.key === "j" || event.key === "J";
+      if (!goingPrev && !goingNext) return;
+
+      const { prev, next } = getNeighbors();
+      const target = goingPrev ? prev : next;
+      if (!target) return;
+      event.preventDefault();
+      goTo(target.id, { push: true, animate: true });
+    },
+    { signal }
+  );
+}
+
 function setupSideSearch(navEl, signal) {
   const input = document.querySelector("[data-side-search]");
   const empty = document.querySelector("[data-side-search-empty]");
@@ -574,6 +608,15 @@ async function initLearnPage(signal, { animate = true } = {}) {
       { signal }
     );
 
+    setupPagerKeys(
+      () => ({
+        prev: chapters[currentIndex - 1],
+        next: chapters[currentIndex + 1],
+      }),
+      goToChapter,
+      signal
+    );
+
     window.addEventListener(
       "popstate",
       () => {
@@ -774,6 +817,15 @@ async function initLabPage(signal, { animate = true } = {}) {
       goToLab(link.dataset.labId, { push: true, animate: true });
     },
     { signal }
+  );
+
+  setupPagerKeys(
+    () => ({
+      prev: labs[currentIndex - 1],
+      next: labs[currentIndex + 1],
+    }),
+    goToLab,
+    signal
   );
 
   window.addEventListener(
