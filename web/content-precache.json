@@ -32,5 +32,11 @@
   "./content/en/labs/15-inspect-history.md",
   "./content/km/labs/15-inspect-history.md",
   "./content/en/labs/16-hooks.md",
-  "./content/km/labs/16-hooks.md"
+  "./content/km/labs/16-hooks.md",
+  "./content/en/labs/17-signing.md",
+  "./content/km/labs/17-signing.md",
+  "./content/en/labs/18-forks.md",
+  "./content/km/labs/18-forks.md",
+  "./content/en/labs/19-submodules-lfs.md",
+  "./content/km/labs/19-submodules-lfs.md"
 ]

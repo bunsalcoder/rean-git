@@ -1036,6 +1036,10 @@ Rewriting history re-signs (or drops signatures). That’s expected after intera
 
 Many teams make signing optional for juniors; some require it on `main`. Match your workplace.
 
+### Lab
+
+**[Lab 17 — Signing commits](../labs/17-signing/)**
+
 ---
 
 ## 23. Forks & multiple remotes
@@ -1078,6 +1082,10 @@ git push --mirror BACKUP_URL
 
 Use carefully — mirrors rewrite matching refs.
 
+### Lab
+
+**[Lab 18 — Forks & remotes](../labs/18-forks/)**
+
 ---
 
 ## 24. Submodules & Git LFS
@@ -1119,6 +1127,10 @@ LFS stores pointers in Git and big files on an LFS server. Needs `git-lfs` insta
 
 - Package registry / CDN for assets
 - Subtree merges (`git subtree`) — less common, fewer gotchas than submodules for some teams
+
+### Lab
+
+**[Lab 19 — Submodules & LFS](../labs/19-submodules-lfs/)**
 
 ---
 
@@ -1326,7 +1338,7 @@ Use this as your progress board — foundations first, then hero skills.
 - [ ] Know what hooks and signed commits are for
 - [ ] Add an `upstream` remote on a fork
 - [ ] Explain when to use submodules vs LFS vs packages
-- [ ] Labs 14–16 complete
+- [ ] Labs 14–19 complete
 
 ### Mastery
 
