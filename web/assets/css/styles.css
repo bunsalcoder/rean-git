@@ -1473,6 +1473,13 @@ html.theme-animate body *::after {
   color: var(--ink);
 }
 
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 .page-home,
 .page-labs,
 .page-lab,
@@ -2136,6 +2143,13 @@ html.theme-animate body *::after {
   text-align: right;
 }
 
+.pager-hint {
+  margin: 0.85rem 0 0;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+
 /* Full-width prev/next bar on lab screen */
 .pager-footer {
   position: relative;
@@ -2357,6 +2371,7 @@ main.is-page-entering,
   .backdrop,
   .toolbar,
   .pager,
+  .pager-hint,
   .skip-link,
   .copy-btn,
   .lab-verify,

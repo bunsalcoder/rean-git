@@ -182,3 +182,35 @@ test("sidebar search filters chapters", async ({ page }) => {
   await expect(visible).toBeGreaterThan(0);
   await expect(visible).toBeLessThan(total);
 });
+
+test("arrow keys move to the next chapter", async ({ page }) => {
+  await page.goto("/learn.html?c=how-to-use");
+  await expect(page.locator("[data-chapter-title]")).not.toHaveText(/Loading/i);
+  await page.keyboard.press("ArrowRight");
+  await expect(page).toHaveURL(/[?&]c=1(?:&|$)/);
+});
+
+test("j moves to the next lab", async ({ page }) => {
+  await page.goto("/lab.html?id=01-first-repo");
+  await expect(page.locator("[data-lab-body]")).toBeVisible();
+  await page.keyboard.press("j");
+  await expect(page).toHaveURL(/id=02-branch-merge/);
+});
+
+test("arrow keys do not navigate while typing in sidebar search", async ({ page }) => {
+  await page.goto("/learn.html?c=1");
+  await expect(page.locator("[data-chapter-title]")).not.toHaveText(/Loading/i);
+  await page.locator("[data-side-search]").fill("x");
+  await page.keyboard.press("ArrowLeft");
+  await expect(page).toHaveURL(/[?&]c=1(?:&|$)/);
+  await expect(page.locator("[data-side-search]")).toHaveValue("x");
+});
+
+test("footer links to the GitHub repo", async ({ page }) => {
+  await page.goto("/");
+  const link = page.locator(
+    '.site-footer a[href="https://github.com/bunsalcoder/rean-git"]'
+  );
+  await expect(link).toBeVisible();
+  await expect(link).toHaveAttribute("target", "_blank");
+});
