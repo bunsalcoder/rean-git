@@ -153,3 +153,27 @@ on_branch_any() {
   done
   return 1
 }
+
+config_equals() {
+  [[ "$(git_pg config --get "$1" 2>/dev/null || true)" == "$2" ]]
+}
+
+commit_is_signed() {
+  git_pg verify-commit "${1:-HEAD}" &>/dev/null
+}
+
+remote_named() {
+  git_pg remote get-url "$1" &>/dev/null
+}
+
+ref_exists() {
+  git_pg rev-parse --verify --quiet "$1" >/dev/null
+}
+
+log_all_matches() {
+  git_pg log --all --oneline | grep -q "$1"
+}
+
+submodule_dir_present() {
+  [[ -e "${LAB_PG}/$1/.git" || -d "${LAB_PG}/$1/.git" ]]
+}

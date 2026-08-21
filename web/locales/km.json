@@ -29,7 +29,7 @@
   "home": {
     "introLabel": "សេចក្តីណែនាំ",
     "headline": "រៀន Git ដោយដៃនៅលើក្តារចុច។",
-    "lede": "ម្ភៃប្រាំពីរជំពូក និងដប់ប្រាំមួយមន្ទីរពិសោធន៍ — ពី commit ដំបូងដល់ផ្នែកខាងក្នុងរបស់ Git។",
+    "lede": "ម្ភៃប្រាំពីរជំពូក និងដប់ប្រាំបួនមន្ទីរពិសោធន៍ — ពី commit ដំបូងដល់ផ្នែកខាងក្នុងរបស់ Git។",
     "startLearning": "ចាប់ផ្តើមរៀន",
     "continueChapter": "បន្ត — {title}",
     "continueLab": "មន្ទីរពិសោធន៍ — {title}",
@@ -220,6 +220,21 @@
       "title": "Hooks",
       "teaser": "រារាំង commit អាក្រក់ក្នុងស្រុក។",
       "summary": "ដំឡើង pre-commit hook ហើយមើលវាចាប់ commit អាក្រក់។"
+    },
+    "17-signing": {
+      "title": "ចុះហត្ថលេខា commits",
+      "teaser": "ចុះហត្ថលេខាដោយ SSH key។",
+      "summary": "ចុះហត្ថលេខា commit ដោយ SSH ហើយផ្ទៀងផ្ទាត់ហត្ថលេខាក្នុងស្រុក។"
+    },
+    "18-forks": {
+      "title": "Forks និង remotes",
+      "teaser": "Origin, upstream, fetch។",
+      "summary": "បន្ថែម upstream លើ fork, push feature, ហើយ fetch ពេលដើមផ្លាស់ទី។"
+    },
+    "19-submodules-lfs": {
+      "title": "Submodules និង LFS",
+      "teaser": "Nest repo, ខ្ទាស់ binary។",
+      "summary": "ខ្ទាស់ repo nested ដោយ submodule បន្ទាប់មកតាមដានឯកសារធំដោយ Git LFS។"
     }
   }
 }

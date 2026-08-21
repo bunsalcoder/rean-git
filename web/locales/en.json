@@ -29,7 +29,7 @@
   "home": {
     "introLabel": "Introduction",
     "headline": "Learn Git with your hands on the keyboard.",
-    "lede": "Twenty-seven chapters and sixteen labs — from first commit to Git internals.",
+    "lede": "Twenty-seven chapters and nineteen labs — from first commit to Git internals.",
     "startLearning": "Start learning",
     "continueChapter": "Continue — {title}",
     "continueLab": "Lab — {title}",
@@ -220,6 +220,21 @@
       "title": "Hooks",
       "teaser": "Block bad commits locally.",
       "summary": "Install a pre-commit hook and see it catch a bad commit."
+    },
+    "17-signing": {
+      "title": "Signing commits",
+      "teaser": "Sign with an SSH key.",
+      "summary": "Sign a commit with SSH and verify the signature locally."
+    },
+    "18-forks": {
+      "title": "Forks & remotes",
+      "teaser": "Origin, upstream, fetch.",
+      "summary": "Add upstream on a fork, push a feature, and fetch when the original repo moves."
+    },
+    "19-submodules-lfs": {
+      "title": "Submodules & LFS",
+      "teaser": "Nest a repo, pin binaries.",
+      "summary": "Pin a nested repo with a submodule, then track a large file with Git LFS."
     }
   }
 }

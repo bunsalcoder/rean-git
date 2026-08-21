@@ -15,6 +15,9 @@
     { "id": "13-internals", "level": "advanced" },
     { "id": "14-worktrees", "level": "advanced" },
     { "id": "15-inspect-history", "level": "advanced" },
-    { "id": "16-hooks", "level": "advanced" }
+    { "id": "16-hooks", "level": "advanced" },
+    { "id": "17-signing", "level": "advanced" },
+    { "id": "18-forks", "level": "advanced" },
+    { "id": "19-submodules-lfs", "level": "advanced" }
   ]
 }

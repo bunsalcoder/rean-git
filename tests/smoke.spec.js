@@ -148,7 +148,15 @@ test("content precache manifest lists handbook and labs", async ({ page }) => {
   const urls = await res.json();
   expect(urls).toContain("./content/en/guide.md");
   expect(urls).toContain("./content/en/labs/01-first-repo.md");
+  expect(urls).toContain("./content/en/labs/17-signing.md");
   expect(urls).toContain("./content/km/guide.md");
+});
+
+test("professional labs appear in the catalog", async ({ page }) => {
+  await page.goto("/labs.html");
+  for (const id of ["17-signing", "18-forks", "19-submodules-lfs"]) {
+    await expect(page.locator(`[data-lab-grid] a[data-lab-id="${id}"]`)).toBeVisible();
+  }
 });
 
 test("copy button copies a code block", async ({ page, context }) => {
