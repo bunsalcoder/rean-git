@@ -251,6 +251,14 @@ test("lab page links to the matching handbook chapter", async ({ page }) => {
   await expect(related).toHaveAttribute("href", /c=14/);
 });
 
+test("learn page links to the matching lab", async ({ page }) => {
+  await page.goto("/learn.html?c=14");
+  const related = page.locator("[data-related-lab] a");
+  await expect(related).toBeVisible();
+  await expect(related).toHaveAttribute("href", /id=08-stash/);
+  await expect(related).toContainText(/stash/i);
+});
+
 test("unchecking every lab box clears completion", async ({ page }) => {
   await page.addInitScript(() => {
     localStorage.setItem(
@@ -288,6 +296,18 @@ test("search finds text inside a chapter", async ({ page }) => {
   await expect(results.first()).toBeVisible({ timeout: 10000 });
   const titles = await results.allTextContents();
   expect(titles.some((text) => /mental model/i.test(text))).toBeTruthy();
+});
+
+test("search finds text inside a lab", async ({ page }) => {
+  await page.goto("/");
+  await page.locator("[data-search-toggle]").click();
+  const input = page.locator("[data-search-input]");
+  await expect(input).toBeVisible();
+  await input.fill("messy WIP");
+  const results = page.locator("[data-search-results] [role='option']");
+  await expect(results.first()).toBeVisible({ timeout: 10000 });
+  const titles = await results.allTextContents();
+  expect(titles.some((text) => /stash/i.test(text))).toBeTruthy();
 });
 
 test("learn page can mark a chapter done", async ({ page }) => {

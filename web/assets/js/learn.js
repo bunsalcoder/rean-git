@@ -280,6 +280,24 @@ function paintRelatedChapter(lab) {
   el.innerHTML = `<a href="${chapterHref(lab.chapter)}">${escapeHtml(label)}</a>`;
 }
 
+function paintRelatedLab(chapterId) {
+  const el = document.querySelector("[data-related-lab]");
+  if (!el) return;
+  const lab = window.ReanGitCatalog?.getLabForChapter?.(chapterId);
+  if (!lab) {
+    el.hidden = true;
+    el.replaceChildren();
+    return;
+  }
+  const title = t(`labs.${lab.id}.title`);
+  const label =
+    title && title !== `labs.${lab.id}.title`
+      ? t("learn.relatedLab", { title })
+      : t("learn.relatedLabFallback");
+  el.hidden = false;
+  el.innerHTML = `<a href="${labHref(lab.id)}" data-lab-id="${escapeHtml(lab.id)}">${escapeHtml(label)}</a>`;
+}
+
 function paintMarkDone(chapterId) {
   const btn = document.querySelector("[data-mark-done]");
   if (!btn) return;
@@ -547,6 +565,7 @@ async function initLearnPage(signal, { animate = true } = {}) {
       renderMarkdown(bodyEl, chapter.body);
       renderPager(index);
       paintMarkDone(chapter.id);
+      paintRelatedLab(chapter.id);
       window.ReanGitI18n?.syncSeo?.();
     };
 
