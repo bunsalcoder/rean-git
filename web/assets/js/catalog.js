@@ -134,9 +134,15 @@
       return labs;
     });
 
+  function getLabForChapter(chapterId) {
+    if (!chapterId) return null;
+    return labs.find((lab) => lab.chapter === chapterId) || null;
+  }
+
   window.ReanGitCatalog = {
     ready,
     getLabs: () => labs,
+    getLabForChapter,
     getCheatSheetChapter: () => cheatSheetChapter,
     cheatSheetHref,
     mountLists,

@@ -363,31 +363,53 @@
     let trap = null;
     let activeIndex = 0;
     let chapterBodies = new Map();
+    let labBodies = new Map();
     let indexLocale = null;
 
     function isOpen() {
       return !modal.hidden;
     }
 
-    async function ensureChapterIndex() {
-      const locale = window.ReanGitI18n?.getLocale?.() || "en";
-      if (indexLocale === locale && chapterBodies.size) return;
-      const urls =
-        locale === "en"
-          ? ["./content/en/guide.md"]
-          : [`./content/${locale}/guide.md`, "./content/en/guide.md"];
+    async function loadFirstOk(urls) {
       for (const url of urls) {
         try {
           const res = await fetch(url, { credentials: "same-origin" });
           if (!res.ok) continue;
-          const parsed = window.ReanGitUtil?.parseGuideChapters?.(await res.text()) || [];
-          chapterBodies = new Map(parsed.map((chapter) => [chapter.id, chapter.body]));
-          indexLocale = locale;
-          return;
+          return await res.text();
         } catch {
           /* try next locale fallback */
         }
       }
+      return "";
+    }
+
+    async function ensureSearchIndex() {
+      const locale = window.ReanGitI18n?.getLocale?.() || "en";
+      if (indexLocale === locale && chapterBodies.size) return;
+      const guideUrls =
+        locale === "en"
+          ? ["./content/en/guide.md"]
+          : [`./content/${locale}/guide.md`, "./content/en/guide.md"];
+      const guide = await loadFirstOk(guideUrls);
+      const parsed = window.ReanGitUtil?.parseGuideChapters?.(guide) || [];
+      chapterBodies = new Map(parsed.map((chapter) => [chapter.id, chapter.body]));
+
+      await window.ReanGitCatalog?.ready;
+      const catalog = window.ReanGitCatalog?.getLabs?.() || [];
+      const entries = await Promise.all(
+        catalog.map(async (lab) => {
+          const urls =
+            locale === "en"
+              ? [`./content/en/labs/${lab.id}.md`]
+              : [
+                  `./content/${locale}/labs/${lab.id}.md`,
+                  `./content/en/labs/${lab.id}.md`,
+                ];
+          return [lab.id, await loadFirstOk(urls)];
+        })
+      );
+      labBodies = new Map(entries);
+      indexLocale = locale;
     }
 
     function collectItems() {
@@ -403,10 +425,11 @@
         const title = i18n?.t?.(`labs.${lab.id}.title`) || lab.id;
         const teaser = i18n?.t?.(`labs.${lab.id}.teaser`) || "";
         const summary = i18n?.t?.(`labs.${lab.id}.summary`) || "";
+        const body = labBodies.get(lab.id) || "";
         return {
           href: `./lab.html?id=${encodeURIComponent(lab.id)}`,
           title: String(title),
-          haystack: `${title} ${teaser} ${summary} ${lab.id}`.toLowerCase(),
+          haystack: `${title} ${teaser} ${summary} ${lab.id} ${body}`.toLowerCase(),
           kind: i18n?.t?.("lab.labs") || "Labs",
         };
       });
@@ -457,7 +480,7 @@
       trap.activate();
       input.focus();
       input.select();
-      ensureChapterIndex().then(() => {
+      ensureSearchIndex().then(() => {
         if (isOpen()) render(input.value);
       });
     }
@@ -535,7 +558,7 @@
       if (!isOpen()) return;
       window.ReanGitI18n?.apply?.(modal);
       render(input.value);
-      ensureChapterIndex().then(() => {
+      ensureSearchIndex().then(() => {
         if (isOpen()) render(input.value);
       });
     });

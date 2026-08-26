@@ -91,6 +91,8 @@
     "next": "Next",
     "markDone": "Mark done",
     "markedDone": "Done",
+    "relatedLab": "Practice — {title}",
+    "relatedLabFallback": "Open the matching lab",
     "loadError": "Could not load lessons.",
     "serveHint": "Serve the web/ folder over HTTP (for example python3 -m http.server 4173), then open the site from that URL."
   },

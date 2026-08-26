@@ -91,6 +91,8 @@
     "next": "បន្ទាប់",
     "markDone": "សម្គាល់ថារួច",
     "markedDone": "រួចរាល់",
+    "relatedLab": "អនុវត្ត — {title}",
+    "relatedLabFallback": "បើកមន្ទីរពិសោធន៍ដែលត្រូវគ្នា",
     "loadError": "មិនអាចផ្ទុកមេរៀនបានទេ។",
     "serveHint": "បម្រើថត web/ តាម HTTP (ឧទាហរណ៍ python3 -m http.server 4173) បន្ទាប់មកបើកវេបសាយពី URL នោះ។"
   },

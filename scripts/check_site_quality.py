@@ -337,6 +337,8 @@ def check_html_assets(labs: list[str]) -> int:
         catalog_text = catalog_js.read_text(encoding="utf-8")
         if "cheatSheetChapter" not in catalog_text or "data-cheat-sheet" not in catalog_text:
             msgs.append("catalog.js must sync cheat sheet links from labs.json")
+        if "getLabForChapter" not in catalog_text:
+            msgs.append("catalog.js must map labs back to handbook chapters")
 
     util_js = WEB / "assets" / "js" / "util.js"
     if not util_js.is_file():
@@ -548,6 +550,8 @@ def check_shared_runtime() -> int:
         msgs.append("learn.js must mark completed chapters")
     if "data-related-chapter" not in learn_js:
         msgs.append("learn.js must link labs to handbook chapters")
+    if "data-related-lab" not in learn_js:
+        msgs.append("learn.js must link chapters to matching labs")
     if re.search(r'LAST_CHAPTER_KEY\s*=\s*"rean-git:last-chapter"', learn_js):
         msgs.append("learn.js should use ReanGitUtil for last-chapter storage")
 
@@ -563,8 +567,10 @@ def check_shared_runtime() -> int:
         msgs.append("site.js must register the service worker")
     if "UTIL_SRC" not in site_text:
         msgs.append("site.js soft-nav should load util.js")
-    if "parseGuideChapters" not in site_text and "ensureChapterIndex" not in site_text:
+    if "parseGuideChapters" not in site_text and "ensureSearchIndex" not in site_text:
         msgs.append("site.js search should index handbook chapter bodies")
+    if "labs/" not in site_text or "labBodies" not in site_text:
+        msgs.append("site.js search should index lab markdown bodies")
     if 'role="combobox"' not in site_text or "aria-activedescendant" not in site_text:
         msgs.append("site.js search should use combobox semantics")
 
@@ -677,8 +683,12 @@ def check_print_styles() -> int:
         if "data-home-lede" not in home_text:
             msgs.append("index.html missing derived chapter/lab count lede")
     learn_html = WEB / "learn.html"
-    if learn_html.is_file() and "data-mark-done" not in learn_html.read_text(encoding="utf-8"):
-        msgs.append("learn.html missing mark-done control")
+    if learn_html.is_file():
+        learn_text = learn_html.read_text(encoding="utf-8")
+        if "data-mark-done" not in learn_text:
+            msgs.append("learn.html missing mark-done control")
+        if "data-related-lab" not in learn_text:
+            msgs.append("learn.html missing related lab mount point")
     lab_html = WEB / "lab.html"
     if lab_html.is_file() and "data-related-chapter" not in lab_html.read_text(encoding="utf-8"):
         msgs.append("lab.html missing related chapter mount point")
