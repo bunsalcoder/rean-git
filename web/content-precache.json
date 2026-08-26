@@ -25,8 +25,6 @@
   "./content/km/labs/11-interactive-rebase.md",
   "./content/en/labs/12-bisect.md",
   "./content/km/labs/12-bisect.md",
-  "./content/en/labs/13-internals.md",
-  "./content/km/labs/13-internals.md",
   "./content/en/labs/14-worktrees.md",
   "./content/km/labs/14-worktrees.md",
   "./content/en/labs/15-inspect-history.md",
@@ -38,5 +36,7 @@
   "./content/en/labs/18-forks.md",
   "./content/km/labs/18-forks.md",
   "./content/en/labs/19-submodules-lfs.md",
-  "./content/km/labs/19-submodules-lfs.md"
+  "./content/km/labs/19-submodules-lfs.md",
+  "./content/en/labs/13-internals.md",
+  "./content/km/labs/13-internals.md"
 ]

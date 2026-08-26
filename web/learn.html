@@ -78,7 +78,7 @@
           <a href="./index.html" data-i18n="nav.home">Home</a>
           <a href="./learn.html" aria-current="page" data-i18n="nav.learn">Learn</a>
           <a href="./labs.html" data-i18n="nav.labs">Labs</a>
-          <a href="./learn.html?c=26" data-i18n="nav.cheatSheet">Cheat sheet</a>
+          <a href="./learn.html?c=26" data-cheat-sheet data-i18n="nav.cheatSheet">Cheat sheet</a>
         </nav>
         <div class="header-actions">
           <div class="lang-switch" role="group" data-i18n="nav.language" data-i18n-attr="aria-label" aria-label="Language">
@@ -140,7 +140,10 @@
           <button class="btn btn-ghost side-toggle" type="button" data-side-toggle aria-expanded="false" aria-controls="side-panel" data-i18n="learn.chapters">
             Chapters
           </button>
-          <p class="progress-pill" data-progress data-i18n="learn.loadingShort">Loading</p>
+          <div class="toolbar-actions">
+            <button type="button" class="btn btn-ghost" data-mark-done hidden data-i18n="learn.markDone">Mark done</button>
+            <p class="progress-pill" data-progress data-i18n="learn.loadingShort">Loading</p>
+          </div>
         </div>
         <p class="eyebrow" data-i18n="learn.curriculum">Curriculum</p>
         <h1 data-chapter-title data-i18n="learn.loading">Loading…</h1>

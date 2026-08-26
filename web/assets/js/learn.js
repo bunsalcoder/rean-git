@@ -41,6 +41,7 @@ function getLabs() {
     id: lab.id,
     title: t(`labs.${lab.id}.title`),
     level: t(`levels.${lab.level}`),
+    chapter: lab.chapter,
   }));
 }
 
@@ -49,8 +50,6 @@ function getParam(name) {
 }
 
 function getRouteId(queryKey) {
-  const hash = location.hash.replace(/^#/, "").trim();
-  if (hash) return decodeURIComponent(hash);
   return getParam(queryKey);
 }
 
@@ -137,43 +136,24 @@ function writeChecklistState(state) {
   }
 }
 
-const LAST_CHAPTER_KEY = "rean-git:last-chapter";
-const LAST_LAB_KEY = "rean-git:last-lab";
-
-function readStorageItem(key) {
-  try {
-    return localStorage.getItem(key);
-  } catch {
-    return null;
-  }
-}
-
-function writeStorageItem(key, value) {
-  try {
-    localStorage.setItem(key, value);
-  } catch {
-    /* private mode / quota — ignore */
-  }
-}
-
 function readLastChapter(chapters) {
-  const saved = readStorageItem(LAST_CHAPTER_KEY);
+  const saved = window.ReanGitUtil?.readStorageItem?.(window.ReanGitUtil.LAST_CHAPTER_KEY);
   if (!saved) return null;
   return chapters.some((c) => c.id === saved) ? saved : null;
 }
 
 function writeLastChapter(id) {
-  writeStorageItem(LAST_CHAPTER_KEY, id);
+  window.ReanGitUtil?.writeStorageItem?.(window.ReanGitUtil.LAST_CHAPTER_KEY, id);
 }
 
 function readLastLab() {
-  const saved = readStorageItem(LAST_LAB_KEY);
+  const saved = window.ReanGitUtil?.readStorageItem?.(window.ReanGitUtil.LAST_LAB_KEY);
   if (!saved) return null;
   return getLabMeta().some((l) => l.id === saved) ? saved : null;
 }
 
 function writeLastLab(id) {
-  writeStorageItem(LAST_LAB_KEY, id);
+  window.ReanGitUtil?.writeStorageItem?.(window.ReanGitUtil.LAST_LAB_KEY, id);
 }
 
 function resolveRouteOrResume(queryKey, savedId, fallbackId) {
@@ -230,10 +210,6 @@ function syncLabChecklistProgress(labId) {
   if (!boxes.length) return;
   const checked = [...boxes].filter((el) => el.checked).length;
   const total = boxes.length;
-  if (checked === 0) {
-    const existing = window.ReanGitUtil.labProgress?.(id);
-    if (existing && existing.total === total) return;
-  }
   window.ReanGitUtil.recordLabChecklist(id, checked, total);
 }
 
@@ -256,25 +232,65 @@ function labNavItem(lab) {
   const doneBadge = done
     ? `<span class="side-done">${escapeHtml(t("ui.done"))}</span>`
     : "";
-  return `<li${done ? ' class="is-complete"' : ""}><a href="${labHref(lab.id)}" data-lab-id="${lab.id}"${done ? ' class="is-complete"' : ""}>${doneBadge}${escapeHtml(lab.title)}<br><span style="opacity:.6;font-weight:500;font-size:.8rem">${escapeHtml(lab.level)}</span></a></li>`;
+  return `<li${done ? ' class="is-complete"' : ""}><a href="${labHref(lab.id)}" data-lab-id="${lab.id}"${done ? ' class="is-complete"' : ""}>${doneBadge}${escapeHtml(lab.title)}<br><span class="side-level">${escapeHtml(lab.level)}</span></a></li>`;
+}
+
+function paintNavDone(link, done) {
+  link.classList.toggle("is-complete", done);
+  link.closest("li")?.classList.toggle("is-complete", done);
+  let badge = link.querySelector(".side-done");
+  if (done && !badge) {
+    badge = document.createElement("span");
+    badge.className = "side-done";
+    badge.textContent = t("ui.done");
+    link.prepend(badge);
+  } else if (!done && badge) {
+    badge.remove();
+  }
 }
 
 function paintLabNavCompletion(navEl) {
   if (!navEl) return;
   navEl.querySelectorAll("a[data-lab-id]").forEach((link) => {
-    const done = window.ReanGitUtil?.isLabComplete?.(link.dataset.labId);
-    link.classList.toggle("is-complete", done);
-    link.closest("li")?.classList.toggle("is-complete", done);
-    let badge = link.querySelector(".side-done");
-    if (done && !badge) {
-      badge = document.createElement("span");
-      badge.className = "side-done";
-      badge.textContent = t("ui.done");
-      link.prepend(badge);
-    } else if (!done && badge) {
-      badge.remove();
-    }
+    paintNavDone(link, window.ReanGitUtil?.isLabComplete?.(link.dataset.labId));
   });
+}
+
+function paintChapterNavCompletion(navEl) {
+  if (!navEl) return;
+  navEl.querySelectorAll("a[data-chapter-id]").forEach((link) => {
+    paintNavDone(link, window.ReanGitUtil?.isChapterComplete?.(link.dataset.chapterId));
+  });
+}
+
+function paintRelatedChapter(lab) {
+  const el = document.querySelector("[data-related-chapter]");
+  if (!el) return;
+  if (!lab?.chapter) {
+    el.hidden = true;
+    el.replaceChildren();
+    return;
+  }
+  const title = t(`chapters.${lab.chapter}`);
+  const label =
+    title && title !== `chapters.${lab.chapter}`
+      ? t("lab.relatedChapter", { title })
+      : t("lab.relatedChapterFallback");
+  el.hidden = false;
+  el.innerHTML = `<a href="${chapterHref(lab.chapter)}">${escapeHtml(label)}</a>`;
+}
+
+function paintMarkDone(chapterId) {
+  const btn = document.querySelector("[data-mark-done]");
+  if (!btn) return;
+  if (!chapterId) {
+    btn.hidden = true;
+    return;
+  }
+  const done = window.ReanGitUtil?.isChapterComplete?.(chapterId);
+  btn.hidden = false;
+  btn.setAttribute("aria-pressed", String(Boolean(done)));
+  btn.textContent = done ? t("learn.markedDone") : t("learn.markDone");
 }
 
 async function loadText(url) {
@@ -530,6 +546,7 @@ async function initLearnPage(signal, { animate = true } = {}) {
       document.title = `${chapter.title} — rean-git`;
       renderMarkdown(bodyEl, chapter.body);
       renderPager(index);
+      paintMarkDone(chapter.id);
       window.ReanGitI18n?.syncSeo?.();
     };
 
@@ -575,7 +592,11 @@ async function initLearnPage(signal, { animate = true } = {}) {
     navEl.innerHTML = chapters
       .map((c, i) => {
         const n = padNum(i + 1);
-        return `<li><a href="${chapterHref(c.id)}" data-chapter-id="${c.id}"><small style="display:block;opacity:.55;font-size:.72rem;font-weight:700;letter-spacing:.06em">${n}</small>${escapeHtml(c.title)}</a></li>`;
+        const done = window.ReanGitUtil?.isChapterComplete?.(c.id);
+        const doneBadge = done
+          ? `<span class="side-done">${escapeHtml(t("ui.done"))}</span>`
+          : "";
+        return `<li${done ? ' class="is-complete"' : ""}><a href="${chapterHref(c.id)}" data-chapter-id="${c.id}"${done ? ' class="is-complete"' : ""}>${doneBadge}<small class="side-num">${n}</small>${escapeHtml(c.title)}</a></li>`;
       })
       .join("");
 
@@ -583,8 +604,35 @@ async function initLearnPage(signal, { animate = true } = {}) {
 
     const goToChapter = (id, opts) => {
       if (!id) return;
+      if (currentIndex >= 0) {
+        const nextIndex = resolveIndex(id);
+        if (nextIndex === currentIndex + 1) {
+          window.ReanGitUtil?.recordChapterComplete?.(chapters[currentIndex].id);
+        }
+      }
       showChapter(id, opts);
     };
+
+    window.addEventListener(
+      "rean-git:chapter-progress",
+      () => {
+        paintChapterNavCompletion(navEl);
+        if (currentIndex >= 0) paintMarkDone(chapters[currentIndex].id);
+      },
+      { signal }
+    );
+
+    const markDoneBtn = document.querySelector("[data-mark-done]");
+    markDoneBtn?.addEventListener(
+      "click",
+      () => {
+        const chapter = chapters[currentIndex];
+        if (!chapter) return;
+        const done = window.ReanGitUtil?.isChapterComplete?.(chapter.id);
+        window.ReanGitUtil?.recordChapterComplete?.(chapter.id, !done);
+      },
+      { signal }
+    );
 
     navEl.addEventListener(
       "click",
@@ -727,6 +775,7 @@ async function initLabPage(signal, { animate = true } = {}) {
     }
     document.title = `${lab.title} — rean-git`;
     renderPager(index);
+    paintRelatedChapter(lab);
     window.ReanGitI18n?.syncSeo?.();
 
     try {

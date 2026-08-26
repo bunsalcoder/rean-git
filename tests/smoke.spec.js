@@ -71,6 +71,11 @@ test("labs page filter narrows the grid", async ({ page }) => {
   await expect(beginnerCount).toBeGreaterThan(0);
   await expect(beginnerCount).toBeLessThan(total);
 
+  await page.locator('[data-lab-filter="intermediate"]').click();
+  await expect(page.locator('[data-lab-grid] a[data-lab-id="08-stash"]')).toBeVisible();
+  await expect(page.locator('[data-lab-grid] a[data-lab-id="07-team-workflow"]')).toBeVisible();
+  await expect(page.locator('[data-lab-grid] a[data-lab-id="11-interactive-rebase"]')).toHaveCount(0);
+
   await page.locator('[data-lab-filter="all"]').click();
   await expect(grid).toHaveCount(total);
 });
@@ -127,6 +132,10 @@ test("lab sidebar marks completed labs", async ({ page }) => {
       JSON.stringify({
         "01-first-repo": { checked: 3, total: 3, complete: true },
       })
+    );
+    localStorage.setItem(
+      "rean-git:checklist:/lab.html?id=01-first-repo",
+      JSON.stringify({ 0: true, 1: true, 2: true })
     );
   });
   await page.goto("/lab.html?id=01-first-repo");
@@ -197,6 +206,13 @@ test("j moves to the next lab", async ({ page }) => {
   await expect(page).toHaveURL(/id=02-branch-merge/);
 });
 
+test("j after bisect goes to worktrees, not internals", async ({ page }) => {
+  await page.goto("/lab.html?id=12-bisect");
+  await expect(page.locator("[data-lab-body]")).toBeVisible();
+  await page.keyboard.press("j");
+  await expect(page).toHaveURL(/id=14-worktrees/);
+});
+
 test("arrow keys do not navigate while typing in sidebar search", async ({ page }) => {
   await page.goto("/learn.html?c=1");
   await expect(page.locator("[data-chapter-title]")).not.toHaveText(/Loading/i);
@@ -213,4 +229,104 @@ test("footer links to the GitHub repo", async ({ page }) => {
   );
   await expect(link).toBeVisible();
   await expect(link).toHaveAttribute("target", "_blank");
+});
+
+test("home asks visitors to clone the repo", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("[data-clone-command]")).toContainText("git clone");
+  await expect(page.locator("[data-home-lede]")).toContainText("27");
+  await expect(page.locator("[data-home-lede]")).toContainText("19");
+});
+
+test("lab track puts internals last", async ({ page }) => {
+  await page.goto("/");
+  const last = page.locator("[data-lab-track] a[data-lab-id]").last();
+  await expect(last).toHaveAttribute("data-lab-id", "13-internals");
+});
+
+test("lab page links to the matching handbook chapter", async ({ page }) => {
+  await page.goto("/lab.html?id=08-stash");
+  const related = page.locator("[data-related-chapter] a");
+  await expect(related).toBeVisible();
+  await expect(related).toHaveAttribute("href", /c=14/);
+});
+
+test("unchecking every lab box clears completion", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      "rean-git:lab-progress",
+      JSON.stringify({
+        "01-first-repo": { checked: 3, total: 3, complete: true },
+      })
+    );
+    localStorage.setItem(
+      "rean-git:checklist:/lab.html?id=01-first-repo",
+      JSON.stringify({ 0: true, 1: true, 2: true })
+    );
+  });
+  await page.goto("/lab.html?id=01-first-repo");
+  const link = page.locator('[data-lab-nav] a[data-lab-id="01-first-repo"]');
+  await expect(link).toHaveClass(/is-complete/);
+  const boxes = page.locator('[data-lab-body] input[type="checkbox"]');
+  const count = await boxes.count();
+  expect(count).toBeGreaterThan(0);
+  for (let i = 0; i < count; i += 1) {
+    if (await boxes.nth(i).isChecked()) {
+      await boxes.nth(i).click();
+    }
+  }
+  await expect(link).not.toHaveClass(/is-complete/);
+});
+
+test("search finds text inside a chapter", async ({ page }) => {
+  await page.goto("/");
+  await page.locator("[data-search-toggle]").click();
+  const input = page.locator("[data-search-input]");
+  await expect(input).toBeVisible();
+  await input.fill("suitcase");
+  const results = page.locator("[data-search-results] [role='option']");
+  await expect(results.first()).toBeVisible({ timeout: 10000 });
+  const titles = await results.allTextContents();
+  expect(titles.some((text) => /mental model/i.test(text))).toBeTruthy();
+});
+
+test("learn page can mark a chapter done", async ({ page }) => {
+  await page.goto("/learn.html?c=1");
+  const button = page.locator("[data-mark-done]");
+  await expect(button).toBeVisible();
+  await button.click();
+  await expect(button).toHaveAttribute("aria-pressed", "true");
+  await expect(
+    page.locator('[data-chapter-nav] a[data-chapter-id="1"].is-complete')
+  ).toBeVisible();
+});
+
+test("404 page is served for the dedicated not-found document", async ({ page }) => {
+  await page.goto("/404.html");
+  await expect(page.locator("h1")).toBeVisible();
+  await expect(page.locator("[data-search-toggle]")).toBeVisible();
+});
+
+test("cheat sheet nav uses the catalog chapter id", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("[data-cheat-sheet]").first()).toHaveAttribute(
+    "href",
+    /learn\.html\?c=26/
+  );
+});
+
+test("reset progress clears completed labs on home", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      "rean-git:lab-progress",
+      JSON.stringify({
+        "01-first-repo": { checked: 3, total: 3, complete: true },
+      })
+    );
+  });
+  await page.goto("/");
+  await expect(page.locator("[data-home-labs-complete]")).toBeVisible();
+  page.once("dialog", (dialog) => dialog.accept());
+  await page.locator("[data-reset-progress]").click();
+  await expect(page.locator("[data-home-progress]")).toBeHidden();
 });

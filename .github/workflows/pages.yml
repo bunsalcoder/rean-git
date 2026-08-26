@@ -16,15 +16,9 @@ concurrency:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/site-checks.yml
     permissions:
       contents: read
-    steps:
-      - uses: actions/checkout@v4
-      - name: Verify English content copies match sources
-        run: ./scripts/check_content_sync.sh
-      - name: Verify locales, content coverage, and internal links
-        run: ./scripts/check_site_quality.sh
 
   deploy:
     needs: check

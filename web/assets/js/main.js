@@ -64,15 +64,11 @@
     featLine?.classList.add("is-drawn");
   };
 
-  const LAST_CHAPTER_KEY = "rean-git:last-chapter";
-  const LAST_LAB_KEY = "rean-git:last-lab";
+  const LAST_CHAPTER_KEY = window.ReanGitUtil?.LAST_CHAPTER_KEY || "rean-git:last-chapter";
+  const LAST_LAB_KEY = window.ReanGitUtil?.LAST_LAB_KEY || "rean-git:last-lab";
 
   function readStorage(key) {
-    try {
-      return localStorage.getItem(key);
-    } catch {
-      return null;
-    }
+    return window.ReanGitUtil?.readStorageItem?.(key) ?? null;
   }
 
   function paintHomeResume() {
@@ -123,11 +119,13 @@
     const labId = readStorage(LAST_LAB_KEY);
     const chapterIndex = chapterId ? chapters.indexOf(chapterId) + 1 : 0;
     const labIndex = labId ? catalogLabs.findIndex((lab) => lab.id === labId) + 1 : 0;
-    const completed = window.ReanGitUtil?.completedLabCount?.(
+    const completedLabs = window.ReanGitUtil?.completedLabCount?.(
       catalogLabs.map((lab) => lab.id)
     ) || 0;
+    const completedChapters =
+      window.ReanGitUtil?.completedChapterCount?.(chapters) || 0;
 
-    if (!chapterIndex && !labIndex && !completed) {
+    if (!chapterIndex && !labIndex && !completedLabs && !completedChapters) {
       panel.hidden = true;
       return;
     }
@@ -156,10 +154,23 @@
       labEl.hidden = true;
     }
 
-    if (completed > 0) {
+    const chaptersCompleteEl = document.querySelector("[data-home-chapters-complete]");
+    if (chaptersCompleteEl) {
+      if (completedChapters > 0) {
+        chaptersCompleteEl.hidden = false;
+        chaptersCompleteEl.textContent = i18n.t("home.chaptersComplete", {
+          current: String(completedChapters),
+          total: String(chapters.length),
+        });
+      } else {
+        chaptersCompleteEl.hidden = true;
+      }
+    }
+
+    if (completedLabs > 0) {
       completeEl.hidden = false;
       completeEl.textContent = i18n.t("home.labsComplete", {
-        current: String(completed),
+        current: String(completedLabs),
         total: String(catalogLabs.length),
       });
     } else {
@@ -188,6 +199,55 @@
     });
   }
 
+  function paintHomeCounts() {
+    const lede = document.querySelector("[data-home-lede]");
+    const i18n = window.ReanGitI18n;
+    if (!lede || !i18n?.t) return;
+    const chapters = Object.keys(i18n.getDict?.()?.chapters || {});
+    const numbered = chapters.filter((id) => /^\d+$/.test(id)).length;
+    const labs = window.ReanGitCatalog?.getLabs?.() || [];
+    lede.textContent = i18n.t("home.lede", {
+      chapterCount: String(numbered || chapters.length),
+      labCount: String(labs.length || 19),
+    });
+  }
+
+  function paintCloneCta() {
+    const command = document.querySelector("[data-clone-command]");
+    const copyBtn = document.querySelector("[data-clone-copy]");
+    const snippet = window.ReanGitUtil?.CLONE_COMMAND || "git clone https://github.com/bunsalcoder/rean-git.git\ncd rean-git";
+    if (command) command.textContent = snippet;
+    if (!copyBtn || copyBtn.dataset.wired === "true") return;
+    copyBtn.dataset.wired = "true";
+    copyBtn.addEventListener("click", async () => {
+      const i18n = window.ReanGitI18n;
+      try {
+        await navigator.clipboard.writeText(snippet);
+        copyBtn.textContent = i18n?.t?.("ui.copied") || "Copied";
+        window.setTimeout(() => {
+          copyBtn.textContent = i18n?.t?.("ui.copy") || "Copy";
+        }, 1400);
+      } catch {
+        copyBtn.textContent = i18n?.t?.("ui.failed") || "Failed";
+      }
+    });
+  }
+
+  function wireResetProgress() {
+    const btn = document.querySelector("[data-reset-progress]");
+    if (!btn || btn.dataset.wired === "true") return;
+    btn.dataset.wired = "true";
+    btn.addEventListener("click", () => {
+      const i18n = window.ReanGitI18n;
+      const message = i18n?.t?.("home.resetConfirm") || "Clear your learning progress on this device?";
+      if (!window.confirm(message)) return;
+      window.ReanGitUtil?.resetProgress?.();
+      paintHomeResume();
+      paintHomeProgress();
+      paintLabsPageProgress();
+    });
+  }
+
   const mount = async () => {
     try {
       await window.ReanGitI18n?.ready;
@@ -203,6 +263,9 @@
     paintHomeResume();
     paintHomeProgress();
     paintLabsPageProgress();
+    paintHomeCounts();
+    paintCloneCta();
+    wireResetProgress();
   };
 
   window.ReanGitHome = { mount };
@@ -210,16 +273,23 @@
     paintHomeResume();
     paintHomeProgress();
     paintLabsPageProgress();
+    paintHomeCounts();
+    paintCloneCta();
   });
   window.ReanGitI18n?.onChange?.(() => {
     paintHomeResume();
     paintHomeProgress();
     paintLabsPageProgress();
+    paintHomeCounts();
+    paintCloneCta();
   });
 
   window.addEventListener("rean-git:lab-progress", () => {
     paintHomeProgress();
     paintLabsPageProgress();
+  });
+  window.addEventListener("rean-git:chapter-progress", () => {
+    paintHomeProgress();
   });
 
   const start = () => {

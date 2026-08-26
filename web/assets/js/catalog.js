@@ -3,6 +3,7 @@
   const VALID_LEVELS = new Set(["beginner", "intermediate", "advanced"]);
 
   let labs = [];
+  let cheatSheetChapter = "26";
   let filterLevel = "all";
   let filtersWired = false;
 
@@ -94,6 +95,16 @@
     title.textContent = i18n.t("home.pathTitle", { count: String(labs.length) });
   }
 
+  function cheatSheetHref() {
+    return `./learn.html?c=${encodeURIComponent(cheatSheetChapter || "26")}`;
+  }
+
+  function syncCheatSheetLinks() {
+    document.querySelectorAll("[data-cheat-sheet]").forEach((link) => {
+      link.setAttribute("href", cheatSheetHref());
+    });
+  }
+
   function mountLists() {
     const track = document.querySelector("[data-lab-track]");
     const grid = document.querySelector("[data-lab-grid]");
@@ -102,6 +113,7 @@
     syncFilterButtons();
     renderGrid(grid);
     paintCountTitle();
+    syncCheatSheetLinks();
     if (track) window.ReanGitI18n?.apply?.(track);
   }
 
@@ -111,16 +123,22 @@
       return res.json();
     })
     .then((data) => {
+      if (typeof data?.cheatSheetChapter === "string" && data.cheatSheetChapter) {
+        cheatSheetChapter = data.cheatSheetChapter;
+      }
       const list = Array.isArray(data?.labs) ? data.labs : [];
       labs = list.filter(
         (lab) => lab && typeof lab.id === "string" && VALID_LEVELS.has(lab.level)
       );
+      syncCheatSheetLinks();
       return labs;
     });
 
   window.ReanGitCatalog = {
     ready,
     getLabs: () => labs,
+    getCheatSheetChapter: () => cheatSheetChapter,
+    cheatSheetHref,
     mountLists,
     setFilter,
   };

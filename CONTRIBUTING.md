@@ -8,7 +8,7 @@ Handbook and labs are the product. Edit those first, then keep the site copies, 
 |-----------|------|
 | `docs/GIT_FROM_ZERO.md` | Handbook chapters |
 | `labs/<id>/README.md` | Lab instructions |
-| `web/data/labs.json` | Lab order and level (`beginner` / `intermediate` / `advanced`) |
+| `web/data/labs.json` | Lab order, level (`beginner` / `intermediate` / `advanced`), related handbook chapter, and `cheatSheetChapter` |
 
 After English edits:
 
@@ -22,7 +22,8 @@ If you add or remove a chapter or lab:
 
 1. Add matching keys in `web/locales/en.json` and `web/locales/km.json`
    (`chapters.<id>` or `labs.<id>.title` / `teaser` / `summary`).
-2. Regenerate the sitemap and offline content manifest:
+2. Update `cheatSheetChapter` and each lab's `chapter` in `web/data/labs.json`.
+3. Regenerate the sitemap and offline content manifest:
 
 ```bash
 python3 scripts/check_site_quality.py --write-sitemap

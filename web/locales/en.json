@@ -7,7 +7,9 @@
     "labsTitle": "Labs — rean-git",
     "labsDescription": "Hands-on Git labs for the rean-git learning path.",
     "labTitle": "Lab — rean-git",
-    "labDescription": "Hands-on Git lab instructions for rean-git."
+    "labDescription": "Hands-on Git lab instructions for rean-git.",
+    "notFoundTitle": "Page not found — rean-git",
+    "notFoundDescription": "That page is not part of the rean-git site."
   },
   "nav": {
     "home": "Home",
@@ -27,10 +29,15 @@
   "a11y": {
     "skipToContent": "Skip to content"
   },
+  "notFound": {
+    "headline": "This page is not in the repo.",
+    "body": "The link may be old, or the path is wrong. Head home and pick a chapter or lab.",
+    "home": "Back to home"
+  },
   "home": {
     "introLabel": "Introduction",
     "headline": "Learn Git with your hands on the keyboard.",
-    "lede": "Twenty-seven chapters and nineteen labs — from first commit to Git internals.",
+    "lede": "{chapterCount} chapters and {labCount} labs — from first commit to Git internals.",
     "startLearning": "Start learning",
     "continueChapter": "Continue — {title}",
     "continueLab": "Lab — {title}",
@@ -39,7 +46,15 @@
     "progressTitle": "Pick up where you left off",
     "chapterProgress": "Chapter {current} of {total} — {title}",
     "labProgress": "Lab {current} of {total} — {title}",
+    "chaptersComplete": "{current} of {total} chapters complete",
     "labsComplete": "{current} of {total} labs complete",
+    "resetProgress": "Reset progress",
+    "resetConfirm": "Clear your learning progress on this device?",
+    "cloneEyebrow": "On your machine",
+    "cloneTitle": "Clone the repo, then type every command.",
+    "cloneBody": "Labs live in the GitHub repo, not in the browser. Clone it and keep a terminal open beside this site.",
+    "updateAvailable": "A newer version of rean-git is ready.",
+    "refresh": "Refresh",
     "methodEyebrow": "How you learn",
     "methodTitle": "Read a chapter. Run the commands. Keep going.",
     "step1Title": "Read",
@@ -74,6 +89,8 @@
     "pagerHint": "← → or J / K to change chapters",
     "previous": "Previous",
     "next": "Next",
+    "markDone": "Mark done",
+    "markedDone": "Done",
     "loadError": "Could not load lessons.",
     "serveHint": "Serve the web/ folder over HTTP (for example python3 -m http.server 4173), then open the site from that URL."
   },
@@ -94,7 +111,9 @@
     "loadError": "Could not load lab.",
     "serveHint": "Serve the web/ folder over HTTP.",
     "verifyTitle": "Self-check (optional)",
-    "verifyBody": "After finishing the steps in playground/, run the verifier from this lab folder:"
+    "verifyBody": "After finishing the steps in playground/, run the verifier from this lab folder:",
+    "relatedChapter": "Handbook — {title}",
+    "relatedChapterFallback": "Open the matching handbook chapter"
   },
   "ui": {
     "copy": "Copy",

@@ -1,10 +1,11 @@
-const CACHE = "rean-git-v6";
+const CACHE = "rean-git-v8";
 const PRECACHE = [
   "./",
   "./index.html",
   "./learn.html",
   "./labs.html",
   "./lab.html",
+  "./404.html",
   "./manifest.webmanifest",
   "./content-precache.json",
   "./data/labs.json",
@@ -45,8 +46,15 @@ self.addEventListener("install", (event) => {
         await cache.addAll(PRECACHE);
         await precacheContent(cache);
       })
-      .then(() => self.skipWaiting())
+      .then(() => {
+        // First visit: activate now. Updates wait so the page can prompt.
+        if (!self.registration.active) return self.skipWaiting();
+      })
   );
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "skipWaiting") self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
@@ -69,7 +77,9 @@ async function networkFirst(request) {
   } catch {
     const cached = await cache.match(request);
     if (cached) return cached;
-    if (request.mode === "navigate") return cache.match("./index.html");
+    if (request.mode === "navigate") {
+      return (await cache.match("./404.html")) || cache.match("./index.html");
+    }
     throw new Error(`offline: ${request.url}`);
   }
 }
