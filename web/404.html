@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n="meta.notFoundTitle">Page not found — rean-git</title>
+    <meta
+      name="description"
+      data-i18n="meta.notFoundDescription"
+      data-i18n-attr="content"
+      content="That page is not part of the rean-git site."
+    />
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href="https://bunsalcoder.github.io/rean-git/" />
+    <link rel="icon" href="./assets/img/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="./assets/img/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="./assets/img/apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <meta name="theme-color" content="#f3f5f7" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("rean-git-theme");
+        if (!t) t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", t);
+        var themeMeta = document.querySelector('meta[name="theme-color"]');
+        if (themeMeta) themeMeta.setAttribute("content", t === "dark" ? "#2f3644" : "#f3f5f7");
+        var l = localStorage.getItem("rean-git-lang");
+        if (l === "km" || l === "en") {
+          document.documentElement.setAttribute("lang", l);
+          document.documentElement.setAttribute("data-lang", l);
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body class="page-home page-404">
+    <a class="skip-link" href="#main-content" data-i18n="a11y.skipToContent">Skip to content</a>
+    <header class="site-header site-header-bar">
+      <div class="wrap header-inner">
+        <a class="logo" href="./">rean<span>-git</span></a>
+        <nav class="nav" data-nav id="site-nav">
+          <a href="./index.html" data-i18n="nav.home">Home</a>
+          <a href="./learn.html" data-i18n="nav.learn">Learn</a>
+          <a href="./labs.html" data-i18n="nav.labs">Labs</a>
+          <a href="./learn.html?c=26" data-cheat-sheet data-i18n="nav.cheatSheet">Cheat sheet</a>
+        </nav>
+        <div class="header-actions">
+          <div class="lang-switch" role="group" data-i18n="nav.language" data-i18n-attr="aria-label" aria-label="Language">
+            <button type="button" data-set-lang="en" aria-pressed="true">EN</button>
+            <button type="button" data-set-lang="km" aria-pressed="false">ខ្មែរ</button>
+          </div>
+          <button class="search-toggle" type="button" data-search-toggle data-i18n="nav.search" data-i18n-attr="aria-label" aria-label="Search">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5" />
+              <path d="M16 16.5 20.5 21" />
+            </svg>
+          </button>
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle dark mode">
+            <svg class="theme-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <g class="theme-sun">
+                <circle class="theme-sun-core" cx="12" cy="12" r="4" />
+                <g class="theme-sun-rays">
+                  <path d="M12 2v2.2M12 19.8V22M4.93 4.93l1.56 1.56M17.51 17.51l1.56 1.56M2 12h2.2M19.8 12H22M4.93 19.07l1.56-1.56M17.51 6.49l1.56-1.56" />
+                </g>
+              </g>
+              <path
+                class="theme-moon"
+                d="M21 14.12A9 9 0 0 1 9.88 3 7.5 7.5 0 1 0 21 14.12Z"
+              />
+            </svg>
+          </button>
+          <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav" data-i18n="nav.menu" data-i18n-attr="aria-label" aria-label="Menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content" class="not-found" tabindex="-1">
+      <div class="wrap">
+        <p class="eyebrow">404</p>
+        <h1 data-i18n="notFound.headline">This page is not in the repo.</h1>
+        <p data-i18n="notFound.body">
+          The link may be old, or the path is wrong. Head home and pick a chapter or lab.
+        </p>
+        <a class="btn btn-primary" href="./" data-i18n="notFound.home">Back to home</a>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap footer-inner">
+        <p data-i18n="home.footerTagline">rean-git — hands-on Git from zero to hero.</p>
+        <div class="footer-links">
+          <a href="./learn.html" data-i18n="home.footerLink">Read the handbook</a>
+          <a href="https://github.com/bunsalcoder/rean-git" target="_blank" rel="noopener noreferrer" data-i18n="nav.github">GitHub</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="assets/js/i18n.js" defer></script>
+    <script src="assets/js/util.js" defer></script>
+    <script src="assets/js/catalog.js" defer></script>
+    <script src="assets/js/site.js" defer></script>
+  </body>
+</html>

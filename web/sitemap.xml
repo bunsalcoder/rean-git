@@ -221,11 +221,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=13-internals</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=14-worktrees</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -252,6 +247,11 @@
   </url>
   <url>
     <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=19-submodules-lfs</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=13-internals</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

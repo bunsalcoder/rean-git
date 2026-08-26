@@ -88,7 +88,7 @@
           <a href="./index.html" aria-current="page" data-i18n="nav.home">Home</a>
           <a href="./learn.html" data-i18n="nav.learn">Learn</a>
           <a href="./labs.html" data-i18n="nav.labs">Labs</a>
-          <a href="./learn.html?c=26" data-i18n="nav.cheatSheet">Cheat sheet</a>
+          <a href="./learn.html?c=26" data-cheat-sheet data-i18n="nav.cheatSheet">Cheat sheet</a>
         </nav>
         <div class="header-actions">
           <div class="lang-switch" role="group" data-i18n="nav.language" data-i18n-attr="aria-label" aria-label="Language">
@@ -128,8 +128,8 @@
           <div class="masthead-copy">
             <p class="brand">rean<span>-git</span></p>
             <h1 class="headline" data-i18n="home.headline">Learn Git with your hands on the keyboard.</h1>
-            <p class="lede" data-i18n="home.lede">
-              Twenty-seven chapters and nineteen labs — from first commit to Git internals.
+            <p class="lede" data-home-lede>
+              27 chapters and 19 labs — from first commit to Git internals.
             </p>
             <div class="cta-row">
               <a class="btn btn-primary" href="./learn.html" data-home-learn data-i18n="home.startLearning">Start learning</a>
@@ -207,6 +207,22 @@
         </div>
       </section>
 
+      <section class="clone-cta" data-clone-cta aria-labelledby="clone-title">
+        <div class="wrap">
+          <p class="eyebrow" data-i18n="home.cloneEyebrow">On your machine</p>
+          <h2 id="clone-title" data-i18n="home.cloneTitle">Clone the repo, then type every command.</h2>
+          <p data-i18n="home.cloneBody">
+            Labs live in the GitHub repo, not in the browser. Clone it and keep a
+            terminal open beside this site.
+          </p>
+          <div class="clone-box code-block">
+            <pre><code data-clone-command>git clone https://github.com/bunsalcoder/rean-git.git
+cd rean-git</code></pre>
+            <button type="button" class="copy-btn" data-clone-copy data-i18n="ui.copy">Copy</button>
+          </div>
+        </div>
+      </section>
+
       <section class="progress-panel" data-home-progress hidden>
         <div class="wrap">
           <div class="progress-panel-inner">
@@ -217,7 +233,9 @@
             <div class="progress-stats">
               <p class="progress-stat" data-home-chapter-progress hidden></p>
               <p class="progress-stat" data-home-lab-progress hidden></p>
+              <p class="progress-stat" data-home-chapters-complete hidden></p>
               <p class="progress-stat" data-home-labs-complete hidden></p>
+              <button type="button" class="btn btn-ghost" data-reset-progress data-i18n="home.resetProgress">Reset progress</button>
             </div>
           </div>
         </div>

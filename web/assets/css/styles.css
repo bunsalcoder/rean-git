@@ -504,7 +504,8 @@ html[lang="km"] .nav a {
 }
 
 .search-dialog input:focus {
-  outline: none;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .search-results {
@@ -1302,6 +1303,54 @@ html.theme-animate body *::after {
   max-width: 18rem;
 }
 
+.clone-cta {
+  position: relative;
+  z-index: 1;
+  padding: 2.75rem 0 2.5rem;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.clone-cta h2 {
+  margin: 0 0 0.55rem;
+  font-size: clamp(1.45rem, 3vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.clone-cta > .wrap > p {
+  margin: 0 0 1.15rem;
+  color: var(--ink-soft);
+  max-width: 36rem;
+}
+
+.clone-box {
+  position: relative;
+  max-width: 36rem;
+}
+
+.clone-box pre {
+  margin: 0;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  border-radius: 0.55rem;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.clone-box .copy-btn {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+}
+
+.section-head .clone-box {
+  margin: 1.15rem 0 0;
+}
+
 /* —— Lab track (horizontal steps — not docker path-list) —— */
 .path {
   position: relative;
@@ -1480,6 +1529,45 @@ html.theme-animate body *::after {
   flex-wrap: wrap;
 }
 
+.sw-update {
+  position: fixed;
+  z-index: 80;
+  right: 1rem;
+  bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  max-width: min(24rem, calc(100% - 2rem));
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  background: var(--surface);
+  box-shadow: 0 16px 40px var(--shadow-strong);
+}
+
+.sw-update p {
+  margin: 0;
+  flex: 1 1 12rem;
+  font-size: 0.9rem;
+}
+
+.page-404 .not-found {
+  padding: 4.5rem 0 6rem;
+}
+
+.page-404 .not-found h1 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  letter-spacing: -0.04em;
+}
+
+.page-404 .not-found p {
+  margin: 0 0 1.5rem;
+  color: var(--ink-soft);
+  max-width: 32rem;
+}
+
 .page-home,
 .page-labs,
 .page-lab,
@@ -1592,6 +1680,10 @@ html.theme-animate body *::after {
   color: var(--ink-soft);
   font-size: 0.92rem;
   line-height: 1.45;
+}
+
+.progress-stats [data-reset-progress] {
+  justify-self: start;
 }
 
 .lab-grid {
@@ -1807,6 +1899,35 @@ html.theme-animate body *::after {
   text-transform: uppercase;
 }
 
+.side-num {
+  display: block;
+  opacity: 0.55;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.side-level {
+  opacity: 0.6;
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+.related-chapter {
+  margin: 0 0 0.65rem;
+  font-size: 0.92rem;
+}
+
+.related-chapter a {
+  color: var(--accent-deep);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.related-chapter a:hover {
+  color: var(--ink);
+}
+
 .labs-progress {
   margin-top: 1rem;
   max-width: 28rem;
@@ -1847,6 +1968,14 @@ html.theme-animate body *::after {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.35rem;
+}
+
+.toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+  margin-left: auto;
 }
 
 .progress-pill {
@@ -2073,7 +2202,8 @@ html.theme-animate body *::after {
   color: var(--ink);
 }
 
-.md-body .copy-btn {
+.md-body .copy-btn,
+.clone-box .copy-btn {
   position: absolute;
   top: 0.55rem;
   right: 0.55rem;
@@ -2092,7 +2222,9 @@ html.theme-animate body *::after {
 }
 
 .md-body .code-block:hover .copy-btn,
-.md-body .code-block:focus-within .copy-btn {
+.md-body .code-block:focus-within .copy-btn,
+.clone-box:hover .copy-btn,
+.clone-box:focus-within .copy-btn {
   opacity: 1;
   transform: none;
 }
@@ -2375,6 +2507,10 @@ main.is-page-entering,
   .skip-link,
   .copy-btn,
   .lab-verify,
+  .clone-cta,
+  .sw-update,
+  [data-mark-done],
+  [data-reset-progress],
   .side-toggle,
   .search-toggle,
   .theme-toggle,

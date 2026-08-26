@@ -84,7 +84,7 @@ def parse_guide_chapter_ids(text: str, locale: str = "en") -> list[str]:
     return ids
 
 
-def parse_curriculum() -> tuple[list[str], list[str]]:
+def parse_curriculum() -> tuple[list[str], list[str], str]:
     learn_js = LEARN_JS.read_text(encoding="utf-8")
     if re.search(r"\bCHAPTER_IDS\b", learn_js):
         raise SystemExit(
@@ -111,6 +111,10 @@ def parse_curriculum() -> tuple[list[str], list[str]]:
     if not isinstance(raw, list) or not raw:
         raise SystemExit("web/data/labs.json must have a non-empty labs array")
 
+    cheat_sheet = payload.get("cheatSheetChapter")
+    if not isinstance(cheat_sheet, str) or not cheat_sheet:
+        raise SystemExit("labs.json must set cheatSheetChapter")
+
     labs: list[str] = []
     seen: set[str] = set()
     for index, lab in enumerate(raw):
@@ -122,11 +126,21 @@ def parse_curriculum() -> tuple[list[str], list[str]]:
             raise SystemExit(f"labs.json entry {index} has an invalid id")
         if level not in VALID_LAB_LEVELS:
             raise SystemExit(f"labs.json {lab_id} has invalid level {level!r}")
+        chapter = lab.get("chapter")
+        if not isinstance(chapter, str) or not re.fullmatch(r"(?:how-to-use|\d+)", chapter):
+            raise SystemExit(f"labs.json {lab_id} has invalid chapter {chapter!r}")
+        if chapter not in chapters:
+            raise SystemExit(f"labs.json {lab_id} chapter {chapter!r} is not a handbook chapter")
         if lab_id in seen:
             raise SystemExit(f"labs.json duplicate id {lab_id}")
         seen.add(lab_id)
         labs.append(lab_id)
-    return chapters, labs
+
+    if cheat_sheet not in chapters:
+        raise SystemExit(f"cheatSheetChapter {cheat_sheet!r} is not a handbook chapter")
+    if labs and labs[-1] != "13-internals":
+        raise SystemExit("lab catalog should list 13-internals last (mastery)")
+    return chapters, labs, cheat_sheet
 
 
 def fail(messages: list[str], label: str) -> int:
@@ -319,6 +333,10 @@ def check_html_assets(labs: list[str]) -> int:
         msgs.append("missing web/assets/js/catalog.js")
     elif "data/labs.json" not in catalog_js.read_text(encoding="utf-8"):
         msgs.append("catalog.js must load web/data/labs.json")
+    else:
+        catalog_text = catalog_js.read_text(encoding="utf-8")
+        if "cheatSheetChapter" not in catalog_text or "data-cheat-sheet" not in catalog_text:
+            msgs.append("catalog.js must sync cheat sheet links from labs.json")
 
     util_js = WEB / "assets" / "js" / "util.js"
     if not util_js.is_file():
@@ -446,6 +464,8 @@ def check_seo(chapters: list[str], labs: list[str]) -> int:
             msgs.append(f"{name}: fonts should be local, not Google Fonts")
         if "data-search-toggle" not in text:
             msgs.append(f"{name}: missing search toggle")
+        if "data-cheat-sheet" not in text:
+            msgs.append(f"{name}: missing data-cheat-sheet nav link")
 
     home = WEB / "index.html"
     if home.is_file() and 'type="application/ld+json"' not in home.read_text(
@@ -510,6 +530,12 @@ def check_shared_runtime() -> int:
     util_text = util.read_text(encoding="utf-8") if util.is_file() else ""
     if "recordLabChecklist" not in util_text or "completedLabCount" not in util_text:
         msgs.append("util.js must track lab checklist completion")
+    if "recordChapterComplete" not in util_text or "resetProgress" not in util_text:
+        msgs.append("util.js must track chapter completion and reset progress")
+    if "parseGuideChapters" not in util_text:
+        msgs.append("util.js must parse handbook chapters for search")
+    if "LAST_CHAPTER_KEY" not in util_text or "CLONE_COMMAND" not in util_text:
+        msgs.append("util.js must own progress keys and the clone command")
     if "rean-git:lab-progress" not in util_text:
         msgs.append("util.js must dispatch lab progress updates")
 
@@ -518,6 +544,12 @@ def check_shared_runtime() -> int:
         msgs.append("learn.js must show the lab verify.sh hint")
     if "paintLabNavCompletion" not in learn_js:
         msgs.append("learn.js must mark completed labs in the sidebar")
+    if "paintChapterNavCompletion" not in learn_js or "data-mark-done" not in learn_js:
+        msgs.append("learn.js must mark completed chapters")
+    if "data-related-chapter" not in learn_js:
+        msgs.append("learn.js must link labs to handbook chapters")
+    if re.search(r'LAST_CHAPTER_KEY\s*=\s*"rean-git:last-chapter"', learn_js):
+        msgs.append("learn.js should use ReanGitUtil for last-chapter storage")
 
     if not sw.is_file():
         msgs.append("missing web/sw.js")
@@ -531,6 +563,10 @@ def check_shared_runtime() -> int:
         msgs.append("site.js must register the service worker")
     if "UTIL_SRC" not in site_text:
         msgs.append("site.js soft-nav should load util.js")
+    if "parseGuideChapters" not in site_text and "ensureChapterIndex" not in site_text:
+        msgs.append("site.js search should index handbook chapter bodies")
+    if 'role="combobox"' not in site_text or "aria-activedescendant" not in site_text:
+        msgs.append("site.js search should use combobox semantics")
 
     return fail(msgs, "shared util + service worker")
 
@@ -590,6 +626,8 @@ def check_pwa() -> int:
             msgs.append("manifest.webmanifest should use display standalone")
         if "icon-192.png" not in text or "icon-512.png" not in text:
             msgs.append("manifest.webmanifest missing 192/512 icons")
+        if "maskable" not in text:
+            msgs.append("manifest.webmanifest missing maskable icons")
 
     for name in ("icon-192.png", "icon-512.png"):
         if not (WEB / "assets" / "img" / name).is_file():
@@ -607,6 +645,11 @@ def check_pwa() -> int:
     sw_text = sw.read_text(encoding="utf-8") if sw.is_file() else ""
     if "manifest.webmanifest" not in sw_text:
         msgs.append("sw.js should precache the web app manifest")
+    if "404.html" not in sw_text:
+        msgs.append("sw.js should precache 404.html")
+
+    if not (WEB / "404.html").is_file():
+        msgs.append("missing web/404.html")
 
     return fail(msgs, "PWA manifest + theme-color")
 
@@ -622,6 +665,23 @@ def check_print_styles() -> int:
     labs_html = WEB / "labs.html"
     if labs_html.is_file() and "data-labs-progress" not in labs_html.read_text(encoding="utf-8"):
         msgs.append("labs.html missing labs progress summary mount point")
+    if labs_html.is_file() and "data-clone-command" not in labs_html.read_text(encoding="utf-8"):
+        msgs.append("labs.html missing clone-the-repo snippet")
+    home = WEB / "index.html"
+    if home.is_file():
+        home_text = home.read_text(encoding="utf-8")
+        if "data-clone-command" not in home_text:
+            msgs.append("index.html missing clone-the-repo snippet")
+        if "data-reset-progress" not in home_text:
+            msgs.append("index.html missing reset progress control")
+        if "data-home-lede" not in home_text:
+            msgs.append("index.html missing derived chapter/lab count lede")
+    learn_html = WEB / "learn.html"
+    if learn_html.is_file() and "data-mark-done" not in learn_html.read_text(encoding="utf-8"):
+        msgs.append("learn.html missing mark-done control")
+    lab_html = WEB / "lab.html"
+    if lab_html.is_file() and "data-related-chapter" not in lab_html.read_text(encoding="utf-8"):
+        msgs.append("lab.html missing related chapter mount point")
     return fail(msgs, "print styles + labs progress UI")
 
 
@@ -703,7 +763,7 @@ def check_content_precache(labs: list[str]) -> int:
 def main() -> int:
     write_sitemap_mode = "--write-sitemap" in sys.argv
     write_precache_mode = "--write-content-precache" in sys.argv
-    chapters, labs = parse_curriculum()
+    chapters, labs, cheat_sheet = parse_curriculum()
     if write_sitemap_mode or write_precache_mode:
         if write_sitemap_mode:
             write_sitemap(chapters, labs)
@@ -711,7 +771,7 @@ def main() -> int:
             write_content_precache(labs)
         return 0
 
-    print(f"Curriculum: {len(chapters)} chapters, {len(labs)} labs")
+    print(f"Curriculum: {len(chapters)} chapters, {len(labs)} labs, cheat sheet {cheat_sheet}")
     print()
     failures = 0
     failures += check_locale_parity()

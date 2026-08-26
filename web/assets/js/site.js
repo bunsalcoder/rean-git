@@ -71,7 +71,38 @@
     if (!("serviceWorker" in navigator) || navigator.webdriver) return;
     const src = new URL("./sw.js", location.href);
     const scope = new URL("./", location.href).pathname;
-    navigator.serviceWorker.register(src, { scope }).catch(() => {});
+    navigator.serviceWorker.register(src, { scope }).then((reg) => {
+      const promptIfWaiting = (worker) => {
+        if (!worker || !navigator.serviceWorker.controller) return;
+        showUpdateToast(() => {
+          worker.postMessage?.({ type: "skipWaiting" });
+          location.reload();
+        });
+      };
+      if (reg.waiting) promptIfWaiting(reg.waiting);
+      reg.addEventListener("updatefound", () => {
+        const worker = reg.installing;
+        if (!worker) return;
+        worker.addEventListener("statechange", () => {
+          if (worker.state === "installed") promptIfWaiting(worker);
+        });
+      });
+    }).catch(() => {});
+  }
+
+  function showUpdateToast(onRefresh) {
+    if (document.querySelector("[data-sw-update]")) return;
+    const toast = document.createElement("div");
+    toast.className = "sw-update";
+    toast.setAttribute("data-sw-update", "");
+    toast.setAttribute("role", "status");
+    const i18n = window.ReanGitI18n;
+    toast.innerHTML = `
+      <p>${window.ReanGitUtil.escapeHtml(i18n?.t?.("home.updateAvailable") || "A newer version of rean-git is ready.")}</p>
+      <button type="button" class="btn btn-primary" data-sw-refresh>${window.ReanGitUtil.escapeHtml(i18n?.t?.("home.refresh") || "Refresh")}</button>
+    `;
+    document.body.appendChild(toast);
+    toast.querySelector("[data-sw-refresh]")?.addEventListener("click", onRefresh);
   }
 
   let lastPageKey = pageKey(location.href);
@@ -303,14 +334,19 @@
         <div class="search-dialog" role="dialog" aria-modal="true" aria-labelledby="site-search-title">
           <h2 id="site-search-title" class="visually-hidden" data-i18n="nav.search">Search</h2>
           <input
+            id="site-search-input"
             type="search"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-expanded="false"
+            aria-controls="site-search-results"
             data-search-input
             autocomplete="off"
             data-i18n="nav.searchPlaceholder"
             data-i18n-attr="placeholder"
             placeholder="Search chapters and labs"
           />
-          <ul class="search-results" data-search-results role="listbox"></ul>
+          <ul id="site-search-results" class="search-results" data-search-results role="listbox"></ul>
           <p class="search-empty" data-search-empty hidden data-i18n="nav.searchEmpty">No matching chapters or labs</p>
           <p class="search-hint" data-i18n="nav.searchHint">Type to search · Esc to close</p>
         </div>
@@ -326,9 +362,32 @@
 
     let trap = null;
     let activeIndex = 0;
+    let chapterBodies = new Map();
+    let indexLocale = null;
 
     function isOpen() {
       return !modal.hidden;
+    }
+
+    async function ensureChapterIndex() {
+      const locale = window.ReanGitI18n?.getLocale?.() || "en";
+      if (indexLocale === locale && chapterBodies.size) return;
+      const urls =
+        locale === "en"
+          ? ["./content/en/guide.md"]
+          : [`./content/${locale}/guide.md`, "./content/en/guide.md"];
+      for (const url of urls) {
+        try {
+          const res = await fetch(url, { credentials: "same-origin" });
+          if (!res.ok) continue;
+          const parsed = window.ReanGitUtil?.parseGuideChapters?.(await res.text()) || [];
+          chapterBodies = new Map(parsed.map((chapter) => [chapter.id, chapter.body]));
+          indexLocale = locale;
+          return;
+        } catch {
+          /* try next locale fallback */
+        }
+      }
     }
 
     function collectItems() {
@@ -337,7 +396,7 @@
       const chapters = Object.entries(dict.chapters || {}).map(([id, title]) => ({
         href: `./learn.html?c=${encodeURIComponent(id)}`,
         title: String(title),
-        haystack: String(title).toLowerCase(),
+        haystack: `${title} ${chapterBodies.get(id) || ""}`.toLowerCase(),
         kind: i18n?.t?.("learn.chapters") || "Chapters",
       }));
       const labs = (window.ReanGitCatalog?.getLabs?.() || []).map((lab) => {
@@ -355,17 +414,23 @@
     }
 
     function resultLinks() {
-      return [...list.querySelectorAll("a")];
+      return [...list.querySelectorAll('[role="option"]')];
     }
 
     function setActive(index) {
       const links = resultLinks();
       if (!links.length) {
         activeIndex = 0;
+        input.removeAttribute("aria-activedescendant");
         return;
       }
       activeIndex = (index + links.length) % links.length;
-      links.forEach((link, i) => link.classList.toggle("is-active", i === activeIndex));
+      links.forEach((link, i) => {
+        const selected = i === activeIndex;
+        link.classList.toggle("is-active", selected);
+        link.setAttribute("aria-selected", String(selected));
+      });
+      input.setAttribute("aria-activedescendant", links[activeIndex].id);
       links[activeIndex].scrollIntoView({ block: "nearest" });
     }
 
@@ -375,8 +440,8 @@
       const limited = matches.slice(0, 12);
       list.innerHTML = limited
         .map(
-          (item) =>
-            `<li><a href="${escapeSearchHtml(item.href)}"><strong>${escapeSearchHtml(item.title)}</strong><small>${escapeSearchHtml(item.kind)}</small></a></li>`
+          (item, index) =>
+            `<li role="presentation"><a id="search-opt-${index}" role="option" aria-selected="${index === 0 ? "true" : "false"}" href="${escapeSearchHtml(item.href)}"><strong>${escapeSearchHtml(item.title)}</strong><small>${escapeSearchHtml(item.kind)}</small></a></li>`
         )
         .join("");
       if (empty) empty.hidden = limited.length > 0;
@@ -385,17 +450,23 @@
 
     function open() {
       modal.hidden = false;
+      input.setAttribute("aria-expanded", "true");
       window.ReanGitI18n?.apply?.(modal);
       render(input.value);
       trap = createFocusTrap(dialog);
       trap.activate();
       input.focus();
       input.select();
+      ensureChapterIndex().then(() => {
+        if (isOpen()) render(input.value);
+      });
     }
 
     function close() {
       if (modal.hidden) return;
       modal.hidden = true;
+      input.setAttribute("aria-expanded", "false");
+      input.removeAttribute("aria-activedescendant");
       trap?.deactivate();
       trap = null;
       toggle.focus();
@@ -459,9 +530,14 @@
     });
 
     window.ReanGitI18n?.onChange?.(() => {
+      chapterBodies = new Map();
+      indexLocale = null;
       if (!isOpen()) return;
       window.ReanGitI18n?.apply?.(modal);
       render(input.value);
+      ensureChapterIndex().then(() => {
+        if (isOpen()) render(input.value);
+      });
     });
     window.ReanGitCatalog?.ready?.then(() => {
       if (isOpen()) render(input.value);
