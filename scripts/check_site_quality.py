@@ -573,6 +573,11 @@ def check_shared_runtime() -> int:
         msgs.append("site.js search should index lab markdown bodies")
     if 'role="combobox"' not in site_text or "aria-activedescendant" not in site_text:
         msgs.append("site.js search should use combobox semantics")
+    if "data-shortcuts-modal" not in site_text or "focusMain" not in site_text:
+        msgs.append("site.js must offer shortcuts help and focusMain")
+
+    if "focusMain" not in learn_js:
+        msgs.append("learn.js must focus main content after chapter/lab changes")
 
     return fail(msgs, "shared util + service worker")
 

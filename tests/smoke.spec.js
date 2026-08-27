@@ -350,3 +350,22 @@ test("reset progress clears completed labs on home", async ({ page }) => {
   await page.locator("[data-reset-progress]").click();
   await expect(page.locator("[data-home-progress]")).toBeHidden();
 });
+
+test("question mark opens keyboard shortcuts help", async ({ page }) => {
+  await page.goto("/");
+  await page.keyboard.press("Shift+/");
+  const dialog = page.locator("[data-shortcuts-modal] .shortcuts-dialog");
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText(/search|ស្វែងរក/i);
+  await page.keyboard.press("Escape");
+  await expect(page.locator("[data-shortcuts-modal]")).toBeHidden();
+});
+
+test("changing chapter focuses main content and announces", async ({ page }) => {
+  await page.goto("/learn.html?c=how-to-use");
+  await expect(page.locator("[data-chapter-title]")).not.toHaveText(/Loading/i);
+  await page.keyboard.press("ArrowRight");
+  await expect(page).toHaveURL(/[?&]c=1(?:&|$)/);
+  await expect(page.locator("#main-content")).toBeFocused();
+  await expect(page.locator("[data-live-region]")).toContainText(/Chapter|ជំពូក/i);
+});
