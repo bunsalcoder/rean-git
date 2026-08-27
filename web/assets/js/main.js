@@ -248,6 +248,75 @@
     });
   }
 
+  function downloadProgressFile() {
+    const payload = window.ReanGitUtil?.exportProgress?.();
+    if (!payload) return;
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    const day = new Date().toISOString().slice(0, 10);
+    link.href = url;
+    link.download = `rean-git-progress-${day}.json`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function refreshProgressViews() {
+    paintHomeResume();
+    paintHomeProgress();
+    paintLabsPageProgress();
+  }
+
+  function wireProgressBackup() {
+    const exportBtns = document.querySelectorAll("[data-export-progress]");
+    const importBtns = document.querySelectorAll("[data-import-progress]");
+    const fileInput = document.querySelector("[data-import-progress-file]");
+    if (!fileInput || fileInput.dataset.wired === "true") return;
+    fileInput.dataset.wired = "true";
+
+    exportBtns.forEach((btn) => {
+      if (btn.dataset.wired === "true") return;
+      btn.dataset.wired = "true";
+      btn.addEventListener("click", () => downloadProgressFile());
+    });
+
+    importBtns.forEach((btn) => {
+      if (btn.dataset.wired === "true") return;
+      btn.dataset.wired = "true";
+      btn.addEventListener("click", () => {
+        fileInput.value = "";
+        fileInput.click();
+      });
+    });
+
+    fileInput.addEventListener("change", async () => {
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) return;
+      const i18n = window.ReanGitI18n;
+      const message =
+        i18n?.t?.("home.importConfirm") ||
+        "Replace progress on this device with the imported file?";
+      if (!window.confirm(message)) {
+        fileInput.value = "";
+        return;
+      }
+      try {
+        const text = await file.text();
+        const payload = JSON.parse(text);
+        window.ReanGitUtil?.importProgress?.(payload);
+        refreshProgressViews();
+      } catch {
+        window.alert(i18n?.t?.("home.importFailed") || "Could not import that progress file.");
+      } finally {
+        fileInput.value = "";
+      }
+    });
+  }
+
   const mount = async () => {
     try {
       await window.ReanGitI18n?.ready;
@@ -266,6 +335,7 @@
     paintHomeCounts();
     paintCloneCta();
     wireResetProgress();
+    wireProgressBackup();
   };
 
   window.ReanGitHome = { mount };
@@ -285,10 +355,12 @@
   });
 
   window.addEventListener("rean-git:lab-progress", () => {
+    paintHomeResume();
     paintHomeProgress();
     paintLabsPageProgress();
   });
   window.addEventListener("rean-git:chapter-progress", () => {
+    paintHomeResume();
     paintHomeProgress();
   });
 

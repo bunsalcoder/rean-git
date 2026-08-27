@@ -351,6 +351,30 @@ test("reset progress clears completed labs on home", async ({ page }) => {
   await expect(page.locator("[data-home-progress]")).toBeHidden();
 });
 
+test("import progress restores completed labs on home", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("[data-import-progress]").first()).toBeVisible();
+  page.once("dialog", (dialog) => dialog.accept());
+  await page.locator("[data-import-progress-file]").setInputFiles({
+    name: "rean-git-progress.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(
+      JSON.stringify({
+        version: 1,
+        lastLab: "01-first-repo",
+        labs: {
+          "01-first-repo": { checked: 3, total: 3, complete: true },
+        },
+        chapters: {},
+        checklists: {},
+      })
+    ),
+  });
+  await expect(page.locator("[data-home-progress]")).toBeVisible();
+  await expect(page.locator("[data-home-labs-complete]")).toContainText("1");
+  await expect(page.locator("[data-home-lab-progress]")).toBeVisible();
+});
+
 test("question mark opens keyboard shortcuts help", async ({ page }) => {
   await page.goto("/");
   await page.keyboard.press("Shift+/");

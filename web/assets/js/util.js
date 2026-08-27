@@ -118,6 +118,74 @@
     emit("rean-git:chapter-progress", { reset: true });
   }
 
+  const PROGRESS_VERSION = 1;
+
+  function collectChecklists() {
+    const checklists = {};
+    try {
+      for (let i = 0; i < localStorage.length; i += 1) {
+        const key = localStorage.key(i);
+        if (!key || !key.startsWith(CHECKLIST_PREFIX)) continue;
+        const relative = key.slice(CHECKLIST_PREFIX.length);
+        checklists[relative] = readJson(key, {});
+      }
+    } catch {
+      /* private mode */
+    }
+    return checklists;
+  }
+
+  function exportProgress() {
+    return {
+      version: PROGRESS_VERSION,
+      exportedAt: new Date().toISOString(),
+      lastChapter: readStorageItem(LAST_CHAPTER_KEY),
+      lastLab: readStorageItem(LAST_LAB_KEY),
+      labs: readJson(LAB_PROGRESS_KEY, {}),
+      chapters: readJson(CHAPTER_PROGRESS_KEY, {}),
+      checklists: collectChecklists(),
+    };
+  }
+
+  function isPlainObject(value) {
+    return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+  }
+
+  function importProgress(payload) {
+    if (!isPlainObject(payload)) throw new Error("invalid progress file");
+    const version = payload.version == null ? PROGRESS_VERSION : payload.version;
+    if (version !== PROGRESS_VERSION) throw new Error("unsupported progress version");
+
+    const labs = isPlainObject(payload.labs) ? payload.labs : {};
+    const chapters = isPlainObject(payload.chapters) ? payload.chapters : {};
+    const checklists = isPlainObject(payload.checklists) ? payload.checklists : {};
+
+    resetProgress();
+
+    if (typeof payload.lastChapter === "string" && payload.lastChapter) {
+      writeStorageItem(LAST_CHAPTER_KEY, payload.lastChapter);
+    }
+    if (typeof payload.lastLab === "string" && payload.lastLab) {
+      writeStorageItem(LAST_LAB_KEY, payload.lastLab);
+    }
+    writeJson(LAB_PROGRESS_KEY, labs);
+    writeJson(CHAPTER_PROGRESS_KEY, chapters);
+    Object.entries(checklists).forEach(([relative, state]) => {
+      if (
+        !relative ||
+        !isPlainObject(state) ||
+        relative.includes("..") ||
+        !/^[a-zA-Z0-9._/-]+$/.test(relative)
+      ) {
+        return;
+      }
+      writeJson(`${CHECKLIST_PREFIX}${relative}`, state);
+    });
+
+    emit("rean-git:lab-progress", { imported: true });
+    emit("rean-git:chapter-progress", { imported: true });
+  }
+
   function parseGuideChapters(markdown) {
     const lines = String(markdown || "").split("\n");
     const starts = [];
@@ -163,6 +231,8 @@
     isChapterComplete,
     completedChapterCount,
     resetProgress,
+    exportProgress,
+    importProgress,
     parseGuideChapters,
   };
 })();

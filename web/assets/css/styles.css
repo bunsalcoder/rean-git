@@ -1772,8 +1772,20 @@ html.theme-animate body *::after {
   line-height: 1.45;
 }
 
-.progress-stats [data-reset-progress] {
+.progress-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.15rem;
+}
+
+.progress-tools .btn,
+.clone-import .btn {
   justify-self: start;
+}
+
+.clone-import {
+  margin: 0.85rem 0 0;
 }
 
 .lab-grid {
