@@ -220,6 +220,10 @@
 cd rean-git</code></pre>
             <button type="button" class="copy-btn" data-clone-copy data-i18n="ui.copy">Copy</button>
           </div>
+          <p class="clone-import">
+            <button type="button" class="btn btn-ghost" data-import-progress data-i18n="home.importProgress">Import progress</button>
+            <input type="file" accept="application/json,.json" hidden data-import-progress-file />
+          </p>
         </div>
       </section>
 
@@ -235,7 +239,11 @@ cd rean-git</code></pre>
               <p class="progress-stat" data-home-lab-progress hidden></p>
               <p class="progress-stat" data-home-chapters-complete hidden></p>
               <p class="progress-stat" data-home-labs-complete hidden></p>
-              <button type="button" class="btn btn-ghost" data-reset-progress data-i18n="home.resetProgress">Reset progress</button>
+              <div class="progress-tools">
+                <button type="button" class="btn btn-ghost" data-export-progress data-i18n="home.exportProgress">Export progress</button>
+                <button type="button" class="btn btn-ghost" data-import-progress data-i18n="home.importProgress">Import progress</button>
+                <button type="button" class="btn btn-ghost" data-reset-progress data-i18n="home.resetProgress">Reset progress</button>
+              </div>
             </div>
           </div>
         </div>

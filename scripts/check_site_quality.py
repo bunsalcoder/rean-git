@@ -534,6 +534,8 @@ def check_shared_runtime() -> int:
         msgs.append("util.js must track lab checklist completion")
     if "recordChapterComplete" not in util_text or "resetProgress" not in util_text:
         msgs.append("util.js must track chapter completion and reset progress")
+    if "exportProgress" not in util_text or "importProgress" not in util_text:
+        msgs.append("util.js must export and import learning progress")
     if "parseGuideChapters" not in util_text:
         msgs.append("util.js must parse handbook chapters for search")
     if "LAST_CHAPTER_KEY" not in util_text or "CLONE_COMMAND" not in util_text:
@@ -685,6 +687,8 @@ def check_print_styles() -> int:
             msgs.append("index.html missing clone-the-repo snippet")
         if "data-reset-progress" not in home_text:
             msgs.append("index.html missing reset progress control")
+        if "data-export-progress" not in home_text or "data-import-progress" not in home_text:
+            msgs.append("index.html missing export/import progress controls")
         if "data-home-lede" not in home_text:
             msgs.append("index.html missing derived chapter/lab count lede")
     learn_html = WEB / "learn.html"
