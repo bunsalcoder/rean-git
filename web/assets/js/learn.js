@@ -386,6 +386,10 @@ function searchModalOpen() {
   return Boolean(modal && !modal.hidden);
 }
 
+function shortcutsModalOpen() {
+  return Boolean(window.ReanGitA11y?.shortcutsOpen?.());
+}
+
 function setupPagerKeys(getNeighbors, goTo, signal) {
   window.addEventListener(
     "keydown",
@@ -393,7 +397,7 @@ function setupPagerKeys(getNeighbors, goTo, signal) {
       if (event.defaultPrevented) return;
       if (event.metaKey || event.ctrlKey || event.altKey) return;
       if (isTypingTarget(event.target)) return;
-      if (searchModalOpen()) return;
+      if (searchModalOpen() || shortcutsModalOpen()) return;
 
       const goingPrev = event.key === "ArrowLeft" || event.key === "k" || event.key === "K";
       const goingNext = event.key === "ArrowRight" || event.key === "j" || event.key === "J";
@@ -600,6 +604,12 @@ async function initLearnPage(signal, { animate = true } = {}) {
       }
 
       applyChapter(chapter, index);
+
+      if (hadChapter) {
+        window.ReanGitA11y?.focusMain?.({
+          message: t("a11y.chapterLoaded", { title: chapter.title }),
+        });
+      }
 
       if (shouldAnimate) {
         playChapterIn();
@@ -840,6 +850,12 @@ async function initLabPage(signal, { animate = true } = {}) {
 
     await applyLab(lab, index);
     if (token !== transitionToken) return;
+
+    if (hadLab) {
+      window.ReanGitA11y?.focusMain?.({
+        message: t("a11y.labLoaded", { title: lab.title }),
+      });
+    }
 
     if (shouldAnimate) {
       playLabIn();

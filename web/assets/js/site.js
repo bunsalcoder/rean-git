@@ -65,7 +65,41 @@
     };
   }
 
-  window.ReanGitA11y = { getFocusable, createFocusTrap };
+  function ensureLiveRegion() {
+    let el = document.querySelector("[data-live-region]");
+    if (el) return el;
+    el = document.createElement("div");
+    el.className = "visually-hidden";
+    el.setAttribute("data-live-region", "");
+    el.setAttribute("aria-live", "polite");
+    el.setAttribute("aria-atomic", "true");
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function announce(message) {
+    if (!message) return;
+    const el = ensureLiveRegion();
+    el.textContent = "";
+    window.requestAnimationFrame(() => {
+      el.textContent = String(message);
+    });
+  }
+
+  function focusMain({ message } = {}) {
+    const main = document.getElementById("main-content");
+    if (main) {
+      if (!main.hasAttribute("tabindex")) main.setAttribute("tabindex", "-1");
+      try {
+        main.focus({ preventScroll: true });
+      } catch {
+        main.focus();
+      }
+    }
+    if (message) announce(message);
+  }
+
+  window.ReanGitA11y = { getFocusable, createFocusTrap, announce, focusMain };
 
   function registerServiceWorker() {
     if (!("serviceWorker" in navigator) || navigator.webdriver) return;
@@ -547,7 +581,7 @@
         else open();
         return;
       }
-      if (event.key !== "/" || typing || event.metaKey || event.ctrlKey || event.altKey) return;
+      if (event.key !== "/" || typing || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
       event.preventDefault();
       open();
     });
@@ -568,6 +602,91 @@
   }
 
   setupSearch();
+
+  function setupShortcutsHelp() {
+    let modal = document.querySelector("[data-shortcuts-modal]");
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.className = "shortcuts-modal";
+      modal.hidden = true;
+      modal.setAttribute("data-shortcuts-modal", "");
+      modal.innerHTML = `
+        <div class="shortcuts-dialog" role="dialog" aria-modal="true" aria-labelledby="site-shortcuts-title" tabindex="-1">
+          <div class="shortcuts-head">
+            <h2 id="site-shortcuts-title" data-i18n="shortcuts.title">Keyboard shortcuts</h2>
+            <button type="button" class="btn btn-ghost" data-shortcuts-close data-i18n="shortcuts.close">Close</button>
+          </div>
+          <dl class="shortcuts-list">
+            <div><dt><kbd>/</kbd> <span data-i18n="shortcuts.or">or</span> <kbd>Ctrl</kbd>+<kbd>K</kbd></dt><dd data-i18n="shortcuts.search">Search chapters and labs</dd></div>
+            <div><dt><kbd>?</kbd></dt><dd data-i18n="shortcuts.help">Show this help</dd></div>
+            <div><dt><kbd>←</kbd> <kbd>→</kbd> <span data-i18n="shortcuts.or">or</span> <kbd>J</kbd> <kbd>K</kbd></dt><dd data-i18n="shortcuts.pager">Previous / next chapter or lab</dd></div>
+            <div><dt><kbd>Esc</kbd></dt><dd data-i18n="shortcuts.escape">Close search, menus, or this help</dd></div>
+          </dl>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    const dialog = modal.querySelector(".shortcuts-dialog");
+    const closeBtn = modal.querySelector("[data-shortcuts-close]");
+    if (!dialog) return;
+
+    let trap = null;
+
+    function isOpen() {
+      return !modal.hidden;
+    }
+
+    function open() {
+      modal.hidden = false;
+      window.ReanGitI18n?.apply?.(modal);
+      trap = createFocusTrap(dialog, [closeBtn].filter(Boolean));
+      trap.activate();
+    }
+
+    function close() {
+      if (modal.hidden) return;
+      modal.hidden = true;
+      trap?.deactivate();
+      trap = null;
+    }
+
+    closeBtn?.addEventListener("click", close);
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) close();
+    });
+    modal.addEventListener("keydown", (event) => {
+      if (!isOpen()) return;
+      if (event.key === "Escape") {
+        event.preventDefault();
+        close();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.defaultPrevented) return;
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      const typing =
+        event.target instanceof HTMLElement &&
+        event.target.closest("input, textarea, select, [contenteditable='true']");
+      if (typing) return;
+      if (document.querySelector("[data-search-modal]:not([hidden])")) return;
+      // Prefer event.key === "?"; some environments report Shift+/ instead.
+      if (event.key !== "?" && !(event.key === "/" && event.shiftKey)) return;
+      event.preventDefault();
+      if (isOpen()) close();
+      else open();
+    });
+
+    window.ReanGitI18n?.onChange?.(() => {
+      if (isOpen()) window.ReanGitI18n?.apply?.(modal);
+    });
+
+    window.ReanGitA11y.shortcutsOpen = isOpen;
+    window.ReanGitA11y.closeShortcuts = close;
+  }
+
+  setupShortcutsHelp();
   registerServiceWorker();
 
   if (!nav) return;
@@ -801,6 +920,7 @@
     await bootPage({ animate: false });
     window.scrollTo(0, 0);
     window.ReanGitI18n?.syncSeo?.();
+    focusMain({ message: document.title });
 
     if (animate) {
       await nextFrame();
