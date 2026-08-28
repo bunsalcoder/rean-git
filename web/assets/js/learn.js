@@ -335,6 +335,38 @@ async function loadLocalizedContent(relativePath) {
   throw lastError || new Error(`Could not load ${relativePath}`);
 }
 
+const labMarkdownCache = new Map();
+const labMarkdownPending = new Map();
+
+async function fetchLabMarkdown(id) {
+  if (labMarkdownCache.has(id)) return labMarkdownCache.get(id);
+  if (labMarkdownPending.has(id)) return labMarkdownPending.get(id);
+
+  const promise = loadLocalizedContent(`labs/${id}.md`)
+    .then((md) => {
+      labMarkdownCache.set(id, md);
+      labMarkdownPending.delete(id);
+      return md;
+    })
+    .catch((err) => {
+      labMarkdownPending.delete(id);
+      throw err;
+    });
+
+  labMarkdownPending.set(id, promise);
+  return promise;
+}
+
+function prefetchLabMarkdown(id) {
+  if (!id || labMarkdownCache.has(id)) return;
+  fetchLabMarkdown(id).catch(() => {});
+}
+
+function prefetchAdjacentLabMarkdown(labIds, index) {
+  if (index > 0) prefetchLabMarkdown(labIds[index - 1]);
+  if (index + 1 < labIds.length) prefetchLabMarkdown(labIds[index + 1]);
+}
+
 function sanitizeMarkdownHtml(html) {
   if (!window.DOMPurify) return null;
   // Task-list checkboxes from GFM need <input type="checkbox">.
@@ -570,6 +602,8 @@ async function initLearnPage(signal, { animate = true } = {}) {
       renderPager(index);
       paintMarkDone(chapter.id);
       paintRelatedLab(chapter.id);
+      const relatedLab = window.ReanGitCatalog?.getLabForChapter?.(chapter.id);
+      if (relatedLab?.id) prefetchLabMarkdown(relatedLab.id);
       window.ReanGitI18n?.syncSeo?.();
     };
 
@@ -740,10 +774,10 @@ async function initLabPage(signal, { animate = true } = {}) {
     bodyEl.innerHTML = `<div class="error"><strong>${escapeHtml(t("lab.loadError"))}</strong><br>${escapeHtml(t("lab.serveHint"))}</div>`;
     return null;
   }
+  const labIds = labs.map((lab) => lab.id);
   let currentIndex = -1;
   let transitionToken = 0;
   const paneEl = bodyEl.closest(".content-pane");
-  const cache = new Map();
   const LAB_OUT_MS = 380;
   const prefersReducedMotion = () =>
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -784,11 +818,19 @@ async function initLabPage(signal, { animate = true } = {}) {
     document.body.classList.add("is-switching");
   };
 
-  const loadLabMarkdown = async (id) => {
-    if (cache.has(id)) return cache.get(id);
-    const md = await loadLocalizedContent(`labs/${id}.md`);
-    cache.set(id, md);
-    return md;
+  const loadLabMarkdown = (id) => fetchLabMarkdown(id);
+
+  const wireLabPrefetch = (root) => {
+    if (!root) return;
+    root.addEventListener(
+      "pointerenter",
+      (event) => {
+        const link = event.target.closest("a[data-lab-id]");
+        if (!link) return;
+        prefetchLabMarkdown(link.dataset.labId);
+      },
+      { signal, capture: true }
+    );
   };
 
   const applyLab = async (lab, index) => {
@@ -806,6 +848,7 @@ async function initLabPage(signal, { animate = true } = {}) {
     renderPager(index);
     paintRelatedChapter(lab);
     window.ReanGitI18n?.syncSeo?.();
+    prefetchAdjacentLabMarkdown(labIds, index);
 
     try {
       const md = await loadLabMarkdown(lab.id);
@@ -867,6 +910,8 @@ async function initLabPage(signal, { animate = true } = {}) {
   navEl.innerHTML = labs.map((l) => labNavItem(l)).join("");
 
   setupSideSearch(navEl, signal);
+  wireLabPrefetch(navEl);
+  wireLabPrefetch(pagerEl);
 
   window.addEventListener(
     "rean-git:lab-progress",

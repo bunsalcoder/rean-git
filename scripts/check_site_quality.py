@@ -554,6 +554,8 @@ def check_shared_runtime() -> int:
         msgs.append("learn.js must link labs to handbook chapters")
     if "data-related-lab" not in learn_js:
         msgs.append("learn.js must link chapters to matching labs")
+    if "prefetchLabMarkdown" not in learn_js or "prefetchAdjacentLabMarkdown" not in learn_js:
+        msgs.append("learn.js must prefetch adjacent lab markdown")
     if re.search(r'LAST_CHAPTER_KEY\s*=\s*"rean-git:last-chapter"', learn_js):
         msgs.append("learn.js should use ReanGitUtil for last-chapter storage")
 
