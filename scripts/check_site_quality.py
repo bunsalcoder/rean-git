@@ -20,6 +20,19 @@ NUMBERED_H2_RE = re.compile(r"^## (\d+)\.\s+")
 H2_RE = re.compile(r"^## .+$", re.M)
 HOW_TO_FALLBACK_RE = re.compile(r"^## How to use this guide$")
 KM_LINE_RATIO = 0.85
+KHMER_SCRIPT_RE = re.compile(r"[\u1780-\u17FF]")
+KM_LAB_TITLES_NEED_KHMER = (
+    "03-conflict",
+    "08-stash",
+    "09-tags",
+    "10-cherry-pick",
+    "11-interactive-rebase",
+    "12-bisect",
+    "14-worktrees",
+    "16-hooks",
+    "18-forks",
+    "19-submodules-lfs",
+)
 VALID_LAB_LEVELS = {"beginner", "intermediate", "advanced"}
 SITE_ORIGIN = "https://bunsalcoder.github.io/rean-git"
 PAGE_CANONICALS = {
@@ -268,6 +281,12 @@ def check_km_content(chapters: list[str], labs: list[str]) -> int:
                 f"km/labs/{lab_id}.md has {len(km_h2)} ## headings; "
                 f"English has {len(en_h2)}"
             )
+
+    km_labs = load_json(LOCALES / "km.json").get("labs", {})
+    for lab_id in KM_LAB_TITLES_NEED_KHMER:
+        title = km_labs.get(lab_id, {}).get("title", "")
+        if title and not KHMER_SCRIPT_RE.search(title):
+            msgs.append(f"km labs.{lab_id}.title should include Khmer wording ({title!r})")
 
     return fail(msgs, "Khmer handbook + lab structure")
 

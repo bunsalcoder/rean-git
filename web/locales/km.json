@@ -191,7 +191,7 @@
       "summary": "បំបែកការងារដោយសុវត្ថិភាព បន្ទាប់មកនាំមករួមគ្នាវិញ។"
     },
     "03-conflict": {
-      "title": "Conflict",
+      "title": "ទំនាស់",
       "teaser": "ដោះស្រាយ merge conflict។",
       "summary": "ជួប merge conflict ហើយដោះស្រាយដោយស្ងប់ស្ងាត់។"
     },
@@ -216,27 +216,27 @@
       "summary": "មិនអើពើឯកសារឥតប្រយោជន៍ sync ញឹកញាប់ សរសេរ PR ដែលពិនិត្យបាន។"
     },
     "08-stash": {
-      "title": "Stash",
+      "title": "Stash — ទុកការងារបណ្តោះអាសន្ន",
       "teaser": "ទុក WIP ប្តូរបរិបទ។",
       "summary": "ទុកការងារមិនទាន់រួច ប្តូរបរិបទ រួចស្តារវិញ។"
     },
     "09-tags": {
-      "title": "Tags",
+      "title": "Tags និងការចេញផ្សាយ",
       "teaser": "ដាក់ស្លាកការចេញផ្សាយ។",
       "summary": "ចំណាំការចេញផ្សាយ ហើយ checkout tag កំណែ។"
     },
     "10-cherry-pick": {
-      "title": "Cherry-pick",
+      "title": "Cherry-pick — ចម្លង commit",
       "teaser": "ចម្លង commit មួយ។",
       "summary": "នាំ commit មួយទៅ branch ផ្សេង។"
     },
     "11-interactive-rebase": {
-      "title": "Interactive rebase",
+      "title": "Rebase អន្តរកម្ម",
       "teaser": "បង្រួមប្រវត្តិឲ្យច្បាស់។",
       "summary": "បង្រួម commits រញ៉េរញ៉ៃទៅជារៀងច្បាស់លាស់។"
     },
     "12-bisect": {
-      "title": "Bisect",
+      "title": "Bisect — រក commit ខុស",
       "teaser": "រក commit ដែលបំបែក។",
       "summary": "ស្វែងរកប្រវត្តិតាម binary search រក commit ដែលបំបែក។"
     },
@@ -246,7 +246,7 @@
       "summary": "ដើរតាម commits, trees, blobs និង refs។"
     },
     "14-worktrees": {
-      "title": "Worktrees",
+      "title": "Worktree និង detached HEAD",
       "teaser": "ថតទីពីរ repo តែមួយ។",
       "summary": "ប្រើ detached HEAD ដោយសុវត្ថិភាព ហើយធ្វើការក្នុង worktree ទីពីរ។"
     },
@@ -256,7 +256,7 @@
       "summary": "តាមដានការផ្លាស់ប្តូរដោយ blame, pickaxe search និង branch ranges។"
     },
     "16-hooks": {
-      "title": "Hooks",
+      "title": "Hooks — ទំពក់ Git",
       "teaser": "រារាំង commit អាក្រក់ក្នុងស្រុក។",
       "summary": "ដំឡើង pre-commit hook ហើយមើលវាចាប់ commit អាក្រក់។"
     },
@@ -266,12 +266,12 @@
       "summary": "ចុះហត្ថលេខា commit ដោយ SSH ហើយផ្ទៀងផ្ទាត់ហត្ថលេខាក្នុងស្រុក។"
     },
     "18-forks": {
-      "title": "Forks និង remotes",
+      "title": "Fork និង remote",
       "teaser": "Origin, upstream, fetch។",
       "summary": "បន្ថែម upstream លើ fork, push feature, ហើយ fetch ពេលដើមផ្លាស់ទី។"
     },
     "19-submodules-lfs": {
-      "title": "Submodules និង LFS",
+      "title": "Submodule និង Git LFS",
       "teaser": "Nest repo, ខ្ទាស់ binary។",
       "summary": "ខ្ទាស់ repo nested ដោយ submodule បន្ទាប់មកតាមដានឯកសារធំដោយ Git LFS។"
     }
