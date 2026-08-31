@@ -18,6 +18,8 @@ jobs:
         run: ./scripts/check_km_content_sync.sh
       - name: Verify locales, content coverage, and internal links
         run: ./scripts/check_site_quality.sh
+      - name: Run lab verify.sh against fixture playgrounds
+        run: ./scripts/run_lab_verifier_fixtures.sh
       - uses: actions/setup-node@v4
         with:
           node-version: "20"

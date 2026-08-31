@@ -59,13 +59,14 @@ If a Khmer file is missing, the site falls back to English. CI still requires th
 ## Checks
 
 ```bash
-./scripts/check_content_sync.sh      # English copies match sources
-./scripts/check_km_content_sync.sh # Khmer structure vs English + translation status
-./scripts/check_site_quality.sh    # locales, chapters, Khmer structure, links, SEO
-npm run test:e2e                   # optional; Playwright smoke tests
+./scripts/check_content_sync.sh         # English copies match sources
+./scripts/check_km_content_sync.sh      # Khmer structure vs English + translation status
+./scripts/check_site_quality.sh         # locales, chapters, Khmer structure, links, SEO
+./scripts/run_lab_verifier_fixtures.sh  # build fixture playgrounds + run verify.sh
+npm run test:e2e                        # optional; Playwright smoke tests
 ```
 
-CI runs the first two (and Playwright) on pushes and PRs to `main` and `develop`.
+CI runs the content checks, lab verifier fixtures, and Playwright on pushes and PRs to `main` and `develop`.
 
 ## Lab self-check
 
@@ -78,7 +79,13 @@ cd labs/01-first-repo
 
 Shared helpers live in `scripts/lab_verify_lib.sh`. Verifiers inspect local git state (clean tree, branches, tags, hooks, etc.). Labs that use GitHub (06, 07) print warnings for steps that must be confirmed in the browser.
 
-When you add a lab, add `labs/<id>/verify.sh` and register checks in `scripts/check_site_quality.py` via `check_lab_verifiers()`.
+Representative offline labs also have **fixture builders** under `scripts/lab_fixtures/<id>.sh`. CI builds a completed `playground/` for each, runs `verify.sh`, then deletes the playground. When you change a covered lab’s steps or verifier, update the matching fixture and re-run:
+
+```bash
+./scripts/run_lab_verifier_fixtures.sh --only 01-first-repo
+```
+
+Use `--keep` to leave playgrounds in place for debugging. When you add a lab, add `labs/<id>/verify.sh` (and register checks via `check_lab_verifiers()`), and prefer a fixture builder for offline-friendly labs.
 
 ## Issues and pull requests
 
