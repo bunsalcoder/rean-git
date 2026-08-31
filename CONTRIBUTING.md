@@ -34,20 +34,35 @@ Chapter IDs come from handbook headings (`## How to use this guide` and `## N. �
 
 ## Khmer content
 
-Khmer has no sync script. Update it in place:
+Khmer is translated by hand, but structure stays aligned with English via helper scripts:
 
 - `web/content/km/guide.md` — same chapter headings as English (`## 1.`, `## 2.`, … plus the how-to-use heading).
 - `web/content/km/labs/<id>.md` — same `##` section count as the English lab (Goal / Setup / Steps / …, translated).
 - `web/locales/km.json` — UI strings and titles.
+
+After English adds a chapter or lab (or changes lab section headings):
+
+```bash
+./scripts/sync_km_structure.sh
+```
+
+That scaffolds missing Khmer files from English structure (Khmer section titles + placeholder body), appends missing chapter stubs to `km/guide.md`, and replaces known English `##` headings in existing lab files. Translate the scaffolded prose before merging.
+
+Check Khmer drift any time:
+
+```bash
+./scripts/check_km_content_sync.sh
+```
 
 If a Khmer file is missing, the site falls back to English. CI still requires the Khmer files to exist and to follow English structure.
 
 ## Checks
 
 ```bash
-./scripts/check_content_sync.sh   # English copies match sources
-./scripts/check_site_quality.sh   # locales, chapters, Khmer structure, links, SEO
-npm run test:e2e                  # optional; Playwright smoke tests
+./scripts/check_content_sync.sh      # English copies match sources
+./scripts/check_km_content_sync.sh # Khmer structure vs English + translation status
+./scripts/check_site_quality.sh    # locales, chapters, Khmer structure, links, SEO
+npm run test:e2e                   # optional; Playwright smoke tests
 ```
 
 CI runs the first two (and Playwright) on pushes and PRs to `main` and `develop`.
