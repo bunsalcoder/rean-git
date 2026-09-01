@@ -18,6 +18,22 @@ test("language switch updates html lang", async ({ page }) => {
   );
 });
 
+test("Khmer locale loads translated UI and handbook content", async ({ page }) => {
+  await page.goto("/learn.html?lang=km&c=1");
+  await expect(page.locator("[data-chapter-title]")).not.toHaveText(/Loading/i);
+  await expect(page.locator(".headline, [data-chapter-title]").first()).toContainText(
+    /[\u1780-\u17FF]/
+  );
+  await expect(page.locator("[data-chapter-body]")).toContainText(/[\u1780-\u17FF]/);
+});
+
+test("Khmer lab page loads translated instructions", async ({ page }) => {
+  await page.goto("/lab.html?lang=km&id=01-first-repo");
+  await expect(page.locator("[data-lab-body]")).toBeVisible();
+  await expect(page.locator("[data-lab-body]")).toContainText(/[\u1780-\u17FF]/);
+  await expect(page.locator("[data-lab-body] pre, [data-lab-body] code").first()).toBeVisible();
+});
+
 test("pages advertise English and Khmer alternates", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator('link[rel="alternate"][hreflang="km"]')).toHaveAttribute(
