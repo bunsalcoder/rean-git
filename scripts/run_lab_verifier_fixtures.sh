@@ -63,6 +63,8 @@ cleanup_all() {
   if (( KEEP == 0 )); then
     for lab_id in "${FIXTURES[@]}"; do
       rm -rf "${ROOT}/labs/${lab_id}/playground"
+      rm -rf "${ROOT}/labs/${lab_id}/sandbox"
+      rm -rf "${ROOT}/labs/${lab_id}/review"
     done
   fi
 }

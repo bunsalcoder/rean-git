@@ -18,6 +18,11 @@ jobs:
         run: ./scripts/check_km_content_sync.sh
       - name: Verify locales, content coverage, and internal links
         run: ./scripts/check_site_quality.sh
+      - name: Install Git LFS for submodule/LFS lab fixtures
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq git-lfs
+          git lfs install
       - name: Run lab verify.sh against fixture playgrounds
         run: ./scripts/run_lab_verifier_fixtures.sh
       - uses: actions/setup-node@v4

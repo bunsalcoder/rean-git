@@ -9,6 +9,8 @@ dist/
 *.log
 .DS_Store
 py_compile
+__pycache__/
+**/__pycache__/
 
 # Student sandboxes created by the labs
 labs/**/playground/

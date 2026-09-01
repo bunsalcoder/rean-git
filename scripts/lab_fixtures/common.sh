@@ -46,3 +46,16 @@ fixture_cleanup_playground() {
     rm -rf "${FIXTURE_LAB_ROOT}/playground"
   fi
 }
+
+fixture_lab_sandbox() {
+  local lab_id="${1:?lab id}"
+  fixture_lab_root "${lab_id}"
+  echo "${FIXTURE_LAB_ROOT}/sandbox"
+}
+
+fixture_reset_sandbox() {
+  local lab_id="${1:?lab id}"
+  fixture_lab_root "${lab_id}"
+  rm -rf "${FIXTURE_LAB_ROOT}/sandbox"
+  mkdir -p "${FIXTURE_LAB_ROOT}/sandbox"
+}
