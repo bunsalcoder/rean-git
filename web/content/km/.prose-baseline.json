@@ -1,0 +1,22 @@
+{
+  "guide.md": "670746fb30e91ab2",
+  "labs/01-first-repo.md": "495485ef32e5f678",
+  "labs/02-branch-merge.md": "d2417378e0f19622",
+  "labs/03-conflict.md": "0eeb9a54be205f4a",
+  "labs/04-rebase.md": "0860438354869f11",
+  "labs/05-undo.md": "3183dc670a64467c",
+  "labs/06-remote-pr.md": "0257d030ca1ef1c0",
+  "labs/07-team-workflow.md": "068e36eb6209d914",
+  "labs/08-stash.md": "9a220900c97f8067",
+  "labs/09-tags.md": "5d08777db9a988dc",
+  "labs/10-cherry-pick.md": "c3b28b35f059184e",
+  "labs/11-interactive-rebase.md": "f0c919b19a7bc168",
+  "labs/12-bisect.md": "93f525f957aa1fea",
+  "labs/13-internals.md": "a90916445e805835",
+  "labs/14-worktrees.md": "164f892997557434",
+  "labs/15-inspect-history.md": "a185f838d9f47f0d",
+  "labs/16-hooks.md": "f60e1bee1c6f6c7d",
+  "labs/17-signing.md": "71500eb1d841c496",
+  "labs/18-forks.md": "35e51d05021f07fe",
+  "labs/19-submodules-lfs.md": "986ffc633dc3d09d"
+}

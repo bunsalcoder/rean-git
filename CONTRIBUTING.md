@@ -54,17 +54,29 @@ Check Khmer drift any time:
 ./scripts/check_km_content_sync.sh
 ```
 
+English prose changes (not just file timestamps) trigger stale warnings via
+`web/content/km/.prose-baseline.json`. After you review or update Khmer prose,
+refresh the baseline:
+
+```bash
+python3 scripts/check_km_content_sync.py --write-prose-baseline
+```
+
 If a Khmer file is missing, the site falls back to English. CI still requires the Khmer files to exist and to follow English structure.
 
 ## Checks
 
 ```bash
 ./scripts/check_content_sync.sh         # English copies match sources
-./scripts/check_km_content_sync.sh      # Khmer structure vs English + translation status
+./scripts/check_km_content_sync.sh      # Khmer structure vs English + prose drift
 ./scripts/check_site_quality.sh         # locales, chapters, Khmer structure, links, SEO
 ./scripts/run_lab_verifier_fixtures.sh  # build fixture playgrounds + run verify.sh
+npm run check                           # all four checks above
 npm run test:e2e                        # optional; Playwright smoke tests
+npm run dev                             # preview site at http://localhost:4173
 ```
+
+CI also runs a **secret scan** (Gitleaks) on every push and PR.
 
 CI runs the content checks, lab verifier fixtures, and Playwright on pushes and PRs to `main` and `develop`.
 

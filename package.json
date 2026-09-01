@@ -2,6 +2,8 @@
   "name": "rean-git",
   "private": true,
   "scripts": {
+    "dev": "cd web && python3 -m http.server 4173",
+    "check": "./scripts/check_content_sync.sh && ./scripts/check_km_content_sync.sh && ./scripts/check_site_quality.sh && ./scripts/run_lab_verifier_fixtures.sh",
     "test:e2e": "playwright test",
     "test:e2e:install": "playwright install chromium"
   },

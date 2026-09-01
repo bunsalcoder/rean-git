@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import re
 from pathlib import Path
 
@@ -48,6 +49,20 @@ def structure_fingerprint(text: str) -> tuple[int, int, int]:
         len(H3_RE.findall(text)),
         fences // 2 if fences else 0,
     )
+
+
+def prose_fingerprint(text: str) -> str:
+    """Hash non-code prose so Khmer drift checks ignore touch-only English edits."""
+    lines: list[str] = []
+    for line, in_fence in iter_markdown_lines(text):
+        if in_fence:
+            continue
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        lines.append(stripped)
+    payload = "\n".join(lines).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()[:16]
 
 
 def iter_markdown_lines(text: str):
