@@ -1788,6 +1788,14 @@ html.theme-animate body *::after {
   margin: 0.85rem 0 0;
 }
 
+.clone-codespaces {
+  margin: 0.85rem 0 0;
+}
+
+.clone-codespaces .btn {
+  justify-self: start;
+}
+
 .lab-grid {
   display: grid;
   gap: 0.7rem;
@@ -2183,6 +2191,14 @@ html.theme-animate body *::after {
 .md-body ul.contains-task-list {
   list-style: none;
   padding-left: 0;
+}
+
+.md-body .checklist-progress {
+  margin: 0 0 1rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  letter-spacing: 0.01em;
 }
 
 .md-body .task-list-item {

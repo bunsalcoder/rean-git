@@ -107,7 +107,8 @@ Git works offline. GitHub is where you share and collaborate.
 
 ### Lab link
 
-After chapters 3–5 → [Lab 01 — First repo](../labs/01-first-repo/)
+After chapter 3 → [Install & config](../labs/00-install-config/)  
+After chapters 4–5 → [First repo](../labs/01-first-repo/)
 
 ---
 
@@ -182,6 +183,10 @@ git config --global core.editor "code --wait"   # or nano / vim
 git config --list --show-origin
 ```
 
+### Lab
+
+Complete **[Install & config](../labs/00-install-config/)** before continuing. Use **local** config in the lab playground so your global Git settings stay untouched.
+
 ---
 
 ## 4. Your first repository
@@ -229,7 +234,7 @@ git log --oneline
 
 ### Lab
 
-Complete **[Lab 01 — First repo](../labs/01-first-repo/)** before continuing.
+Complete **[First repo](../labs/01-first-repo/)** before continuing.
 
 ---
 
@@ -338,7 +343,8 @@ Each letter is a commit. A branch is just a pointer with a name.
 
 ### Lab
 
-**[Lab 02 — Branch & merge](../labs/02-branch-merge/)**
+Practice isolation first: **[Branching](../labs/00-branching/)**.  
+Then merge in the next chapter’s lab: **[Branch & merge](../labs/02-branch-merge/)**.
 
 ---
 
@@ -375,7 +381,7 @@ Use `-D` only when you mean “throw this branch away.”
 
 ### Lab
 
-Same practice as branching: **[Lab 02 — Branch & merge](../labs/02-branch-merge/)**
+Same practice as branching: **[Branch & merge](../labs/02-branch-merge/)**
 
 ---
 
@@ -579,7 +585,8 @@ git push                  # upload your commits
 
 ### Lab
 
-**[Lab 06 — Remote & PR](../labs/06-remote-pr/)** (needs a GitHub account)
+Practice the commands offline first: **[Local remote](../labs/00-local-remote/)**.  
+Then use a real GitHub repo: **[Remote & PR](../labs/06-remote-pr/)** (needs a GitHub account).
 
 ---
 
@@ -621,7 +628,7 @@ git push origin --delete fix/login-redirect   # optional cleanup
 
 ### Lab
 
-Finish the remote practice: **[Lab 06 — Remote & PR](../labs/06-remote-pr/)**
+Finish the remote practice: **[Remote & PR](../labs/06-remote-pr/)**
 
 ---
 
@@ -1295,32 +1302,33 @@ git show-ref
 
 ## 27. Learning path checklist
 
-Use this as your progress board — foundations first, then hero skills.
+Use this as your progress board — foundations first, then hero skills. Check items off here; the site remembers them on this device.
 
 ### Foundations
 
-- [ ] Git installed and `user.name` / `user.email` set
+- [ ] Git installed and `user.name` / `user.email` set ([Install & config](../labs/00-install-config/))
 - [ ] You can explain working tree vs staging vs commit (suitcase story)
-- [ ] Lab 01 complete
+- [ ] [First repo](../labs/01-first-repo/) lab complete
 
 ### Local collaboration with yourself
 
-- [ ] Create branches for features and bug fixes
-- [ ] Merge finished work into `main`
-- [ ] Resolve one conflict on purpose
-- [ ] Labs 02–03 complete
+- [ ] Create branches for features and bug fixes ([Branching](../labs/00-branching/))
+- [ ] Merge finished work into `main` ([Branch & merge](../labs/02-branch-merge/))
+- [ ] Resolve one conflict on purpose ([Conflict](../labs/03-conflict/))
+- [ ] Branching, merge, and conflict labs complete
 
 ### History skills
 
 - [ ] Rebase a *local* feature onto latest `main`
 - [ ] Choose restore / reset / revert for the situation
-- [ ] Labs 04–05 complete
+- [ ] Rebase and undo labs complete
 
 ### Remote & team
 
-- [ ] Push a branch and open a PR
+- [ ] Push, fetch, and pull against a remote ([Local remote](../labs/00-local-remote/))
+- [ ] Push a branch and open a PR ([Remote & PR](../labs/06-remote-pr/))
 - [ ] Use `.gitignore` and short-lived branches
-- [ ] Labs 06–07 complete
+- [ ] Remote, PR, and team workflow labs complete
 
 ### Power tools
 
@@ -1329,7 +1337,7 @@ Use this as your progress board — foundations first, then hero skills.
 - [ ] Cherry-pick a single commit onto another branch
 - [ ] Squash commits with interactive rebase
 - [ ] Find a bad commit with bisect
-- [ ] Labs 08–12 complete
+- [ ] Stash through bisect labs complete
 
 ### Professional Git
 
@@ -1338,12 +1346,12 @@ Use this as your progress board — foundations first, then hero skills.
 - [ ] Know what hooks and signed commits are for
 - [ ] Add an `upstream` remote on a fork
 - [ ] Explain when to use submodules vs LFS vs packages
-- [ ] Labs 14–19 complete
+- [ ] Worktrees through submodules/LFS labs complete
 
 ### Mastery
 
 - [ ] Describe blob / tree / commit / ref in plain words
-- [ ] Lab 13 complete
+- [ ] Internals lab complete
 - [ ] You reach for `git status` before guessing
 
 ---

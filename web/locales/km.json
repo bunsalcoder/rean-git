@@ -67,7 +67,8 @@
     "importFailed": "មិនអាចនាំចូលឯកសារវឌ្ឍនភាពនោះបានទេ។",
     "cloneEyebrow": "នៅលើម៉ាស៊ីនរបស់អ្នក",
     "cloneTitle": "Clone repo បន្ទាប់មកវាយរាល់ពាក្យបញ្ជា។",
-    "cloneBody": "មន្ទីរពិសោធន៍ស្ថិតនៅក្នុង GitHub repo មិនមែនក្នុង browser ទេ។ Clone វា ហើយរក្សា terminal ឲ្យបើកក្បែរវេបសាយនេះ។",
+    "cloneBody": "មន្ទីរពិសោធន៍ស្ថិតនៅក្នុង GitHub repo មិនមែនក្នុង browser ទេ។ Clone វា ហើយរក្សា terminal ឲ្យបើកក្បែរវេបសាយនេះ — ឬបើក repo ក្នុង GitHub Codespaces សម្រាប់ terminal ដែលរៀបចំរួច។",
+    "codespaces": "បើកក្នុង Codespaces",
     "updateAvailable": "កំណែថ្មីនៃ rean-git បានរួចរាល់។",
     "refresh": "ផ្ទុកឡើងវិញ",
     "methodEyebrow": "វិធីរៀន",
@@ -108,6 +109,7 @@
     "markedDone": "រួចរាល់",
     "relatedLab": "អនុវត្ត — {title}",
     "relatedLabFallback": "បើកមន្ទីរពិសោធន៍ដែលត្រូវគ្នា",
+    "checklistProgress": "បានធីក {checked} នៃ {total} ធាតុក្នុងបញ្ជី",
     "loadError": "មិនអាចផ្ទុកមេរៀនបានទេ។",
     "serveHint": "បម្រើថត web/ តាម HTTP (ឧទាហរណ៍ python3 -m http.server 4173) បន្ទាប់មកបើកវេបសាយពី URL នោះ។"
   },
@@ -180,10 +182,20 @@
     "27": "បញ្ជីផ្លូវសិក្សា"
   },
   "labs": {
+    "00-install-config": {
+      "title": "ដំឡើង និង config",
+      "teaser": "កំណែ Git និងអត្តសញ្ញាណ។",
+      "summary": "បញ្ជាក់ថា Git ដំណើរការ ហើយកំណត់ user.name / user.email ក្នុងស្រុក។"
+    },
     "01-first-repo": {
       "title": "Repo ដំបូង",
       "teaser": "Init, stage, commit។",
       "summary": "Init, stage, commit — ប្រវត្តិពិតដំបូងរបស់អ្នក។"
+    },
+    "00-branching": {
+      "title": "ការបង្កើត branch",
+      "teaser": "ញែកការងារលើ branch។",
+      "summary": "បង្កើត topic branches ហើយមើលថា commits នៅដាច់ដោយឡែក។"
     },
     "02-branch-merge": {
       "title": "Branch និង merge",
@@ -204,6 +216,11 @@
       "title": "ត្រឡប់វិញ",
       "teaser": "Restore, reset, revert។",
       "summary": "Restore, amend, reset និង revert ដោយមានគោលបំណាង។"
+    },
+    "00-local-remote": {
+      "title": "Remote ក្នុងស្រុក",
+      "teaser": "Push, fetch, pull ដោយគ្មាន GitHub។",
+      "summary": "ប្រើ bare repo ក្នុងស្រុកជា origin — push, fetch និង pull ដោយគ្មាន GitHub។"
     },
     "06-remote-pr": {
       "title": "Remote និង PR",

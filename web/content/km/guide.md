@@ -107,7 +107,8 @@ Git ដំណើរការដោយគ្មានអ៊ីនធឺណិត�
 
 ### តំណមន្ទីរពិសោធន៍
 
-បន្ទាប់ពីជំពូក 3–5 → [មន្ទីរពិសោធន៍ 01 — Repo ដំបូង](./lab.html?id=01-first-repo)
+បន្ទាប់ពីជំពូក 3 → [ដំឡើង និង config](./lab.html?id=00-install-config)  
+បន្ទាប់ពីជំពូក 4–5 → [Repo ដំបូង](./lab.html?id=01-first-repo)
 
 ---
 
@@ -182,6 +183,10 @@ git config --global core.editor "code --wait"   # or nano / vim
 git config --list --show-origin
 ```
 
+### មន្ទីរពិសោធន៍
+
+បំពេញ **[ដំឡើង និង config](./lab.html?id=00-install-config)** មុនពេលបន្ត។ ប្រើ config **ក្នុងស្រុក** ក្នុង playground របស់មន្ទីរពិសោធន៍ ដើម្បីកុំប៉ះការកំណត់ Git global របស់អ្នក។
+
 ---
 
 ## 4. repository ដំបូងរបស់អ្នក
@@ -229,7 +234,7 @@ git log --oneline
 
 ### មន្ទីរពិសោធន៍
 
-បំពេញ **[មន្ទីរពិសោធន៍ 01 — Repo ដំបូង](./lab.html?id=01-first-repo)** មុនពេលបន្ត។
+បំពេញ **[Repo ដំបូង](./lab.html?id=01-first-repo)** មុនពេលបន្ត។
 
 ---
 
@@ -338,7 +343,8 @@ feat/contact-page:           D---E
 
 ### មន្ទីរពិសោធន៍
 
-**[មន្ទីរពិសោធន៍ 02 — Branch និង merge](./lab.html?id=02-branch-merge)**
+អនុវត្តភាពដាច់ដោយឡែកជាមុន៖ **[ការបង្កើត branch](./lab.html?id=00-branching)**។  
+បន្ទាប់មក merge ក្នុងមន្ទីរពិសោធន៍ជំពូកបន្ទាប់៖ **[Branch និង merge](./lab.html?id=02-branch-merge)**។
 
 ---
 
@@ -375,7 +381,7 @@ git branch -d feat/contact-page
 
 ### មន្ទីរពិសោធន៍
 
-ការអនុវត្តដូច branching: **[មន្ទីរពិសោធន៍ 02 — Branch និង merge](./lab.html?id=02-branch-merge)**
+ការអនុវត្តដូច branching: **[Branch និង merge](./lab.html?id=02-branch-merge)**
 
 ---
 
@@ -579,7 +585,8 @@ git push                  # upload your commits
 
 ### មន្ទីរពិសោធន៍
 
-**[មន្ទីរពិសោធន៍ 06 — Remote និង PR](./lab.html?id=06-remote-pr)** (ត្រូវការគណនី GitHub)
+អនុវត្តពាក្យបញ្ជាដោយគ្មាន GitHub ជាមុន៖ **[Remote ក្នុងស្រុក](./lab.html?id=00-local-remote)**។  
+បន្ទាប់មកប្រើ repo GitHub ពិត៖ **[Remote និង PR](./lab.html?id=06-remote-pr)** (ត្រូវការគណនី GitHub)។
 
 ---
 
@@ -621,7 +628,7 @@ git push origin --delete fix/login-redirect   # optional cleanup
 
 ### មន្ទីរពិសោធន៍
 
-បញ្ចប់ការអនុវត្តពីចម្ងាយ៖ **[មន្ទីរពិសោធន៍ 06 — Remote និង PR](./lab.html?id=06-remote-pr)**
+បញ្ចប់ការអនុវត្តពីចម្ងាយ៖ **[Remote និង PR](./lab.html?id=06-remote-pr)**
 
 ---
 
@@ -1293,32 +1300,33 @@ git show-ref
 
 ## 27. បញ្ជីផ្លូវសិក្សា
 
-ប្រើនេះជាក្តារតាមដានវឌ្ឍនភាព — មូលដ្ឋានមុន បន្ទាប់មកជំនាញស្នូល។
+ប្រើនេះជាក្តារតាមដានវឌ្ឍនភាព — មូលដ្ឋានមុន បន្ទាប់មកជំនាញស្នូល។ ធីកធាតុនៅទីនេះ; វេបសាយចងចាំនៅលើឧបករណ៍នេះ។
 
 ### មូលដ្ឋាន
 
-- [ ] Git បានដំឡើង ហើយ `user.name` / `user.email` បានកំណត់
+- [ ] Git បានដំឡើង ហើយ `user.name` / `user.email` បានកំណត់ ([ដំឡើង និង config](./lab.html?id=00-install-config))
 - [ ] អ្នកអាចពន្យល់ working tree vs staging vs commit (រឿងវ៉ាលី)
-- [ ] មន្ទីរពិសោធន៍ 01 បានបញ្ចប់
+- [ ] មន្ទីរពិសោធន៍ [Repo ដំបូង](./lab.html?id=01-first-repo) បានបញ្ចប់
 
 ### សហការជាមួយខ្លួនឯងក្នុងមូលដ្ឋាន
 
-- [ ] បង្កើត branches សម្រាប់ features និង bug fixes
-- [ ] Merge ការងាររួចទៅក្នុង `main`
-- [ ] ដោះស្រាយ conflict មួយដោយចេតនា
-- [ ] មន្ទីរពិសោធន៍ 02–03 បានបញ្ចប់
+- [ ] បង្កើត branches សម្រាប់ features និង bug fixes ([ការបង្កើត branch](./lab.html?id=00-branching))
+- [ ] Merge ការងាររួចទៅក្នុង `main` ([Branch និង merge](./lab.html?id=02-branch-merge))
+- [ ] ដោះស្រាយ conflict មួយដោយចេតនា ([ទំនាស់](./lab.html?id=03-conflict))
+- [ ] មន្ទីរពិសោធន៍ branching, merge និង conflict បានបញ្ចប់
 
 ### ជំនាញប្រវត្តិ
 
 - [ ] Rebase feature *local* ទៅលើ `main` ចុងក្រោយ
 - [ ] ជ្រើស restore / reset / revert តាមស្ថានការណ៍
-- [ ] មន្ទីរពិសោធន៍ 04–05 បានបញ្ចប់
+- [ ] មន្ទីរពិសោធន៍ rebase និង undo បានបញ្ចប់
 
 ### Remote និងក្រុម
 
-- [ ] Push branch ហើយបើក PR
+- [ ] Push, fetch និង pull ទល់នឹង remote ([Remote ក្នុងស្រុក](./lab.html?id=00-local-remote))
+- [ ] Push branch ហើយបើក PR ([Remote និង PR](./lab.html?id=06-remote-pr))
 - [ ] ប្រើ `.gitignore` និង branches រយៈពេលខ្លី
-- [ ] មន្ទីរពិសោធន៍ 06–07 បានបញ្ចប់
+- [ ] មន្ទីរពិសោធន៍ remote, PR និង team workflow បានបញ្ចប់
 
 ### ឧបករណ៍មានថាមពល
 
@@ -1327,7 +1335,7 @@ git show-ref
 - [ ] Cherry-pick commit មួយទៅ branch ផ្សេង
 - [ ] Squash commits ដោយ interactive rebase
 - [ ] រក commit អាក្រក់ដោយ bisect
-- [ ] មន្ទីរពិសោធន៍ 08–12 បានបញ្ចប់
+- [ ] មន្ទីរពិសោធន៍ stash ដល់ bisect បានបញ្ចប់
 
 ### Git វិជ្ជាជីវៈ
 
@@ -1336,12 +1344,12 @@ git show-ref
 - [ ] ដឹងថា hooks និង signed commits សម្រាប់អ្វី
 - [ ] បន្ថែម remote `upstream` លើ fork
 - [ ] ពន្យល់ពេលណាគួរប្រើ submodules vs LFS vs packages
-- [ ] មន្ទីរពិសោធន៍ 14–19 បានបញ្ចប់
+- [ ] មន្ទីរពិសោធន៍ worktrees ដល់ submodules/LFS បានបញ្ចប់
 
 ### ជំនាញជាន់ខ្ពស់
 
 - [ ] ពណ៌នា blob / tree / commit / ref ដោយភាសាសាមញ្ញ
-- [ ] មន្ទីរពិសោធន៍ 13 បានបញ្ចប់
+- [ ] មន្ទីរពិសោធន៍ internals បានបញ្ចប់
 - [ ] អ្នកចាប់ `git status` មុនពេលទាយ
 
 ---

@@ -113,8 +113,14 @@ function enhanceCodeBlocks(root) {
 }
 
 function checklistStorageKey() {
-  const url = new URL(location.href);
-  return `rean-git:checklist:${url.pathname}${url.search}`;
+  const page = document.body.getAttribute("data-page");
+  if (page === "lab") {
+    return `rean-git:checklist:lab:${getParam("id") || ""}`;
+  }
+  if (page === "learn") {
+    return `rean-git:checklist:learn:${getParam("c") || ""}`;
+  }
+  return `rean-git:checklist:${location.pathname}`;
 }
 
 function readChecklistState() {
@@ -190,12 +196,45 @@ function enhanceCheckboxes(root) {
       writeChecklistState(next);
       item?.classList.toggle("is-checked", input.checked);
       syncLabChecklistProgress();
+      syncChapterChecklistProgress(root);
     });
 
     item?.classList.toggle("is-checked", input.checked);
   });
 
   syncLabChecklistProgress();
+  syncChapterChecklistProgress(root);
+}
+
+function paintChecklistProgress(root, checked, total) {
+  if (!root || total < 1) return;
+  let meter = root.querySelector("[data-checklist-progress]");
+  if (!meter) {
+    meter = document.createElement("p");
+    meter.className = "checklist-progress";
+    meter.setAttribute("data-checklist-progress", "");
+    root.insertBefore(meter, root.firstChild);
+  }
+  meter.textContent = t("learn.checklistProgress", {
+    checked: String(checked),
+    total: String(total),
+  });
+  meter.hidden = false;
+}
+
+function syncChapterChecklistProgress(root) {
+  if (document.body.getAttribute("data-page") !== "learn") return;
+  const chapterId = getParam("c");
+  if (!chapterId || !root) return;
+  const boxes = root.querySelectorAll('input[type="checkbox"]');
+  if (!boxes.length) return;
+  const checked = [...boxes].filter((el) => el.checked).length;
+  const total = boxes.length;
+  paintChecklistProgress(root, checked, total);
+  if (checked === total) {
+    window.ReanGitUtil?.recordChapterComplete?.(chapterId, true);
+    paintMarkDone(chapterId);
+  }
 }
 
 function currentLabId() {
