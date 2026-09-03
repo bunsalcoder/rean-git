@@ -9,9 +9,8 @@
 
   const escapeHtml = (text) => window.ReanGitUtil.escapeHtml(text);
 
-  function labNum(lab, index) {
-    const match = /^(\d+)/.exec(lab.id);
-    return match ? match[1] : String(index + 1).padStart(2, "0");
+  function labNum(_lab, index) {
+    return String(index + 1).padStart(2, "0");
   }
 
   function labHref(id) {

@@ -6,6 +6,8 @@ A guided path from absolute beginner through advanced Git: everyday workflow, po
 
 **Live site:** [https://bunsalcoder.github.io/rean-git/](https://bunsalcoder.github.io/rean-git/)
 
+**Zero-setup practice:** [Open in GitHub Codespaces](https://codespaces.new/bunsalcoder/rean-git?quickstart=1) — the Dev Container installs Git, serves the site on port 4173, and leaves a terminal ready for labs.
+
 ## Open the site locally
 
 ```bash

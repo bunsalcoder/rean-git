@@ -1,5 +1,8 @@
 {
-  "guide.md": "670746fb30e91ab2",
+  "guide.md": "ae7d98e7ce7804ef",
+  "labs/00-branching.md": "3477bd5ecc755ebc",
+  "labs/00-install-config.md": "a6dcf299ccd6dc16",
+  "labs/00-local-remote.md": "69ef1f55027eb469",
   "labs/01-first-repo.md": "495485ef32e5f678",
   "labs/02-branch-merge.md": "d2417378e0f19622",
   "labs/03-conflict.md": "0eeb9a54be205f4a",

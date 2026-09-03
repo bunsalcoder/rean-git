@@ -150,7 +150,7 @@ test("lab sidebar marks completed labs", async ({ page }) => {
       })
     );
     localStorage.setItem(
-      "rean-git:checklist:/lab.html?id=01-first-repo",
+      "rean-git:checklist:lab:01-first-repo",
       JSON.stringify({ 0: true, 1: true, 2: true })
     );
   });
@@ -219,7 +219,7 @@ test("j moves to the next lab", async ({ page }) => {
   await page.goto("/lab.html?id=01-first-repo");
   await expect(page.locator("[data-lab-body]")).toBeVisible();
   await page.keyboard.press("j");
-  await expect(page).toHaveURL(/id=02-branch-merge/);
+  await expect(page).toHaveURL(/id=00-branching/);
 });
 
 test("j after bisect goes to worktrees, not internals", async ({ page }) => {
@@ -251,7 +251,13 @@ test("home asks visitors to clone the repo", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("[data-clone-command]")).toContainText("git clone");
   await expect(page.locator("[data-home-lede]")).toContainText("27");
-  await expect(page.locator("[data-home-lede]")).toContainText("19");
+  await expect(page.locator("[data-home-lede]")).toContainText("22");
+});
+
+test("home offers Codespaces for zero-setup practice", async ({ page }) => {
+  await page.goto("/");
+  const link = page.locator('a[href*="codespaces.new/bunsalcoder/rean-git"]');
+  await expect(link).toBeVisible();
 });
 
 test("lab track puts internals last", async ({ page }) => {
@@ -265,6 +271,24 @@ test("lab page links to the matching handbook chapter", async ({ page }) => {
   const related = page.locator("[data-related-chapter] a");
   await expect(related).toBeVisible();
   await expect(related).toHaveAttribute("href", /c=14/);
+});
+
+test("foundation labs link to early handbook chapters", async ({ page }) => {
+  await page.goto("/lab.html?id=00-install-config");
+  await expect(page.locator("[data-related-chapter] a")).toHaveAttribute("href", /c=3/);
+  await page.goto("/lab.html?id=00-branching");
+  await expect(page.locator("[data-related-chapter] a")).toHaveAttribute("href", /c=6/);
+  await page.goto("/lab.html?id=00-local-remote");
+  await expect(page.locator("[data-related-chapter] a")).toHaveAttribute("href", /c=11/);
+});
+
+test("learning path checklist is interactive", async ({ page }) => {
+  await page.goto("/learn.html?c=27");
+  await expect(page.locator("[data-chapter-body] input[type='checkbox']").first()).toBeVisible();
+  await expect(page.locator("[data-checklist-progress]")).toBeVisible();
+  const box = page.locator("[data-chapter-body] input[type='checkbox']").first();
+  await box.check();
+  await expect(page.locator("[data-checklist-progress]")).toContainText(/1/);
 });
 
 test("learn page links to the matching lab", async ({ page }) => {
@@ -284,7 +308,7 @@ test("unchecking every lab box clears completion", async ({ page }) => {
       })
     );
     localStorage.setItem(
-      "rean-git:checklist:/lab.html?id=01-first-repo",
+      "rean-git:checklist:lab:01-first-repo",
       JSON.stringify({ 0: true, 1: true, 2: true })
     );
   });

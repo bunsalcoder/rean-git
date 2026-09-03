@@ -1,0 +1,30 @@
+{
+  "name": "rean-git",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
+  },
+  "forwardPorts": [4173],
+  "portsAttributes": {
+    "4173": {
+      "label": "rean-git site",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "git config --global init.defaultBranch main && git config --global pull.rebase false && npm ci",
+  "postStartCommand": "npm run dev",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "git.autofetch": true
+      },
+      "extensions": [
+        "streetsidesoftware.code-spell-checker"
+      ]
+    }
+  }
+}

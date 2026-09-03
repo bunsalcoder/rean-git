@@ -208,7 +208,7 @@
     const labs = window.ReanGitCatalog?.getLabs?.() || [];
     lede.textContent = i18n.t("home.lede", {
       chapterCount: String(numbered || chapters.length),
-      labCount: String(labs.length || 19),
+      labCount: String(labs.length || 22),
     });
   }
 

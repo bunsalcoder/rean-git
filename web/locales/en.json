@@ -67,7 +67,8 @@
     "importFailed": "Could not import that progress file.",
     "cloneEyebrow": "On your machine",
     "cloneTitle": "Clone the repo, then type every command.",
-    "cloneBody": "Labs live in the GitHub repo, not in the browser. Clone it and keep a terminal open beside this site.",
+    "cloneBody": "Labs live in the GitHub repo, not in the browser. Clone it and keep a terminal open beside this site — or open the repo in GitHub Codespaces for a ready-made terminal.",
+    "codespaces": "Open in Codespaces",
     "updateAvailable": "A newer version of rean-git is ready.",
     "refresh": "Refresh",
     "methodEyebrow": "How you learn",
@@ -108,6 +109,7 @@
     "markedDone": "Done",
     "relatedLab": "Practice — {title}",
     "relatedLabFallback": "Open the matching lab",
+    "checklistProgress": "{checked} of {total} checklist items",
     "loadError": "Could not load lessons.",
     "serveHint": "Serve the web/ folder over HTTP (for example python3 -m http.server 4173), then open the site from that URL."
   },
@@ -180,10 +182,20 @@
     "27": "Learning path checklist"
   },
   "labs": {
+    "00-install-config": {
+      "title": "Install & config",
+      "teaser": "Git version and identity.",
+      "summary": "Confirm Git works and set local user.name / user.email."
+    },
     "01-first-repo": {
       "title": "First repo",
       "teaser": "Init, stage, commit.",
       "summary": "Init, stage, commit — your first real history."
+    },
+    "00-branching": {
+      "title": "Branching",
+      "teaser": "Isolate work on branches.",
+      "summary": "Create topic branches and see that commits stay isolated."
     },
     "02-branch-merge": {
       "title": "Branch & merge",
@@ -204,6 +216,11 @@
       "title": "Undo",
       "teaser": "Restore, reset, revert.",
       "summary": "Restore, amend, reset, and revert with intent."
+    },
+    "00-local-remote": {
+      "title": "Local remote",
+      "teaser": "Push, fetch, pull offline.",
+      "summary": "Use a local bare repo as origin — push, fetch, and pull without GitHub."
     },
     "06-remote-pr": {
       "title": "Remote & PR",
