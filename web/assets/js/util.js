@@ -51,21 +51,75 @@
     window.dispatchEvent(new CustomEvent(name, { detail }));
   }
 
+  function remapLabKey(id, resolveLabId) {
+    if (!id || typeof resolveLabId !== "function") return id;
+    const next = resolveLabId(id);
+    return next || id;
+  }
+
+  function migrateLabIds(resolveLabId) {
+    if (typeof resolveLabId !== "function") return;
+
+    const lastLab = readStorageItem(LAST_LAB_KEY);
+    if (lastLab) {
+      const canonical = remapLabKey(lastLab, resolveLabId);
+      if (canonical !== lastLab) writeStorageItem(LAST_LAB_KEY, canonical);
+    }
+
+    const labs = readJson(LAB_PROGRESS_KEY, {});
+    let labsChanged = false;
+    const nextLabs = {};
+    Object.entries(labs).forEach(([id, value]) => {
+      const canonical = remapLabKey(id, resolveLabId);
+      if (canonical !== id) labsChanged = true;
+      if (!nextLabs[canonical] || (value && value.complete)) {
+        nextLabs[canonical] = value;
+      }
+    });
+    if (labsChanged) writeJson(LAB_PROGRESS_KEY, nextLabs);
+
+    try {
+      const checklistMoves = [];
+      for (let i = 0; i < localStorage.length; i += 1) {
+        const key = localStorage.key(i);
+        if (!key || !key.startsWith(`${CHECKLIST_PREFIX}lab:`)) continue;
+        const oldId = key.slice(`${CHECKLIST_PREFIX}lab:`.length);
+        const canonical = remapLabKey(oldId, resolveLabId);
+        if (!canonical || canonical === oldId) continue;
+        checklistMoves.push({
+          from: key,
+          to: `${CHECKLIST_PREFIX}lab:${canonical}`,
+          value: localStorage.getItem(key),
+        });
+      }
+      checklistMoves.forEach(({ from, to, value }) => {
+        if (value != null && localStorage.getItem(to) == null) {
+          localStorage.setItem(to, value);
+        }
+        localStorage.removeItem(from);
+      });
+    } catch {
+      /* private mode */
+    }
+  }
+
   function recordLabChecklist(labId, checked, total) {
     if (!labId || total < 1) return;
+    const id = window.ReanGitCatalog?.resolveLabId?.(labId) || labId;
     const all = readJson(LAB_PROGRESS_KEY, {});
-    all[labId] = {
+    all[id] = {
       checked,
       total,
       complete: checked === total,
     };
     writeJson(LAB_PROGRESS_KEY, all);
-    emit("rean-git:lab-progress", { labId });
+    emit("rean-git:lab-progress", { labId: id });
   }
 
   function labProgress(labId) {
+    const id = window.ReanGitCatalog?.resolveLabId?.(labId) || labId;
     const all = readJson(LAB_PROGRESS_KEY, {});
-    return all[labId] && typeof all[labId] === "object" ? all[labId] : null;
+    return all[id] && typeof all[id] === "object" ? all[id] : null;
   }
 
   function isLabComplete(labId) {
@@ -165,10 +219,16 @@
     if (typeof payload.lastChapter === "string" && payload.lastChapter) {
       writeStorageItem(LAST_CHAPTER_KEY, payload.lastChapter);
     }
+    const resolve = window.ReanGitCatalog?.resolveLabId;
     if (typeof payload.lastLab === "string" && payload.lastLab) {
-      writeStorageItem(LAST_LAB_KEY, payload.lastLab);
+      writeStorageItem(LAST_LAB_KEY, remapLabKey(payload.lastLab, resolve));
     }
-    writeJson(LAB_PROGRESS_KEY, labs);
+
+    const remappedLabs = {};
+    Object.entries(labs).forEach(([id, value]) => {
+      remappedLabs[remapLabKey(id, resolve)] = value;
+    });
+    writeJson(LAB_PROGRESS_KEY, remappedLabs);
     writeJson(CHAPTER_PROGRESS_KEY, chapters);
     Object.entries(checklists).forEach(([relative, state]) => {
       if (
@@ -179,7 +239,11 @@
       ) {
         return;
       }
-      writeJson(`${CHECKLIST_PREFIX}${relative}`, state);
+      let key = relative;
+      if (key.startsWith("lab:")) {
+        key = `lab:${remapLabKey(key.slice(4), resolve)}`;
+      }
+      writeJson(`${CHECKLIST_PREFIX}${key}`, state);
     });
 
     emit("rean-git:lab-progress", { imported: true });
@@ -223,6 +287,7 @@
     CLONE_COMMAND,
     readStorageItem,
     writeStorageItem,
+    migrateLabIds,
     recordLabChecklist,
     labProgress,
     isLabComplete,

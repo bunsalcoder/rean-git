@@ -8,7 +8,9 @@ Handbook and labs are the product. Edit those first, then keep the site copies, 
 |-----------|------|
 | `docs/GIT_FROM_ZERO.md` | Handbook chapters |
 | `labs/<id>/README.md` | Lab instructions |
-| `web/data/labs.json` | Lab order, level (`beginner` / `intermediate` / `advanced`), related handbook chapter, and `cheatSheetChapter` |
+| `web/data/labs.json` | Lab order, level (`beginner` / `intermediate` / `advanced`), related handbook chapter, `cheatSheetChapter`, and optional `labIdAliases` for renames |
+
+Lab folder IDs are **`NN-slug`** where `NN` is the zero-padded catalog index (`00`, `01`, …). Catalog order, folder name, locale keys, and fixture scripts must all use the same id. When renaming a lab, keep the old id in `labIdAliases` so bookmarks and saved progress still resolve.
 
 After English edits:
 
@@ -89,9 +91,9 @@ cd labs/01-first-repo
 ./verify.sh
 ```
 
-Shared helpers live in `scripts/lab_verify_lib.sh`. Verifiers inspect local git state (clean tree, branches, tags, hooks, etc.). Labs 06–07 still warn when `origin` points at GitHub, because opening/merging the PR in the browser cannot be checked offline.
+Shared helpers live in `scripts/lab_verify_lib.sh`. Verifiers inspect local git state (clean tree, branches, tags, hooks, etc.). Labs `08-remote-pr` and `09-team-workflow` still warn when `origin` points at GitHub, because opening/merging the PR in the browser cannot be checked offline.
 
-Representative offline labs also have **fixture builders** under `scripts/lab_fixtures/<id>.sh`. CI builds a completed `playground/` for each, runs `verify.sh`, then deletes the playground (and any `sandbox/` or `review/` folders the fixture created). Covered labs: **all labs with `verify.sh`**, including 06–07 via local bare remotes that stand in for GitHub (browser PR steps still warn when `origin` is a real GitHub URL). When you change a covered lab’s steps or verifier, update the matching fixture and re-run:
+Representative offline labs also have **fixture builders** under `scripts/lab_fixtures/<id>.sh`. CI builds a completed `playground/` for each, runs `verify.sh`, then deletes the playground (and any `sandbox/` or `review/` folders the fixture created). Covered labs: **all labs with `verify.sh`**, including `08-remote-pr` and `09-team-workflow` via local bare remotes that stand in for GitHub (browser PR steps still warn when `origin` is a real GitHub URL). When you change a covered lab’s steps or verifier, update the matching fixture and re-run:
 
 ```bash
 ./scripts/run_lab_verifier_fixtures.sh --only 01-first-repo

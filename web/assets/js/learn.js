@@ -50,7 +50,12 @@ function getParam(name) {
 }
 
 function getRouteId(queryKey) {
-  return getParam(queryKey);
+  const raw = getParam(queryKey);
+  if (!raw) return raw;
+  if (queryKey === "id" && window.ReanGitCatalog?.resolveLabId) {
+    return window.ReanGitCatalog.resolveLabId(raw);
+  }
+  return raw;
 }
 
 function chapterHref(id) {
@@ -115,7 +120,7 @@ function enhanceCodeBlocks(root) {
 function checklistStorageKey() {
   const page = document.body.getAttribute("data-page");
   if (page === "lab") {
-    return `rean-git:checklist:lab:${getParam("id") || ""}`;
+    return `rean-git:checklist:lab:${getRouteId("id") || ""}`;
   }
   if (page === "learn") {
     return `rean-git:checklist:learn:${getParam("c") || ""}`;
@@ -239,7 +244,7 @@ function syncChapterChecklistProgress(root) {
 
 function currentLabId() {
   if (document.body.getAttribute("data-page") !== "lab") return null;
-  return getParam("id");
+  return getRouteId("id");
 }
 
 function syncLabChecklistProgress(labId) {
@@ -822,7 +827,8 @@ async function initLabPage(signal, { animate = true } = {}) {
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const resolveIndex = (id) => {
-    let index = labs.findIndex((l) => l.id === id);
+    const canonical = window.ReanGitCatalog?.resolveLabId?.(id) || id;
+    let index = labs.findIndex((l) => l.id === canonical);
     if (index < 0) index = 0;
     return index;
   };
@@ -1006,7 +1012,7 @@ async function initLabPage(signal, { animate = true } = {}) {
 
   const start = resolveRouteOrResume("id", readLastLab(), labs[0].id);
   goToLab(start.id, { push: false, animate });
-  if (!start.fromRoute) {
+  if (!start.fromRoute || getParam("id") !== start.id) {
     history.replaceState({ id: start.id }, "", labHref(start.id));
   }
 

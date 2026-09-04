@@ -343,8 +343,8 @@ feat/contact-page:           D---E
 
 ### មន្ទីរពិសោធន៍
 
-អនុវត្តភាពដាច់ដោយឡែកជាមុន៖ **[ការបង្កើត branch](./lab.html?id=00-branching)**។  
-បន្ទាប់មក merge ក្នុងមន្ទីរពិសោធន៍ជំពូកបន្ទាប់៖ **[Branch និង merge](./lab.html?id=02-branch-merge)**។
+អនុវត្តភាពដាច់ដោយឡែកជាមុន៖ **[ការបង្កើត branch](./lab.html?id=02-branching)**។  
+បន្ទាប់មក merge ក្នុងមន្ទីរពិសោធន៍ជំពូកបន្ទាប់៖ **[Branch និង merge](./lab.html?id=03-branch-merge)**។
 
 ---
 
@@ -381,7 +381,7 @@ git branch -d feat/contact-page
 
 ### មន្ទីរពិសោធន៍
 
-ការអនុវត្តដូច branching: **[Branch និង merge](./lab.html?id=02-branch-merge)**
+ការអនុវត្តដូច branching: **[Branch និង merge](./lab.html?id=03-branch-merge)**
 
 ---
 
@@ -431,7 +431,7 @@ git merge --abort
 
 ### មន្ទីរពិសោធន៍
 
-**[មន្ទីរពិសោធន៍ 03 — Conflict](./lab.html?id=03-conflict)**
+**[មន្ទីរពិសោធន៍ 04 — Conflict](./lab.html?id=04-conflict)**
 
 ---
 
@@ -473,7 +473,7 @@ Squash "oops" ចូលទៅក្នុងរឿងច្បាស់លាស
 
 ### មន្ទីរពិសោធន៍
 
-**[មន្ទីរពិសោធន៍ 04 — Rebase](./lab.html?id=04-rebase)**
+**[មន្ទីរពិសោធន៍ 05 — Rebase](./lab.html?id=05-rebase)**
 
 ---
 
@@ -540,7 +540,7 @@ git switch -c recover HASH       # bring it back on a new branch
 
 ### មន្ទីរពិសោធន៍
 
-**[មន្ទីរពិសោធន៍ 05 — ត្រឡប់វិញ](./lab.html?id=05-undo)**
+**[មន្ទីរពិសោធន៍ 06 — ត្រឡប់វិញ](./lab.html?id=06-undo)**
 
 ---
 
@@ -585,8 +585,8 @@ git push                  # upload your commits
 
 ### មន្ទីរពិសោធន៍
 
-អនុវត្តពាក្យបញ្ជាដោយគ្មាន GitHub ជាមុន៖ **[Remote ក្នុងស្រុក](./lab.html?id=00-local-remote)**។  
-បន្ទាប់មកប្រើ repo GitHub ពិត៖ **[Remote និង PR](./lab.html?id=06-remote-pr)** (ត្រូវការគណនី GitHub)។
+អនុវត្តពាក្យបញ្ជាដោយគ្មាន GitHub ជាមុន៖ **[Remote ក្នុងស្រុក](./lab.html?id=07-local-remote)**។  
+បន្ទាប់មកប្រើ repo GitHub ពិត៖ **[Remote និង PR](./lab.html?id=08-remote-pr)** (ត្រូវការគណនី GitHub)។
 
 ---
 
@@ -628,7 +628,7 @@ git push origin --delete fix/login-redirect   # optional cleanup
 
 ### មន្ទីរពិសោធន៍
 
-បញ្ចប់ការអនុវត្តពីចម្ងាយ៖ **[Remote និង PR](./lab.html?id=06-remote-pr)**
+បញ្ចប់ការអនុវត្តពីចម្ងាយ៖ **[Remote និង PR](./lab.html?id=08-remote-pr)**
 
 ---
 
@@ -676,7 +676,7 @@ git merge main                 # or: git rebase main (local only)
 
 ### មន្ទីរពិសោធន៍
 
-**[មន្ទីរពិសោធន៍ 07 — លំហូរការងារក្រុម](./lab.html?id=07-team-workflow)**
+**[មន្ទីរពិសោធន៍ 09 — លំហូរការងារក្រុម](./lab.html?id=09-team-workflow)**
 
 ---
 
@@ -715,7 +715,7 @@ git stash show -p stash@{0}                # preview
 
 ### មន្ទីរពិសោធន៍
 
-**[មន្ទីរពិសោធន៍ 08 — Stash](./lab.html?id=08-stash)**
+**[មន្ទីរពិសោធន៍ 10 — Stash](./lab.html?id=10-stash)**
 
 ---
 
@@ -758,7 +758,7 @@ git push origin --delete v1.0.0     # delete remote
 
 ### មន្ទីរពិសោធន៍
 
-**[មន្ទីរពិសោធន៍ 09 — Tags](./lab.html?id=09-tags)**
+**[មន្ទីរពិសោធន៍ 11 — Tags](./lab.html?id=11-tags)**
 
 ---
 
@@ -796,7 +796,7 @@ git cherry-pick --abort
 
 ### មន្ទីរពិសោធន៍
 
-**[មន្ទីរពិសោធន៍ 10 — Cherry-pick](./lab.html?id=10-cherry-pick)**
+**[មន្ទីរពិសោធន៍ 12 — Cherry-pick](./lab.html?id=12-cherry-pick)**
 
 ---
 
@@ -841,7 +841,7 @@ pick c333 typo
 
 ### មន្ទីរពិសោធន៍
 
-**[មន្ទីរពិសោធន៍ 11 — Interactive rebase](./lab.html?id=11-interactive-rebase)**
+**[មន្ទីរពិសោធន៍ 13 — Interactive rebase](./lab.html?id=13-interactive-rebase)**
 
 ---
 
@@ -874,7 +874,7 @@ git bisect run ./scripts/check-login.sh
 
 ### មន្ទីរពិសោធន៍
 
-**[មន្ទីរពិសោធន៍ 12 — Bisect](./lab.html?id=12-bisect)**
+**[មន្ទីរពិសោធន៍ 14 — Bisect](./lab.html?id=14-bisect)**
 
 ---
 
@@ -922,7 +922,7 @@ worktree នីមួយៗមានឯកសារផ្ទាល់ខ្ល�
 
 ### មន្ទីរពិសោធន៍
 
-**[មន្ទីរពិសោធន៍ 14 — Worktrees](./lab.html?id=14-worktrees)**
+**[មន្ទីរពិសោធន៍ 15 — Worktrees](./lab.html?id=15-worktrees)**
 
 ---
 
@@ -971,7 +971,7 @@ git range-diff main...feat/login  # compare two histories after rebase
 
 ### មន្ទីរពិសោធន៍
 
-**[មន្ទីរពិសោធន៍ 15 — ពិនិត្យប្រវត្តិ](./lab.html?id=15-inspect-history)**
+**[មន្ទីរពិសោធន៍ 16 — ពិនិត្យប្រវត្តិ](./lab.html?id=16-inspect-history)**
 
 ---
 
@@ -1009,7 +1009,7 @@ Commit a `scripts/hooks/` ឬប្រើឧបករណ៍ ([Husky](https://typ
 
 ### មន្ទីរពិសោធន៍
 
-**[មន្ទីរពិសោធន៍ 16 — Hooks](./lab.html?id=16-hooks)**
+**[មន្ទីរពិសោធន៍ 17 — Hooks](./lab.html?id=17-hooks)**
 
 ---
 
@@ -1043,7 +1043,7 @@ git verify-commit HEAD
 
 ### មន្ទីរពិសោធន៍
 
-**[មន្ទីរពិសោធន៍ 17 — ចុះហត្ថលេខា commits](./lab.html?id=17-signing)**
+**[មន្ទីរពិសោធន៍ 18 — ចុះហត្ថលេខា commits](./lab.html?id=18-signing)**
 
 ---
 
@@ -1089,7 +1089,7 @@ git push --mirror BACKUP_URL
 
 ### មន្ទីរពិសោធន៍
 
-**[មន្ទីរពិសោធន៍ 18 — Forks និង remotes](./lab.html?id=18-forks)**
+**[មន្ទីរពិសោធន៍ 19 — Forks និង remotes](./lab.html?id=19-forks)**
 
 ---
 
@@ -1135,7 +1135,7 @@ LFS រក្សាទុកទ្រនិចនៅក្នុង Git និ�
 
 ### មន្ទីរពិសោធន៍
 
-**[មន្ទីរពិសោធន៍ 19 — Submodules និង LFS](./lab.html?id=19-submodules-lfs)**
+**[មន្ទីរពិសោធន៍ 20 — Submodules និង LFS](./lab.html?id=20-submodules-lfs)**
 
 ---
 
@@ -1211,7 +1211,7 @@ A **branch** គឺជាឯកសារយោងដែលអាចចល័ត�
 
 ### មន្ទីរពិសោធន៍
 
-**[មន្ទីរពិសោធន៍ 13 — ផ្នែកខាងក្នុង](./lab.html?id=13-internals)**
+**[មន្ទីរពិសោធន៍ 21 — ផ្នែកខាងក្នុង](./lab.html?id=21-internals)**
 
 ---
 
@@ -1310,9 +1310,9 @@ git show-ref
 
 ### សហការជាមួយខ្លួនឯងក្នុងមូលដ្ឋាន
 
-- [ ] បង្កើត branches សម្រាប់ features និង bug fixes ([ការបង្កើត branch](./lab.html?id=00-branching))
-- [ ] Merge ការងាររួចទៅក្នុង `main` ([Branch និង merge](./lab.html?id=02-branch-merge))
-- [ ] ដោះស្រាយ conflict មួយដោយចេតនា ([ទំនាស់](./lab.html?id=03-conflict))
+- [ ] បង្កើត branches សម្រាប់ features និង bug fixes ([ការបង្កើត branch](./lab.html?id=02-branching))
+- [ ] Merge ការងាររួចទៅក្នុង `main` ([Branch និង merge](./lab.html?id=03-branch-merge))
+- [ ] ដោះស្រាយ conflict មួយដោយចេតនា ([ទំនាស់](./lab.html?id=04-conflict))
 - [ ] មន្ទីរពិសោធន៍ branching, merge និង conflict បានបញ្ចប់
 
 ### ជំនាញប្រវត្តិ
@@ -1323,8 +1323,8 @@ git show-ref
 
 ### Remote និងក្រុម
 
-- [ ] Push, fetch និង pull ទល់នឹង remote ([Remote ក្នុងស្រុក](./lab.html?id=00-local-remote))
-- [ ] Push branch ហើយបើក PR ([Remote និង PR](./lab.html?id=06-remote-pr))
+- [ ] Push, fetch និង pull ទល់នឹង remote ([Remote ក្នុងស្រុក](./lab.html?id=07-local-remote))
+- [ ] Push branch ហើយបើក PR ([Remote និង PR](./lab.html?id=08-remote-pr))
 - [ ] ប្រើ `.gitignore` និង branches រយៈពេលខ្លី
 - [ ] មន្ទីរពិសោធន៍ remote, PR និង team workflow បានបញ្ចប់
 
