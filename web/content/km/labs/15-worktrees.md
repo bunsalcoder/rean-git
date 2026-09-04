@@ -1,4 +1,4 @@
-# មន្ទីរពិសោធន៍ 14 — Worktrees
+# មន្ទីរពិសោធន៍ 15 — Worktree និង detached HEAD
 
 ## គោលដៅ
 
