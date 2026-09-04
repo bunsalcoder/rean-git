@@ -1,4 +1,4 @@
-const CACHE = "rean-git-v15";
+const CACHE = "rean-git-v16";
 const PRECACHE = [
   "./",
   "./index.html",

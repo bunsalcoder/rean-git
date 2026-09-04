@@ -1,4 +1,4 @@
-# មន្ទីរពិសោធន៍ 19 — Submodules និង Git LFS
+# មន្ទីរពិសោធន៍ 20 — Submodule និង Git LFS
 
 ## គោលដៅ
 
