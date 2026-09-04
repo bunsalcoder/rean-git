@@ -88,9 +88,9 @@ test("labs page filter narrows the grid", async ({ page }) => {
   await expect(beginnerCount).toBeLessThan(total);
 
   await page.locator('[data-lab-filter="intermediate"]').click();
-  await expect(page.locator('[data-lab-grid] a[data-lab-id="08-stash"]')).toBeVisible();
-  await expect(page.locator('[data-lab-grid] a[data-lab-id="07-team-workflow"]')).toBeVisible();
-  await expect(page.locator('[data-lab-grid] a[data-lab-id="11-interactive-rebase"]')).toHaveCount(0);
+  await expect(page.locator('[data-lab-grid] a[data-lab-id="10-stash"]')).toBeVisible();
+  await expect(page.locator('[data-lab-grid] a[data-lab-id="09-team-workflow"]')).toBeVisible();
+  await expect(page.locator('[data-lab-grid] a[data-lab-id="13-interactive-rebase"]')).toHaveCount(0);
 
   await page.locator('[data-lab-filter="all"]').click();
   await expect(grid).toHaveCount(total);
@@ -173,13 +173,13 @@ test("content precache manifest lists handbook and labs", async ({ page }) => {
   const urls = await res.json();
   expect(urls).toContain("./content/en/guide.md");
   expect(urls).toContain("./content/en/labs/01-first-repo.md");
-  expect(urls).toContain("./content/en/labs/17-signing.md");
+  expect(urls).toContain("./content/en/labs/18-signing.md");
   expect(urls).toContain("./content/km/guide.md");
 });
 
 test("professional labs appear in the catalog", async ({ page }) => {
   await page.goto("/labs.html");
-  for (const id of ["17-signing", "18-forks", "19-submodules-lfs"]) {
+  for (const id of ["18-signing", "19-forks", "20-submodules-lfs"]) {
     await expect(page.locator(`[data-lab-grid] a[data-lab-id="${id}"]`)).toBeVisible();
   }
 });
@@ -219,14 +219,14 @@ test("j moves to the next lab", async ({ page }) => {
   await page.goto("/lab.html?id=01-first-repo");
   await expect(page.locator("[data-lab-body]")).toBeVisible();
   await page.keyboard.press("j");
-  await expect(page).toHaveURL(/id=00-branching/);
+  await expect(page).toHaveURL(/id=02-branching/);
 });
 
 test("j after bisect goes to worktrees, not internals", async ({ page }) => {
-  await page.goto("/lab.html?id=12-bisect");
+  await page.goto("/lab.html?id=14-bisect");
   await expect(page.locator("[data-lab-body]")).toBeVisible();
   await page.keyboard.press("j");
-  await expect(page).toHaveURL(/id=14-worktrees/);
+  await expect(page).toHaveURL(/id=15-worktrees/);
 });
 
 test("arrow keys do not navigate while typing in sidebar search", async ({ page }) => {
@@ -263,11 +263,19 @@ test("home offers Codespaces for zero-setup practice", async ({ page }) => {
 test("lab track puts internals last", async ({ page }) => {
   await page.goto("/");
   const last = page.locator("[data-lab-track] a[data-lab-id]").last();
-  await expect(last).toHaveAttribute("data-lab-id", "13-internals");
+  await expect(last).toHaveAttribute("data-lab-id", "21-internals");
+});
+
+test("legacy lab ids redirect to canonical ids", async ({ page }) => {
+  await page.goto("/lab.html?id=00-branching");
+  await expect(page).toHaveURL(/id=02-branching/);
+  await expect(page.locator("[data-lab-title]")).not.toHaveText(/Loading/i);
+  await page.goto("/lab.html?id=13-internals");
+  await expect(page).toHaveURL(/id=21-internals/);
 });
 
 test("lab page links to the matching handbook chapter", async ({ page }) => {
-  await page.goto("/lab.html?id=08-stash");
+  await page.goto("/lab.html?id=10-stash");
   const related = page.locator("[data-related-chapter] a");
   await expect(related).toBeVisible();
   await expect(related).toHaveAttribute("href", /c=14/);
@@ -276,9 +284,9 @@ test("lab page links to the matching handbook chapter", async ({ page }) => {
 test("foundation labs link to early handbook chapters", async ({ page }) => {
   await page.goto("/lab.html?id=00-install-config");
   await expect(page.locator("[data-related-chapter] a")).toHaveAttribute("href", /c=3/);
-  await page.goto("/lab.html?id=00-branching");
+  await page.goto("/lab.html?id=02-branching");
   await expect(page.locator("[data-related-chapter] a")).toHaveAttribute("href", /c=6/);
-  await page.goto("/lab.html?id=00-local-remote");
+  await page.goto("/lab.html?id=07-local-remote");
   await expect(page.locator("[data-related-chapter] a")).toHaveAttribute("href", /c=11/);
 });
 
@@ -295,7 +303,7 @@ test("learn page links to the matching lab", async ({ page }) => {
   await page.goto("/learn.html?c=14");
   const related = page.locator("[data-related-lab] a");
   await expect(related).toBeVisible();
-  await expect(related).toHaveAttribute("href", /id=08-stash/);
+  await expect(related).toHaveAttribute("href", /id=10-stash/);
   await expect(related).toContainText(/stash/i);
 });
 

@@ -3,11 +3,23 @@
   const VALID_LEVELS = new Set(["beginner", "intermediate", "advanced"]);
 
   let labs = [];
+  let labIdAliases = {};
   let cheatSheetChapter = "26";
   let filterLevel = "all";
   let filtersWired = false;
 
   const escapeHtml = (text) => window.ReanGitUtil.escapeHtml(text);
+
+  function resolveLabId(id) {
+    if (!id) return id;
+    let current = id;
+    const seen = new Set();
+    while (labIdAliases[current] && !seen.has(current)) {
+      seen.add(current);
+      current = labIdAliases[current];
+    }
+    return current;
+  }
 
   function labNum(_lab, index) {
     return String(index + 1).padStart(2, "0");
@@ -125,10 +137,15 @@
       if (typeof data?.cheatSheetChapter === "string" && data.cheatSheetChapter) {
         cheatSheetChapter = data.cheatSheetChapter;
       }
+      labIdAliases =
+        data?.labIdAliases && typeof data.labIdAliases === "object" && !Array.isArray(data.labIdAliases)
+          ? data.labIdAliases
+          : {};
       const list = Array.isArray(data?.labs) ? data.labs : [];
       labs = list.filter(
         (lab) => lab && typeof lab.id === "string" && VALID_LEVELS.has(lab.level)
       );
+      window.ReanGitUtil?.migrateLabIds?.(resolveLabId);
       syncCheatSheetLinks();
       return labs;
     });
@@ -142,6 +159,7 @@
     ready,
     getLabs: () => labs,
     getLabForChapter,
+    resolveLabId,
     getCheatSheetChapter: () => cheatSheetChapter,
     cheatSheetHref,
     mountLists,

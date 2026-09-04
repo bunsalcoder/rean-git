@@ -192,102 +192,102 @@
       "teaser": "Init, stage, commit.",
       "summary": "Init, stage, commit — your first real history."
     },
-    "00-branching": {
+    "02-branching": {
       "title": "Branching",
       "teaser": "Isolate work on branches.",
       "summary": "Create topic branches and see that commits stay isolated."
     },
-    "02-branch-merge": {
+    "03-branch-merge": {
       "title": "Branch & merge",
       "teaser": "Split work, then join it.",
       "summary": "Split work safely, then bring it back together."
     },
-    "03-conflict": {
+    "04-conflict": {
       "title": "Conflict",
       "teaser": "Resolve a merge conflict.",
       "summary": "Meet a merge conflict and resolve it calmly."
     },
-    "04-rebase": {
+    "05-rebase": {
       "title": "Rebase",
       "teaser": "Replay commits cleanly.",
       "summary": "Replay commits and keep history readable."
     },
-    "05-undo": {
+    "06-undo": {
       "title": "Undo",
       "teaser": "Restore, reset, revert.",
       "summary": "Restore, amend, reset, and revert with intent."
     },
-    "00-local-remote": {
+    "07-local-remote": {
       "title": "Local remote",
       "teaser": "Push, fetch, pull offline.",
       "summary": "Use a local bare repo as origin — push, fetch, and pull without GitHub."
     },
-    "06-remote-pr": {
+    "08-remote-pr": {
       "title": "Remote & PR",
       "teaser": "Push and open a PR.",
       "summary": "Push a branch and open a clean pull request."
     },
-    "07-team-workflow": {
+    "09-team-workflow": {
       "title": "Team workflow",
       "teaser": "Habits that scale.",
       "summary": "Ignore junk, sync often, write reviewable PRs."
     },
-    "08-stash": {
+    "10-stash": {
       "title": "Stash",
       "teaser": "Shelf WIP, switch context.",
       "summary": "Shelf unfinished work, switch context, restore it."
     },
-    "09-tags": {
+    "11-tags": {
       "title": "Tags",
       "teaser": "Label releases.",
       "summary": "Annotate releases and check out a version tag."
     },
-    "10-cherry-pick": {
+    "12-cherry-pick": {
       "title": "Cherry-pick",
       "teaser": "Copy one commit over.",
       "summary": "Bring one commit onto another branch."
     },
-    "11-interactive-rebase": {
+    "13-interactive-rebase": {
       "title": "Interactive rebase",
       "teaser": "Squash a clean story.",
       "summary": "Squash messy commits into a clear story."
     },
-    "12-bisect": {
+    "14-bisect": {
       "title": "Bisect",
       "teaser": "Find the breaking commit.",
       "summary": "Binary-search history for the breaking commit."
     },
-    "13-internals": {
+    "21-internals": {
       "title": "Internals",
       "teaser": "Commits, trees, blobs.",
       "summary": "Walk commits, trees, blobs, and refs."
     },
-    "14-worktrees": {
+    "15-worktrees": {
       "title": "Worktrees",
       "teaser": "Second folder, same repo.",
       "summary": "Use detached HEAD safely and work in a second worktree."
     },
-    "15-inspect-history": {
+    "16-inspect-history": {
       "title": "Inspect history",
       "teaser": "Blame, pickaxe, ranges.",
       "summary": "Trace changes with blame, pickaxe search, and branch ranges."
     },
-    "16-hooks": {
+    "17-hooks": {
       "title": "Hooks",
       "teaser": "Block bad commits locally.",
       "summary": "Install a pre-commit hook and see it catch a bad commit."
     },
-    "17-signing": {
+    "18-signing": {
       "title": "Signing commits",
       "teaser": "Sign with an SSH key.",
       "summary": "Sign a commit with SSH and verify the signature locally."
     },
-    "18-forks": {
+    "19-forks": {
       "title": "Forks & remotes",
       "teaser": "Origin, upstream, fetch.",
       "summary": "Add upstream on a fork, push a feature, and fetch when the original repo moves."
     },
-    "19-submodules-lfs": {
+    "20-submodules-lfs": {
       "title": "Submodules & LFS",
       "teaser": "Nest a repo, pin binaries.",
       "summary": "Pin a nested repo with a submodule, then track a large file with Git LFS."

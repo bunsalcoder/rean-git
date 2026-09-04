@@ -949,8 +949,12 @@
     }
 
     if (sameDocument && document.body.dataset.page === "lab") {
-      const labId = targetUrl.searchParams.get("id");
-      if (push) history.pushState({ soft: true }, "", targetUrl.href);
+      const rawLabId = targetUrl.searchParams.get("id");
+      const labId = window.ReanGitCatalog?.resolveLabId?.(rawLabId) || rawLabId;
+      if (push) {
+        targetUrl.searchParams.set("id", labId);
+        history.pushState({ soft: true }, "", targetUrl.href);
+      }
       lastPageKey = pageKey(targetUrl);
       syncActiveLinks();
       if (!animatePill) syncIndicator({ animate: false });

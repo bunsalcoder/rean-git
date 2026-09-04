@@ -171,102 +171,102 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=00-branching</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=02-branching</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=02-branch-merge</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=03-branch-merge</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=03-conflict</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=04-conflict</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=04-rebase</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=05-rebase</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=05-undo</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=06-undo</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=00-local-remote</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=07-local-remote</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=06-remote-pr</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=08-remote-pr</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=07-team-workflow</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=09-team-workflow</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=08-stash</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=10-stash</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=09-tags</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=11-tags</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=10-cherry-pick</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=12-cherry-pick</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=11-interactive-rebase</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=13-interactive-rebase</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=12-bisect</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=14-bisect</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=14-worktrees</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=15-worktrees</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=15-inspect-history</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=16-inspect-history</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=16-hooks</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=17-hooks</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=17-signing</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=18-signing</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=18-forks</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=19-forks</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=19-submodules-lfs</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=20-submodules-lfs</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=13-internals</loc>
+    <loc>https://bunsalcoder.github.io/rean-git/lab.html?id=21-internals</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

@@ -343,8 +343,8 @@ Each letter is a commit. A branch is just a pointer with a name.
 
 ### Lab
 
-Practice isolation first: **[Branching](./lab.html?id=00-branching)**.  
-Then merge in the next chapter’s lab: **[Branch & merge](./lab.html?id=02-branch-merge)**.
+Practice isolation first: **[Branching](./lab.html?id=02-branching)**.  
+Then merge in the next chapter’s lab: **[Branch & merge](./lab.html?id=03-branch-merge)**.
 
 ---
 
@@ -381,7 +381,7 @@ Use `-D` only when you mean “throw this branch away.”
 
 ### Lab
 
-Same practice as branching: **[Branch & merge](./lab.html?id=02-branch-merge)**
+Same practice as branching: **[Branch & merge](./lab.html?id=03-branch-merge)**
 
 ---
 
@@ -431,7 +431,7 @@ git merge --abort
 
 ### Lab
 
-**[Lab 03 — Conflict](./lab.html?id=03-conflict)**
+**[Lab 04 — Conflict](./lab.html?id=04-conflict)**
 
 ---
 
@@ -473,7 +473,7 @@ Squash “oops” commits into one clear story. You’ll go deeper in **chapter 
 
 ### Lab
 
-**[Lab 04 — Rebase](./lab.html?id=04-rebase)**
+**[Lab 05 — Rebase](./lab.html?id=05-rebase)**
 
 ---
 
@@ -540,7 +540,7 @@ git switch -c recover HASH       # bring it back on a new branch
 
 ### Lab
 
-**[Lab 05 — Undo](./lab.html?id=05-undo)**
+**[Lab 06 — Undo](./lab.html?id=06-undo)**
 
 ---
 
@@ -585,8 +585,8 @@ git push                  # upload your commits
 
 ### Lab
 
-Practice the commands offline first: **[Local remote](./lab.html?id=00-local-remote)**.  
-Then use a real GitHub repo: **[Remote & PR](./lab.html?id=06-remote-pr)** (needs a GitHub account).
+Practice the commands offline first: **[Local remote](./lab.html?id=07-local-remote)**.  
+Then use a real GitHub repo: **[Remote & PR](./lab.html?id=08-remote-pr)** (needs a GitHub account).
 
 ---
 
@@ -628,7 +628,7 @@ git push origin --delete fix/login-redirect   # optional cleanup
 
 ### Lab
 
-Finish the remote practice: **[Remote & PR](./lab.html?id=06-remote-pr)**
+Finish the remote practice: **[Remote & PR](./lab.html?id=08-remote-pr)**
 
 ---
 
@@ -676,7 +676,7 @@ Update your branch with latest `main` first — reviewers shouldn’t fix your m
 
 ### Lab
 
-**[Lab 07 — Team workflow](./lab.html?id=07-team-workflow)**
+**[Lab 09 — Team workflow](./lab.html?id=09-team-workflow)**
 
 ---
 
@@ -717,7 +717,7 @@ git stash show -p stash@{0}                # preview
 
 ### Lab
 
-**[Lab 08 — Stash](./lab.html?id=08-stash)**
+**[Lab 10 — Stash](./lab.html?id=10-stash)**
 
 ---
 
@@ -760,7 +760,7 @@ Moving a published tag breaks people who already pulled it. Prefer a new version
 
 ### Lab
 
-**[Lab 09 — Tags](./lab.html?id=09-tags)**
+**[Lab 11 — Tags](./lab.html?id=11-tags)**
 
 ---
 
@@ -798,7 +798,7 @@ git cherry-pick --abort
 
 ### Lab
 
-**[Lab 10 — Cherry-pick](./lab.html?id=10-cherry-pick)**
+**[Lab 12 — Cherry-pick](./lab.html?id=12-cherry-pick)**
 
 ---
 
@@ -843,7 +843,7 @@ Save & close → Git replays. Resolve conflicts with `--continue` / `--abort` li
 
 ### Lab
 
-**[Lab 11 — Interactive rebase](./lab.html?id=11-interactive-rebase)**
+**[Lab 13 — Interactive rebase](./lab.html?id=13-interactive-rebase)**
 
 ---
 
@@ -876,7 +876,7 @@ Exit code `0` = good, non-zero = bad.
 
 ### Lab
 
-**[Lab 12 — Bisect](./lab.html?id=12-bisect)**
+**[Lab 14 — Bisect](./lab.html?id=14-bisect)**
 
 ---
 
@@ -924,7 +924,7 @@ Each worktree has its own files; they share the same `.git` object database.
 
 ### Lab
 
-**[Lab 14 — Worktrees](./lab.html?id=14-worktrees)**
+**[Lab 15 — Worktrees](./lab.html?id=15-worktrees)**
 
 ---
 
@@ -973,7 +973,7 @@ Master these and GitHub’s UI becomes optional for investigation.
 
 ### Lab
 
-**[Lab 15 — Inspect history](./lab.html?id=15-inspect-history)**
+**[Lab 16 — Inspect history](./lab.html?id=16-inspect-history)**
 
 ---
 
@@ -1011,7 +1011,7 @@ GitHub **branch protection** + required checks is the modern “server hook.” 
 
 ### Lab
 
-**[Lab 16 — Hooks](./lab.html?id=16-hooks)**
+**[Lab 17 — Hooks](./lab.html?id=17-hooks)**
 
 ---
 
@@ -1045,7 +1045,7 @@ Many teams make signing optional for juniors; some require it on `main`. Match y
 
 ### Lab
 
-**[Lab 17 — Signing commits](./lab.html?id=17-signing)**
+**[Lab 18 — Signing commits](./lab.html?id=18-signing)**
 
 ---
 
@@ -1091,7 +1091,7 @@ Use carefully — mirrors rewrite matching refs.
 
 ### Lab
 
-**[Lab 18 — Forks & remotes](./lab.html?id=18-forks)**
+**[Lab 19 — Forks & remotes](./lab.html?id=19-forks)**
 
 ---
 
@@ -1137,7 +1137,7 @@ LFS stores pointers in Git and big files on an LFS server. Needs `git-lfs` insta
 
 ### Lab
 
-**[Lab 19 — Submodules & LFS](./lab.html?id=19-submodules-lfs)**
+**[Lab 20 — Submodules & LFS](./lab.html?id=20-submodules-lfs)**
 
 ---
 
@@ -1213,7 +1213,7 @@ Official deep dive: [Pro Git book](https://git-scm.com/book/en/v2) (free).
 
 ### Lab
 
-**[Lab 13 — Internals](./lab.html?id=13-internals)**
+**[Lab 21 — Internals](./lab.html?id=21-internals)**
 
 ---
 
@@ -1312,9 +1312,9 @@ Use this as your progress board — foundations first, then hero skills. Check i
 
 ### Local collaboration with yourself
 
-- [ ] Create branches for features and bug fixes ([Branching](./lab.html?id=00-branching))
-- [ ] Merge finished work into `main` ([Branch & merge](./lab.html?id=02-branch-merge))
-- [ ] Resolve one conflict on purpose ([Conflict](./lab.html?id=03-conflict))
+- [ ] Create branches for features and bug fixes ([Branching](./lab.html?id=02-branching))
+- [ ] Merge finished work into `main` ([Branch & merge](./lab.html?id=03-branch-merge))
+- [ ] Resolve one conflict on purpose ([Conflict](./lab.html?id=04-conflict))
 - [ ] Branching, merge, and conflict labs complete
 
 ### History skills
@@ -1325,8 +1325,8 @@ Use this as your progress board — foundations first, then hero skills. Check i
 
 ### Remote & team
 
-- [ ] Push, fetch, and pull against a remote ([Local remote](./lab.html?id=00-local-remote))
-- [ ] Push a branch and open a PR ([Remote & PR](./lab.html?id=06-remote-pr))
+- [ ] Push, fetch, and pull against a remote ([Local remote](./lab.html?id=07-local-remote))
+- [ ] Push a branch and open a PR ([Remote & PR](./lab.html?id=08-remote-pr))
 - [ ] Use `.gitignore` and short-lived branches
 - [ ] Remote, PR, and team workflow labs complete
 

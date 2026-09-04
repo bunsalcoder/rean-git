@@ -192,102 +192,102 @@
       "teaser": "Init, stage, commit។",
       "summary": "Init, stage, commit — ប្រវត្តិពិតដំបូងរបស់អ្នក។"
     },
-    "00-branching": {
+    "02-branching": {
       "title": "ការបង្កើត branch",
       "teaser": "ញែកការងារលើ branch។",
       "summary": "បង្កើត topic branches ហើយមើលថា commits នៅដាច់ដោយឡែក។"
     },
-    "02-branch-merge": {
+    "03-branch-merge": {
       "title": "Branch និង merge",
       "teaser": "បំបែកការងារ បន្ទាប់មកបញ្ចូលគ្នា។",
       "summary": "បំបែកការងារដោយសុវត្ថិភាព បន្ទាប់មកនាំមករួមគ្នាវិញ។"
     },
-    "03-conflict": {
+    "04-conflict": {
       "title": "ទំនាស់",
       "teaser": "ដោះស្រាយ merge conflict។",
       "summary": "ជួប merge conflict ហើយដោះស្រាយដោយស្ងប់ស្ងាត់។"
     },
-    "04-rebase": {
+    "05-rebase": {
       "title": "Rebase",
       "teaser": "ចាក់ឡើងវិញ commits ឲ្យស្អាត។",
       "summary": "ចាក់ឡើងវិញ commits ហើយរក្សាប្រវត្តិឲ្យអានបានងាយ។"
     },
-    "05-undo": {
+    "06-undo": {
       "title": "ត្រឡប់វិញ",
       "teaser": "Restore, reset, revert។",
       "summary": "Restore, amend, reset និង revert ដោយមានគោលបំណាង។"
     },
-    "00-local-remote": {
+    "07-local-remote": {
       "title": "Remote ក្នុងស្រុក",
       "teaser": "Push, fetch, pull ដោយគ្មាន GitHub។",
       "summary": "ប្រើ bare repo ក្នុងស្រុកជា origin — push, fetch និង pull ដោយគ្មាន GitHub។"
     },
-    "06-remote-pr": {
+    "08-remote-pr": {
       "title": "Remote និង PR",
       "teaser": "Push ហើយបើក PR។",
       "summary": "Push branch ហើយបើក pull request ឲ្យស្អាត។"
     },
-    "07-team-workflow": {
+    "09-team-workflow": {
       "title": "លំហូរការងារក្រុម",
       "teaser": "ទម្លាប់ដែលអាចពង្រីកបាន។",
       "summary": "មិនអើពើឯកសារឥតប្រយោជន៍ sync ញឹកញាប់ សរសេរ PR ដែលពិនិត្យបាន។"
     },
-    "08-stash": {
+    "10-stash": {
       "title": "Stash — ទុកការងារបណ្តោះអាសន្ន",
       "teaser": "ទុក WIP ប្តូរបរិបទ។",
       "summary": "ទុកការងារមិនទាន់រួច ប្តូរបរិបទ រួចស្តារវិញ។"
     },
-    "09-tags": {
+    "11-tags": {
       "title": "Tags និងការចេញផ្សាយ",
       "teaser": "ដាក់ស្លាកការចេញផ្សាយ។",
       "summary": "ចំណាំការចេញផ្សាយ ហើយ checkout tag កំណែ។"
     },
-    "10-cherry-pick": {
+    "12-cherry-pick": {
       "title": "Cherry-pick — ចម្លង commit",
       "teaser": "ចម្លង commit មួយ។",
       "summary": "នាំ commit មួយទៅ branch ផ្សេង។"
     },
-    "11-interactive-rebase": {
+    "13-interactive-rebase": {
       "title": "Rebase អន្តរកម្ម",
       "teaser": "បង្រួមប្រវត្តិឲ្យច្បាស់។",
       "summary": "បង្រួម commits រញ៉េរញ៉ៃទៅជារៀងច្បាស់លាស់។"
     },
-    "12-bisect": {
+    "14-bisect": {
       "title": "Bisect — រក commit ខុស",
       "teaser": "រក commit ដែលបំបែក។",
       "summary": "ស្វែងរកប្រវត្តិតាម binary search រក commit ដែលបំបែក។"
     },
-    "13-internals": {
+    "21-internals": {
       "title": "ផ្នែកខាងក្នុង",
       "teaser": "Commits, trees, blobs។",
       "summary": "ដើរតាម commits, trees, blobs និង refs។"
     },
-    "14-worktrees": {
+    "15-worktrees": {
       "title": "Worktree និង detached HEAD",
       "teaser": "ថតទីពីរ repo តែមួយ។",
       "summary": "ប្រើ detached HEAD ដោយសុវត្ថិភាព ហើយធ្វើការក្នុង worktree ទីពីរ។"
     },
-    "15-inspect-history": {
+    "16-inspect-history": {
       "title": "ពិនិត្យប្រវត្តិ",
       "teaser": "Blame, pickaxe, ranges។",
       "summary": "តាមដានការផ្លាស់ប្តូរដោយ blame, pickaxe search និង branch ranges។"
     },
-    "16-hooks": {
+    "17-hooks": {
       "title": "Hooks — ទំពក់ Git",
       "teaser": "រារាំង commit អាក្រក់ក្នុងស្រុក។",
       "summary": "ដំឡើង pre-commit hook ហើយមើលវាចាប់ commit អាក្រក់។"
     },
-    "17-signing": {
+    "18-signing": {
       "title": "ចុះហត្ថលេខា commits",
       "teaser": "ចុះហត្ថលេខាដោយ SSH key។",
       "summary": "ចុះហត្ថលេខា commit ដោយ SSH ហើយផ្ទៀងផ្ទាត់ហត្ថលេខាក្នុងស្រុក។"
     },
-    "18-forks": {
+    "19-forks": {
       "title": "Fork និង remote",
       "teaser": "Origin, upstream, fetch។",
       "summary": "បន្ថែម upstream លើ fork, push feature, ហើយ fetch ពេលដើមផ្លាស់ទី។"
     },
-    "19-submodules-lfs": {
+    "20-submodules-lfs": {
       "title": "Submodule និង Git LFS",
       "teaser": "Nest repo, ខ្ទាស់ binary។",
       "summary": "ខ្ទាស់ repo nested ដោយ submodule បន្ទាប់មកតាមដានឯកសារធំដោយ Git LFS។"

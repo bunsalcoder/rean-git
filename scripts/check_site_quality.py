@@ -22,16 +22,16 @@ HOW_TO_FALLBACK_RE = re.compile(r"^## How to use this guide$")
 KM_LINE_RATIO = 0.85
 KHMER_SCRIPT_RE = re.compile(r"[\u1780-\u17FF]")
 KM_LAB_TITLES_NEED_KHMER = (
-    "03-conflict",
-    "08-stash",
-    "09-tags",
-    "10-cherry-pick",
-    "11-interactive-rebase",
-    "12-bisect",
-    "14-worktrees",
-    "16-hooks",
-    "18-forks",
-    "19-submodules-lfs",
+    "04-conflict",
+    "10-stash",
+    "11-tags",
+    "12-cherry-pick",
+    "13-interactive-rebase",
+    "14-bisect",
+    "15-worktrees",
+    "17-hooks",
+    "19-forks",
+    "20-submodules-lfs",
 )
 VALID_LAB_LEVELS = {"beginner", "intermediate", "advanced"}
 SITE_ORIGIN = "https://bunsalcoder.github.io/rean-git"
@@ -137,6 +137,11 @@ def parse_curriculum() -> tuple[list[str], list[str], str]:
         level = lab.get("level")
         if not isinstance(lab_id, str) or not re.fullmatch(r"[a-z0-9-]+", lab_id):
             raise SystemExit(f"labs.json entry {index} has an invalid id")
+        expected_prefix = f"{index:02d}-"
+        if not lab_id.startswith(expected_prefix):
+            raise SystemExit(
+                f"labs.json entry {index} id {lab_id!r} should start with {expected_prefix}"
+            )
         if level not in VALID_LAB_LEVELS:
             raise SystemExit(f"labs.json {lab_id} has invalid level {level!r}")
         chapter = lab.get("chapter")
@@ -149,10 +154,21 @@ def parse_curriculum() -> tuple[list[str], list[str], str]:
         seen.add(lab_id)
         labs.append(lab_id)
 
+    aliases = payload.get("labIdAliases") or {}
+    if aliases and not isinstance(aliases, dict):
+        raise SystemExit("labs.json labIdAliases must be an object")
+    for old_id, new_id in aliases.items():
+        if not isinstance(old_id, str) or not isinstance(new_id, str):
+            raise SystemExit("labs.json labIdAliases keys/values must be strings")
+        if new_id not in seen:
+            raise SystemExit(f"labs.json alias {old_id!r} points at unknown lab {new_id!r}")
+        if old_id in seen:
+            raise SystemExit(f"labs.json alias {old_id!r} collides with a current lab id")
+
     if cheat_sheet not in chapters:
         raise SystemExit(f"cheatSheetChapter {cheat_sheet!r} is not a handbook chapter")
-    if labs and labs[-1] != "13-internals":
-        raise SystemExit("lab catalog should list 13-internals last (mastery)")
+    if labs and labs[-1] != "21-internals":
+        raise SystemExit("lab catalog should list 21-internals last (mastery)")
     return chapters, labs, cheat_sheet
 
 
