@@ -30,7 +30,7 @@ cat file.txt
 
 → ត្រឡប់ទៅ `v1`។
 
-### 2. Unstage
+### 2. ដកចេញពី staging (Unstage)
 
 ```bash
 echo "v2" >> file.txt

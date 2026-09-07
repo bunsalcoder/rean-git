@@ -215,6 +215,16 @@ test("arrow keys move to the next chapter", async ({ page }) => {
   await expect(page).toHaveURL(/[?&]c=1(?:&|$)/);
 });
 
+test("how-to chapter includes working table of contents links", async ({ page }) => {
+  await page.goto("/learn.html?c=how-to-use");
+  await expect(page.locator("[data-chapter-body]")).toBeVisible();
+  const tocLink = page.locator('[data-chapter-body] a[href="./learn.html?c=1"]');
+  await expect(tocLink.first()).toBeVisible();
+  await tocLink.first().click();
+  await expect(page).toHaveURL(/[?&]c=1(?:&|$)/);
+  await expect(page.locator("[data-chapter-title]")).not.toHaveText(/Loading|How to use|របៀបប្រើ/i);
+});
+
 test("j moves to the next lab", async ({ page }) => {
   await page.goto("/lab.html?id=01-first-repo");
   await expect(page.locator("[data-lab-body]")).toBeVisible();

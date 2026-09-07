@@ -38,7 +38,7 @@ cat README.md
 
 → `main` **មិន** គួរមាន greeting នៅឡើយទេ។
 
-### 3. Merge
+### 3. បញ្ចូល (Merge)
 
 ```bash
 git merge feature/greeting

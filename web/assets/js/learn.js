@@ -66,6 +66,14 @@ function labHref(id) {
   return `./lab.html?id=${encodeURIComponent(id)}`;
 }
 
+function rewriteChapterAnchors(markdown) {
+  // Handbook TOC / cross-refs use GitHub-style heading slugs; map to the reader.
+  return String(markdown || "").replace(
+    /\]\(#(\d+)(?:-[^)\s]*)?\)/g,
+    "](./learn.html?c=$1)"
+  );
+}
+
 function splitGuide(markdown) {
   const lines = markdown.split("\n");
   const starts = [];
@@ -77,13 +85,10 @@ function splitGuide(markdown) {
   });
 
   return starts.map((s, i) => {
-    let end = i + 1 < starts.length ? starts[i + 1].index : lines.length;
-    if (s.id === "how-to-use") {
-      const tocAt = lines.findIndex((line, idx) => idx > s.index && isTocHeading(line));
-      if (tocAt !== -1) end = tocAt;
-    }
+    const end = i + 1 < starts.length ? starts[i + 1].index : lines.length;
     let body = lines.slice(s.index, end).join("\n").trim();
     body = body.replace(/^##\s.+\n+/, "");
+    body = rewriteChapterAnchors(body);
     return { id: s.id, title: s.title, body };
   });
 }
