@@ -55,7 +55,7 @@ if grep -q BROKEN state.txt; then git bisect bad; else git bisect good; fi
 
 ធ្វើបន្ទាត់ `if grep…` ដដែលៗ រហូត Git បោះពុម្ព first bad commit។
 
-### 3. Reset
+### 3. Reset bisect វិញ
 
 ```bash
 git bisect reset

@@ -19,7 +19,7 @@ git commit -m "Add hello"
 
 ## ជំហាន
 
-### 1. Resolve HEAD
+### 1. ដោះស្រាយ HEAD
 
 ```bash
 git rev-parse HEAD

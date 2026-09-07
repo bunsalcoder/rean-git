@@ -20,7 +20,7 @@ git commit -m "App v1 content"
 
 ## ជំហាន
 
-### 1. Annotated release tag
+### 1. Annotated tag សម្រាប់ release
 
 ```bash
 git tag -a v1.0.0 -m "Release v1.0.0"
@@ -38,7 +38,7 @@ git tag -a v1.0.1 -m "Release v1.0.1"
 git log --oneline --decorate
 ```
 
-### 3. Check out tag (detached HEAD)
+### 3. Check out tag (នៅលើ detached HEAD)
 
 ```bash
 git switch --detach v1.0.0

@@ -16,7 +16,7 @@ mkdir -p playground && cd playground
 
 ## ជំហាន
 
-### 1. Initialize
+### 1. ចាប់ផ្តើម
 
 ```bash
 git init

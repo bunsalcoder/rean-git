@@ -38,7 +38,7 @@ git commit -m "Main update"
 git log --oneline --graph --all
 ```
 
-### 3. Rebase feature
+### 3. Rebase លើ feature
 
 ```bash
 git switch feature/tweak
