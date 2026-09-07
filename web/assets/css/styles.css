@@ -1736,6 +1736,28 @@ html.theme-animate body *::after {
   padding: 2.5rem 0 0;
 }
 
+.progress-panel.is-path-complete .progress-panel-inner {
+  border-color: var(--accent-border);
+  background:
+    linear-gradient(135deg, var(--accent-soft), transparent 55%),
+    var(--surface);
+}
+
+.progress-complete-body {
+  margin: 0.65rem 0 0;
+  max-width: 36rem;
+  color: var(--ink-soft);
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.progress-complete-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.15rem;
+}
+
 .progress-panel-inner {
   display: grid;
   gap: 1rem;

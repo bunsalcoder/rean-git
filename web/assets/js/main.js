@@ -124,6 +124,8 @@
     ) || 0;
     const completedChapters =
       window.ReanGitUtil?.completedChapterCount?.(chapters) || 0;
+    const pathComplete =
+      catalogLabs.length > 0 && completedLabs === catalogLabs.length;
 
     if (!chapterIndex && !labIndex && !completedLabs && !completedChapters) {
       panel.hidden = true;
@@ -131,27 +133,59 @@
     }
 
     panel.hidden = false;
+    panel.classList.toggle("is-path-complete", pathComplete);
 
-    if (chapterIndex > 0) {
-      chapterEl.hidden = false;
-      chapterEl.textContent = i18n.t("home.chapterProgress", {
-        current: String(chapterIndex),
-        total: String(chapters.length),
-        title: i18n.t(`chapters.${chapterId}`),
-      });
-    } else {
+    const eyebrow = document.querySelector("[data-home-progress-eyebrow]");
+    const title = document.querySelector("[data-home-progress-title]");
+    const completeBody = document.querySelector("[data-home-path-complete-body]");
+    const completeActions = document.querySelector("[data-home-path-complete-actions]");
+
+    if (pathComplete) {
+      if (eyebrow) eyebrow.textContent = i18n.t("home.pathCompleteEyebrow");
+      if (title) title.textContent = i18n.t("home.pathCompleteTitle");
+      if (completeBody) {
+        completeBody.hidden = false;
+        completeBody.textContent = i18n.t("home.pathCompleteBody");
+      }
+      if (completeActions) completeActions.hidden = false;
       chapterEl.hidden = true;
-    }
-
-    if (labIndex > 0) {
-      labEl.hidden = false;
-      labEl.textContent = i18n.t("home.labProgress", {
-        current: String(labIndex),
-        total: String(catalogLabs.length),
-        title: i18n.t(`labs.${labId}.title`),
-      });
-    } else {
       labEl.hidden = true;
+    } else {
+      if (eyebrow) {
+        eyebrow.setAttribute("data-i18n", "home.progressEyebrow");
+        eyebrow.textContent = i18n.t("home.progressEyebrow");
+      }
+      if (title) {
+        title.setAttribute("data-i18n", "home.progressTitle");
+        title.textContent = i18n.t("home.progressTitle");
+      }
+      if (completeBody) {
+        completeBody.hidden = true;
+        completeBody.textContent = "";
+      }
+      if (completeActions) completeActions.hidden = true;
+
+      if (chapterIndex > 0) {
+        chapterEl.hidden = false;
+        chapterEl.textContent = i18n.t("home.chapterProgress", {
+          current: String(chapterIndex),
+          total: String(chapters.length),
+          title: i18n.t(`chapters.${chapterId}`),
+        });
+      } else {
+        chapterEl.hidden = true;
+      }
+
+      if (labIndex > 0) {
+        labEl.hidden = false;
+        labEl.textContent = i18n.t("home.labProgress", {
+          current: String(labIndex),
+          total: String(catalogLabs.length),
+          title: i18n.t(`labs.${labId}.title`),
+        });
+      } else {
+        labEl.hidden = true;
+      }
     }
 
     const chaptersCompleteEl = document.querySelector("[data-home-chapters-complete]");
