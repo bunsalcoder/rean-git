@@ -88,7 +88,7 @@ test("labs page filter narrows the grid", async ({ page }) => {
   await expect(beginnerCount).toBeLessThan(total);
 
   await page.locator('[data-lab-filter="intermediate"]').click();
-  await expect(page.locator('[data-lab-grid] a[data-lab-id="10-stash"]')).toBeVisible();
+  await expect(page.locator('[data-lab-grid] a[data-lab-id="07-local-remote"]')).toBeVisible();
   await expect(page.locator('[data-lab-grid] a[data-lab-id="09-team-workflow"]')).toBeVisible();
   await expect(page.locator('[data-lab-grid] a[data-lab-id="13-interactive-rebase"]')).toHaveCount(0);
 
@@ -368,6 +368,13 @@ test("search finds text inside a lab", async ({ page }) => {
   expect(titles.some((text) => /stash/i.test(text))).toBeTruthy();
 });
 
+test("chapter checklists render on concept chapters", async ({ page }) => {
+  await page.goto("/learn.html?c=1");
+  await expect(page.locator("[data-chapter-body]")).toBeVisible();
+  await expect(page.locator("[data-chapter-body] input[type='checkbox']")).toHaveCount(2);
+  await expect(page.locator("[data-checklist-progress]")).toContainText(/0 of 2|0 នៃ 2/);
+});
+
 test("learn page can mark a chapter done", async ({ page }) => {
   await page.goto("/learn.html?c=1");
   const button = page.locator("[data-mark-done]");
@@ -407,6 +414,29 @@ test("reset progress clears completed labs on home", async ({ page }) => {
   page.once("dialog", (dialog) => dialog.accept());
   await page.locator("[data-reset-progress]").click();
   await expect(page.locator("[data-home-progress]")).toBeHidden();
+});
+
+test("home celebrates when every lab is complete", async ({ page }) => {
+  const labs = require("../web/data/labs.json");
+  const labIds = (labs.labs || []).map((lab) => lab.id);
+  await page.addInitScript((ids) => {
+    const progress = {};
+    for (const id of ids) {
+      progress[id] = { checked: 1, total: 1, complete: true };
+    }
+    localStorage.setItem("rean-git:lab-progress", JSON.stringify(progress));
+  }, labIds);
+  await page.goto("/");
+  const panel = page.locator("[data-home-progress]");
+  await expect(panel).toBeVisible();
+  await expect(panel).toHaveClass(/is-path-complete/);
+  await expect(page.locator("[data-home-progress-title]")).toContainText(
+    /finished every lab|មន្ទីរពិសោធន៍ទាំងអស់/i
+  );
+  await expect(page.locator("[data-home-path-complete-actions]")).toBeVisible();
+  await expect(
+    page.locator('[data-home-path-complete-actions] a[href*="c=26"]')
+  ).toBeVisible();
 });
 
 test("import progress restores completed labs on home", async ({ page }) => {

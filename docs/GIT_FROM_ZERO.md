@@ -110,6 +110,11 @@ Git works offline. GitHub is where you share and collaborate.
 After chapter 3 → [Install & config](../labs/00-install-config/)  
 After chapters 4–5 → [First repo](../labs/01-first-repo/)
 
+### Check your understanding
+
+- [ ] I can name a real mess that version control prevents (zips, “final-final”, lost changes)
+- [ ] I can explain Git vs GitHub in one sentence each
+
 ---
 
 ## 2. Core mental model
@@ -143,6 +148,11 @@ edit files  →  git add  →  staging  →  git commit  →  history
 ### Why this matters at work
 
 You fixed a login bug *and* started a messy experiment in the same folder. Staging lets you commit **only the login fix** and leave the experiment out. That one idea clears half of “Git confusion.”
+
+### Check your understanding
+
+- [ ] I can map working tree → staging → commit → history to the suitcase story
+- [ ] I know why staging exists (commit only what belongs together)
 
 ---
 
@@ -293,6 +303,12 @@ git show HEAD         # latest commit details
 ```
 
 `HEAD` = “the commit I’m on right now.”
+
+### Check your understanding
+
+- [ ] I know when to use `git add FILE` instead of `git add .`
+- [ ] I can write a commit message that would help someone search history later
+- [ ] I know what `HEAD` points at
 
 ---
 

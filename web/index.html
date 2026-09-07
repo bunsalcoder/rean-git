@@ -238,17 +238,21 @@ cd rean-git</code></pre>
 
       <section class="progress-panel" data-home-progress hidden>
         <div class="wrap">
-          <div class="progress-panel-inner">
+          <div class="progress-panel-inner" data-home-progress-inner>
             <div>
-              <p class="eyebrow" data-i18n="home.progressEyebrow">Your path</p>
-              <h2 data-i18n="home.progressTitle">Pick up where you left off</h2>
+              <p class="eyebrow" data-home-progress-eyebrow data-i18n="home.progressEyebrow">Your path</p>
+              <h2 data-home-progress-title data-i18n="home.progressTitle">Pick up where you left off</h2>
+              <p class="progress-complete-body" data-home-path-complete-body hidden></p>
             </div>
             <div class="progress-stats">
               <p class="progress-stat" data-home-chapter-progress hidden></p>
               <p class="progress-stat" data-home-lab-progress hidden></p>
               <p class="progress-stat" data-home-chapters-complete hidden></p>
               <p class="progress-stat" data-home-labs-complete hidden></p>
-              <div class="progress-tools">
+              <div class="progress-complete-actions" data-home-path-complete-actions hidden>
+                <a class="btn btn-primary" href="./learn.html?c=26" data-i18n="home.pathCompleteCheatSheet">Open cheat sheet</a>
+              </div>
+              <div class="progress-tools" data-home-progress-tools>
                 <button type="button" class="btn btn-ghost" data-export-progress data-i18n="home.exportProgress">Export progress</button>
                 <button type="button" class="btn btn-ghost" data-import-progress data-i18n="home.importProgress">Import progress</button>
                 <button type="button" class="btn btn-ghost" data-reset-progress data-i18n="home.resetProgress">Reset progress</button>
