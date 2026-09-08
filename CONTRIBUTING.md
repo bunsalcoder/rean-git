@@ -105,7 +105,13 @@ Use `--keep` to leave playgrounds in place for debugging. When you add a lab, ad
 
 Use the GitHub issue forms for **content** vs **site bugs**. PRs should include the checklist in `.github/pull_request_template.md`.
 
-If you change shell assets (CSS, JS, fonts, icons) that the service worker precaches, bump `CACHE` in `web/sw.js` so browsers pick up the new files. After adding or removing labs, regenerate `web/content-precache.json` (see above). Installable PWA metadata lives in `web/manifest.webmanifest`.
+If you change shell assets (CSS, JS, fonts, icons) that the service worker precaches, refresh the cache token:
+
+```bash
+python3 scripts/check_site_quality.py --write-sw-cache
+```
+
+CI fails if `CACHE` in `web/sw.js` is stale relative to those files (and `content-precache.json`). After adding or removing labs, regenerate `web/content-precache.json` (see above), then rewrite the SW cache token. Installable PWA metadata lives in `web/manifest.webmanifest`.
 
 ## Site UI
 

@@ -4,6 +4,7 @@
   const LAB_PROGRESS_KEY = "rean-git:lab-progress";
   const CHAPTER_PROGRESS_KEY = "rean-git:chapter-progress";
   const CHECKLIST_PREFIX = "rean-git:checklist:";
+  const PROGRESS_BACKUP_NUDGE_KEY = "rean-git:progress-backup-nudge";
   const CLONE_COMMAND = "git clone https://github.com/bunsalcoder/rean-git.git\ncd rean-git";
 
   function escapeHtml(text) {
@@ -159,6 +160,7 @@
           key === LAST_LAB_KEY ||
           key === LAB_PROGRESS_KEY ||
           key === CHAPTER_PROGRESS_KEY ||
+          key === PROGRESS_BACKUP_NUDGE_KEY ||
           key.startsWith(CHECKLIST_PREFIX)
         ) {
           remove.push(key);
@@ -280,6 +282,37 @@
     });
   }
 
+  function progressBackupNudgeState() {
+    return readStorageItem(PROGRESS_BACKUP_NUDGE_KEY);
+  }
+
+  function markProgressBackupNudge(state) {
+    if (state !== "dismissed" && state !== "exported") return;
+    writeStorageItem(PROGRESS_BACKUP_NUDGE_KEY, state);
+  }
+
+  function shouldPromptProgressBackup(labIds) {
+    if (progressBackupNudgeState()) return false;
+    return completedLabCount(labIds) >= 1;
+  }
+
+  function downloadProgressExport() {
+    const payload = exportProgress();
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    const day = new Date().toISOString().slice(0, 10);
+    link.href = url;
+    link.download = `rean-git-progress-${day}.json`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    markProgressBackupNudge("exported");
+  }
+
   window.ReanGitUtil = {
     escapeHtml,
     LAST_CHAPTER_KEY,
@@ -299,5 +332,9 @@
     exportProgress,
     importProgress,
     parseGuideChapters,
+    progressBackupNudgeState,
+    markProgressBackupNudge,
+    shouldPromptProgressBackup,
+    downloadProgressExport,
   };
 })();

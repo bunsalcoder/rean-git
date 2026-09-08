@@ -126,11 +126,31 @@ test("home shows completed lab count from local progress", async ({ page }) => {
         "01-first-repo": { checked: 3, total: 3, complete: true },
       })
     );
+    localStorage.setItem("rean-git:progress-backup-nudge", "dismissed");
   });
   await page.goto("/");
   const complete = page.locator("[data-home-labs-complete]");
   await expect(complete).toBeVisible();
   await expect(complete).toContainText("1");
+});
+
+test("home nudges export after the first completed lab", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      "rean-git:lab-progress",
+      JSON.stringify({
+        "01-first-repo": { checked: 3, total: 3, complete: true },
+      })
+    );
+  });
+  await page.goto("/");
+  const toast = page.locator("[data-progress-backup]");
+  await expect(toast).toBeVisible();
+  await expect(toast).toContainText(/Export|backup|device/i);
+  await page.locator("[data-progress-backup-dismiss]").click();
+  await expect(toast).toHaveCount(0);
+  await page.reload();
+  await expect(page.locator("[data-progress-backup]")).toHaveCount(0);
 });
 
 test("labs page shows completed lab count from local progress", async ({ page }) => {
@@ -141,6 +161,7 @@ test("labs page shows completed lab count from local progress", async ({ page })
         "01-first-repo": { checked: 3, total: 3, complete: true },
       })
     );
+    localStorage.setItem("rean-git:progress-backup-nudge", "dismissed");
   });
   await page.goto("/labs.html");
   const complete = page.locator("[data-labs-progress]");
@@ -156,6 +177,7 @@ test("lab sidebar marks completed labs", async ({ page }) => {
         "01-first-repo": { checked: 3, total: 3, complete: true },
       })
     );
+    localStorage.setItem("rean-git:progress-backup-nudge", "dismissed");
     localStorage.setItem(
       "rean-git:checklist:lab:01-first-repo",
       JSON.stringify({ 0: true, 1: true, 2: true })
@@ -334,6 +356,7 @@ test("unchecking every lab box clears completion", async ({ page }) => {
         "01-first-repo": { checked: 3, total: 3, complete: true },
       })
     );
+    localStorage.setItem("rean-git:progress-backup-nudge", "dismissed");
     localStorage.setItem(
       "rean-git:checklist:lab:01-first-repo",
       JSON.stringify({ 0: true, 1: true, 2: true })
@@ -417,6 +440,7 @@ test("reset progress clears completed labs on home", async ({ page }) => {
         "01-first-repo": { checked: 3, total: 3, complete: true },
       })
     );
+    localStorage.setItem("rean-git:progress-backup-nudge", "dismissed");
   });
   await page.goto("/");
   await expect(page.locator("[data-home-labs-complete]")).toBeVisible();
@@ -434,6 +458,7 @@ test("home celebrates when every lab is complete", async ({ page }) => {
       progress[id] = { checked: 1, total: 1, complete: true };
     }
     localStorage.setItem("rean-git:lab-progress", JSON.stringify(progress));
+    localStorage.setItem("rean-git:progress-backup-nudge", "dismissed");
   }, labIds);
   await page.goto("/");
   const panel = page.locator("[data-home-progress]");

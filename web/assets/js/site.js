@@ -101,6 +101,68 @@
 
   window.ReanGitA11y = { getFocusable, createFocusTrap, announce, focusMain };
 
+  function showUpdateToast(onRefresh) {
+    if (document.querySelector("[data-sw-update]")) return;
+    const toast = document.createElement("div");
+    toast.className = "sw-update";
+    toast.setAttribute("data-sw-update", "");
+    toast.setAttribute("role", "status");
+    const i18n = window.ReanGitI18n;
+    toast.innerHTML = `
+      <p>${window.ReanGitUtil.escapeHtml(i18n?.t?.("home.updateAvailable") || "A newer version of rean-git is ready.")}</p>
+      <button type="button" class="btn btn-primary" data-sw-refresh>${window.ReanGitUtil.escapeHtml(i18n?.t?.("home.refresh") || "Refresh")}</button>
+    `;
+    document.body.appendChild(toast);
+    toast.querySelector("[data-sw-refresh]")?.addEventListener("click", onRefresh);
+  }
+
+  function dismissProgressBackupToast() {
+    document.querySelector("[data-progress-backup]")?.remove();
+  }
+
+  function showProgressBackupToast() {
+    if (document.querySelector("[data-progress-backup],[data-sw-update]")) return;
+    const util = window.ReanGitUtil;
+    if (!util?.downloadProgressExport || !util.markProgressBackupNudge) return;
+    const toast = document.createElement("div");
+    toast.className = "sw-update";
+    toast.setAttribute("data-progress-backup", "");
+    toast.setAttribute("role", "status");
+    const i18n = window.ReanGitI18n;
+    toast.innerHTML = `
+      <p>${util.escapeHtml(
+        i18n?.t?.("home.backupNudge") ||
+          "Progress stays on this device. Export a backup so you do not lose it."
+      )}</p>
+      <button type="button" class="btn btn-primary" data-progress-backup-export>${util.escapeHtml(
+        i18n?.t?.("home.backupExport") || "Export backup"
+      )}</button>
+      <button type="button" class="btn btn-ghost" data-progress-backup-dismiss>${util.escapeHtml(
+        i18n?.t?.("home.backupDismiss") || "Not now"
+      )}</button>
+    `;
+    document.body.appendChild(toast);
+    toast.querySelector("[data-progress-backup-export]")?.addEventListener("click", () => {
+      util.downloadProgressExport();
+      dismissProgressBackupToast();
+    });
+    toast.querySelector("[data-progress-backup-dismiss]")?.addEventListener("click", () => {
+      util.markProgressBackupNudge("dismissed");
+      dismissProgressBackupToast();
+    });
+  }
+
+  function maybePromptProgressBackup() {
+    const util = window.ReanGitUtil;
+    const labs = window.ReanGitCatalog?.getLabs?.() || [];
+    const labIds = labs.map((lab) => lab.id);
+    if (!util?.shouldPromptProgressBackup?.(labIds)) {
+      dismissProgressBackupToast();
+      return;
+    }
+    showProgressBackupToast();
+  }
+
   function registerServiceWorker() {
     if (!("serviceWorker" in navigator) || navigator.webdriver) return;
     const src = new URL("./sw.js", location.href);
@@ -122,21 +184,6 @@
         });
       });
     }).catch(() => {});
-  }
-
-  function showUpdateToast(onRefresh) {
-    if (document.querySelector("[data-sw-update]")) return;
-    const toast = document.createElement("div");
-    toast.className = "sw-update";
-    toast.setAttribute("data-sw-update", "");
-    toast.setAttribute("role", "status");
-    const i18n = window.ReanGitI18n;
-    toast.innerHTML = `
-      <p>${window.ReanGitUtil.escapeHtml(i18n?.t?.("home.updateAvailable") || "A newer version of rean-git is ready.")}</p>
-      <button type="button" class="btn btn-primary" data-sw-refresh>${window.ReanGitUtil.escapeHtml(i18n?.t?.("home.refresh") || "Refresh")}</button>
-    `;
-    document.body.appendChild(toast);
-    toast.querySelector("[data-sw-refresh]")?.addEventListener("click", onRefresh);
   }
 
   let lastPageKey = pageKey(location.href);
@@ -688,6 +735,17 @@
 
   setupShortcutsHelp();
   registerServiceWorker();
+
+  const scheduleProgressBackupPrompt = () => {
+    Promise.resolve(window.ReanGitCatalog?.ready)
+      .catch(() => {})
+      .then(() => maybePromptProgressBackup());
+  };
+  scheduleProgressBackupPrompt();
+  window.addEventListener("rean-git:lab-progress", scheduleProgressBackupPrompt);
+  window.addEventListener("rean-git:chapter-progress", (event) => {
+    if (event?.detail?.reset) dismissProgressBackupToast();
+  });
 
   if (!nav) return;
 
