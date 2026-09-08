@@ -283,20 +283,7 @@
   }
 
   function downloadProgressFile() {
-    const payload = window.ReanGitUtil?.exportProgress?.();
-    if (!payload) return;
-    const blob = new Blob([JSON.stringify(payload, null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    const day = new Date().toISOString().slice(0, 10);
-    link.href = url;
-    link.download = `rean-git-progress-${day}.json`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
+    window.ReanGitUtil?.downloadProgressExport?.();
   }
 
   function refreshProgressViews() {

@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import subprocess
@@ -561,6 +562,8 @@ def check_shared_runtime() -> int:
         msgs.append("util.js must track chapter completion and reset progress")
     if "exportProgress" not in util_text or "importProgress" not in util_text:
         msgs.append("util.js must export and import learning progress")
+    if "shouldPromptProgressBackup" not in util_text or "downloadProgressExport" not in util_text:
+        msgs.append("util.js must prompt for and download progress backups")
     if "parseGuideChapters" not in util_text:
         msgs.append("util.js must parse handbook chapters for search")
     if "LAST_CHAPTER_KEY" not in util_text or "CLONE_COMMAND" not in util_text:
@@ -594,6 +597,8 @@ def check_shared_runtime() -> int:
     site_text = site_js.read_text(encoding="utf-8") if site_js.is_file() else ""
     if "serviceWorker.register" not in site_text:
         msgs.append("site.js must register the service worker")
+    if "maybePromptProgressBackup" not in site_text or "data-progress-backup" not in site_text:
+        msgs.append("site.js must nudge learners to export progress")
     if "UTIL_SRC" not in site_text:
         msgs.append("site.js soft-nav should load util.js")
     if "parseGuideChapters" not in site_text and "ensureSearchIndex" not in site_text:
@@ -780,6 +785,74 @@ def write_content_precache(labs: list[str]) -> None:
     print(f"Wrote {path.relative_to(ROOT)} ({len(payload)} URLs)")
 
 
+CACHE_RE = re.compile(r'^const CACHE = "([^"]+)";\s*$', re.M)
+PRECACHE_RE = re.compile(r"const PRECACHE = \[([\s\S]*?)\];")
+PRECACHE_URL_RE = re.compile(r'"(\./[^"]+)"')
+
+
+def parse_precache_urls(sw_text: str) -> list[str]:
+    match = PRECACHE_RE.search(sw_text)
+    if not match:
+        return []
+    return PRECACHE_URL_RE.findall(match.group(1))
+
+
+def expected_sw_cache_name(sw_text: str) -> str:
+    """Hash precached shell files + content-precache so CACHE bumps when assets change."""
+    digest = hashlib.sha256()
+    for rel in parse_precache_urls(sw_text):
+        path = WEB / rel[2:]  # strip ./
+        digest.update(rel.encode("utf-8"))
+        digest.update(b"\0")
+        if path.is_file():
+            digest.update(path.read_bytes())
+        else:
+            digest.update(b"MISSING")
+        digest.update(b"\0")
+    precache_manifest = WEB / "content-precache.json"
+    digest.update(b"content-precache.json\0")
+    if precache_manifest.is_file():
+        digest.update(precache_manifest.read_bytes())
+    else:
+        digest.update(b"MISSING")
+    return f"rean-git-{digest.hexdigest()[:12]}"
+
+
+def write_sw_cache() -> None:
+    path = WEB / "sw.js"
+    text = path.read_text(encoding="utf-8")
+    if not CACHE_RE.search(text):
+        raise SystemExit("sw.js missing const CACHE = \"...\";")
+    token = expected_sw_cache_name(text)
+    updated, count = CACHE_RE.subn(f'const CACHE = "{token}";\n', text, count=1)
+    if count != 1:
+        raise SystemExit("could not rewrite CACHE in sw.js")
+    path.write_text(updated, encoding="utf-8")
+    print(f"Wrote {path.relative_to(ROOT)} CACHE={token}")
+
+
+def check_sw_cache() -> int:
+    msgs: list[str] = []
+    path = WEB / "sw.js"
+    if not path.is_file():
+        return fail(["missing web/sw.js"], "service worker cache token")
+    text = path.read_text(encoding="utf-8")
+    match = CACHE_RE.search(text)
+    if not match:
+        msgs.append('sw.js must declare const CACHE = "rean-git-...";')
+        return fail(msgs, "service worker cache token")
+    if not parse_precache_urls(text):
+        msgs.append("sw.js PRECACHE list is empty or unreadable")
+    expected = expected_sw_cache_name(text)
+    actual = match.group(1)
+    if actual != expected:
+        msgs.append(
+            f"sw.js CACHE is stale ({actual} != {expected}) — run: "
+            "python3 scripts/check_site_quality.py --write-sw-cache"
+        )
+    return fail(msgs, "service worker cache token")
+
+
 def check_content_precache(labs: list[str]) -> int:
     msgs: list[str] = []
     path = WEB / "content-precache.json"
@@ -809,12 +882,15 @@ def check_content_precache(labs: list[str]) -> int:
 def main() -> int:
     write_sitemap_mode = "--write-sitemap" in sys.argv
     write_precache_mode = "--write-content-precache" in sys.argv
+    write_sw_cache_mode = "--write-sw-cache" in sys.argv
     chapters, labs, cheat_sheet = parse_curriculum()
-    if write_sitemap_mode or write_precache_mode:
+    if write_sitemap_mode or write_precache_mode or write_sw_cache_mode:
         if write_sitemap_mode:
             write_sitemap(chapters, labs)
         if write_precache_mode:
             write_content_precache(labs)
+        if write_sw_cache_mode:
+            write_sw_cache()
         return 0
 
     print(f"Curriculum: {len(chapters)} chapters, {len(labs)} labs, cheat sheet {cheat_sheet}")
@@ -845,6 +921,8 @@ def main() -> int:
     failures += check_print_styles()
     print()
     failures += check_content_precache(labs)
+    print()
+    failures += check_sw_cache()
     print()
     failures += check_lab_verifiers(labs)
     print()
