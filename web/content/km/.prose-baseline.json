@@ -7,9 +7,9 @@
   "labs/04-conflict.md": "0eeb9a54be205f4a",
   "labs/05-rebase.md": "0860438354869f11",
   "labs/06-undo.md": "3183dc670a64467c",
-  "labs/07-local-remote.md": "69ef1f55027eb469",
-  "labs/08-remote-pr.md": "0257d030ca1ef1c0",
-  "labs/09-team-workflow.md": "068e36eb6209d914",
+  "labs/07-local-remote.md": "49cc606c54f55a23",
+  "labs/08-remote-pr.md": "d95ecdeed5ea3d56",
+  "labs/09-team-workflow.md": "753d688f0a5cc479",
   "labs/10-stash.md": "9a220900c97f8067",
   "labs/11-tags.md": "5d08777db9a988dc",
   "labs/12-cherry-pick.md": "c3b28b35f059184e",
@@ -19,7 +19,7 @@
   "labs/16-inspect-history.md": "a185f838d9f47f0d",
   "labs/17-hooks.md": "f60e1bee1c6f6c7d",
   "labs/18-signing.md": "71500eb1d841c496",
-  "labs/19-forks.md": "35e51d05021f07fe",
+  "labs/19-forks.md": "055d3600d5e3b4b0",
   "labs/20-submodules-lfs.md": "986ffc633dc3d09d",
   "labs/21-internals.md": "a90916445e805835"
 }

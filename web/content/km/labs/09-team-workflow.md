@@ -6,13 +6,13 @@
 
 ## ការរៀបចំ
 
-ប្រើ GitHub repo ដូចគ្នាពី មន្ទីរពិសោធន៍ 06 ឬបង្កើត repo ទទេមួយទៀត។
+ប្រើ GitHub repo ដូចគ្នាពី មន្ទីរពិសោធន៍ 08 ឬបង្កើត repo ទទេមួយទៀត។
 
 ```bash
 cd labs/09-team-workflow
 mkdir -p playground && cd playground
-git clone https://github.com/YOU/rean-git-lab06.git .
-# or init + remote as in lab 06
+git clone https://github.com/YOU/rean-git-lab08.git .
+# or init + remote as in lab 08
 git switch main
 git pull
 ```
@@ -96,6 +96,8 @@ git branch -d chore/team-checklist
 - [ ] Feature branch ត្រូវបាន rebase (ឬ merge) ទៅលើ `main` ចុងក្រោយមុនពិនិត្យ
 - [ ] PR description ពន្យល់ *ហេតុអ្វី* និង រប័បសាកល្បង
 - [ ] Branches local ត្រូវបានសម្រាតបន្ទាប់ពី merge
+
+`./verify.sh` ពិនិត្យ playground local។ គុណភាព rebase និង PR លើ GitHub គឺធ្វើដោយដៃ — បញ្ជាក់នៅលើ GitHub ប្រសិនបើមិនប្រាកដ។
 
 ## សម្អាត (ស្រេចចិត្ត)
 

@@ -2,7 +2,7 @@
 
 ## Goal
 
-Practice `remote`, `push`, `fetch`, and `pull` using a **local bare repo** as `origin` — no GitHub account required. Lab 06 adds a real PR on GitHub afterward.
+Practice `remote`, `push`, `fetch`, and `pull` using a **local bare repo** as `origin` — no GitHub account required. Lab 08 adds a real PR on GitHub afterward.
 
 ## Setup
 

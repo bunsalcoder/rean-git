@@ -109,6 +109,13 @@ test("lab page offers a verify.sh self-check", async ({ page }) => {
   await page.goto("/lab.html?id=01-first-repo");
   await expect(page.locator(".lab-verify")).toBeVisible();
   await expect(page.locator(".lab-verify")).toContainText("./verify.sh");
+  await expect(page.locator(".lab-verify-manual")).toHaveCount(0);
+});
+
+test("remote PR lab notes GitHub steps are manual", async ({ page }) => {
+  await page.goto("/lab.html?id=08-remote-pr");
+  await expect(page.locator(".lab-verify-manual")).toBeVisible();
+  await expect(page.locator(".lab-verify-manual")).toContainText(/GitHub/i);
 });
 
 test("home shows completed lab count from local progress", async ({ page }) => {
@@ -268,6 +275,8 @@ test("home offers Codespaces for zero-setup practice", async ({ page }) => {
   await page.goto("/");
   const link = page.locator('a[href*="codespaces.new/bunsalcoder/rean-git"]');
   await expect(link).toBeVisible();
+  await expect(link).toHaveClass(/btn-primary/);
+  await expect(page.locator("[data-clone-cta] h2")).toContainText(/Codespaces/i);
 });
 
 test("lab track puts internals last", async ({ page }) => {

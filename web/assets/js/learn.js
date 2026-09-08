@@ -42,6 +42,7 @@ function getLabs() {
     title: t(`labs.${lab.id}.title`),
     level: t(`levels.${lab.level}`),
     chapter: lab.chapter,
+    verifyManual: Boolean(lab.verifyManual),
   }));
 }
 
@@ -264,13 +265,18 @@ function syncLabChecklistProgress(labId) {
 
 function appendVerifyHint(target, labId) {
   if (!target || !labId) return;
+  const lab = getLabs().find((item) => item.id === labId);
   const wrap = document.createElement("aside");
   wrap.className = "lab-verify";
+  const manualNote = lab?.verifyManual
+    ? `<p class="lab-verify-manual">${escapeHtml(t("lab.verifyManualNote"))}</p>`
+    : "";
   wrap.innerHTML = `
     <p class="lab-verify-title">${escapeHtml(t("lab.verifyTitle"))}</p>
     <p>${escapeHtml(t("lab.verifyBody"))}</p>
     <pre><code>cd labs/${escapeHtml(labId)}
 ./verify.sh</code></pre>
+    ${manualNote}
   `;
   target.appendChild(wrap);
   enhanceCodeBlocks(wrap);
