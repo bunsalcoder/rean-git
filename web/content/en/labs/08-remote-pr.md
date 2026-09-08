@@ -14,7 +14,7 @@ Push a branch to GitHub and open a pull request.
 
 ### 1. Fork or use a throwaway repo
 
-Easiest: create a **new empty** repository on GitHub named `rean-git-lab06` (no README).
+Easiest: create a **new empty** repository on GitHub named `rean-git-lab08` (no README).
 
 ### 2. Local project
 
@@ -24,11 +24,11 @@ mkdir -p playground && cd playground
 git init
 git config user.name "Your Name"
 git config user.email "you@example.com"
-echo "# Lab 06" > README.md
+echo "# Lab 08" > README.md
 git add README.md
 git commit -m "Initial commit"
 git branch -M main
-git remote add origin https://github.com/YOU/rean-git-lab06.git
+git remote add origin https://github.com/YOU/rean-git-lab08.git
 git push -u origin main
 ```
 
@@ -49,7 +49,7 @@ git push -u origin feat/hello-pr
 **With GitHub CLI:**
 
 ```bash
-gh pr create --title "Practice PR" --body "Lab 06 for rean-git."
+gh pr create --title "Practice PR" --body "Lab 08 for rean-git."
 ```
 
 **Or in the browser:** open the repo → Prompt to compare & open a PR for `feat/hello-pr` → create it.
@@ -70,6 +70,8 @@ git branch -d feat/hello-pr
 - [ ] Feature branch was pushed
 - [ ] A PR was opened (and ideally merged)
 - [ ] Local `main` matches remote after `git pull`
+
+`./verify.sh` checks your local playground against those steps. It **cannot** confirm the GitHub PR merge — open the repo in the browser (or use `gh pr view`) to double-check.
 
 ## Cleanup (optional)
 

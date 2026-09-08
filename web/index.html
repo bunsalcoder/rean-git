@@ -209,26 +209,27 @@
 
       <section class="clone-cta" data-clone-cta aria-labelledby="clone-title">
         <div class="wrap">
-          <p class="eyebrow" data-i18n="home.cloneEyebrow">On your machine</p>
-          <h2 id="clone-title" data-i18n="home.cloneTitle">Clone the repo, then type every command.</h2>
+          <p class="eyebrow" data-i18n="home.cloneEyebrow">Day 1</p>
+          <h2 id="clone-title" data-i18n="home.cloneTitle">Start in Codespaces — terminal ready.</h2>
           <p data-i18n="home.cloneBody">
-            Labs live in the GitHub repo, not in the browser. Clone it and keep a
-            terminal open beside this site.
+            Labs need a real Git terminal. Open Codespaces for zero setup, or
+            clone the repo on your machine and keep a terminal beside this site.
           </p>
-          <div class="clone-box code-block">
-            <pre><code data-clone-command>git clone https://github.com/bunsalcoder/rean-git.git
-cd rean-git</code></pre>
-            <button type="button" class="copy-btn" data-clone-copy data-i18n="ui.copy">Copy</button>
-          </div>
           <p class="clone-codespaces">
             <a
-              class="btn btn-ghost"
+              class="btn btn-primary"
               href="https://codespaces.new/bunsalcoder/rean-git?quickstart=1"
               target="_blank"
               rel="noopener noreferrer"
               data-i18n="home.codespaces"
             >Open in Codespaces</a>
           </p>
+          <p class="clone-alt" data-i18n="home.cloneAlt">Prefer local?</p>
+          <div class="clone-box code-block">
+            <pre><code data-clone-command>git clone https://github.com/bunsalcoder/rean-git.git
+cd rean-git</code></pre>
+            <button type="button" class="copy-btn" data-clone-copy data-i18n="ui.copy">Copy</button>
+          </div>
           <p class="clone-import">
             <button type="button" class="btn btn-ghost" data-import-progress data-i18n="home.importProgress">Import progress</button>
             <input type="file" accept="application/json,.json" hidden data-import-progress-file />

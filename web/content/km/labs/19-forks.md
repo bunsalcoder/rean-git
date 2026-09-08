@@ -63,7 +63,7 @@ git push -u origin feat/thanks
 git remote show origin
 ```
 
-អ្នកនឹងបើក pull request ពី `origin/feat/thanks` ចូល `upstream` (មន្ទីរពិសោធន៍ 06 បានអនុវត្ត PR លើ GitHub)។
+អ្នកនឹងបើក pull request ពី `origin/feat/thanks` ចូល `upstream` (មន្ទីរពិសោធន៍ 08 បានអនុវត្ត PR លើ GitHub)។
 
 ### 3. Upstream ផ្លាស់ទី
 

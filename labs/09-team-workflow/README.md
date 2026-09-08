@@ -6,13 +6,13 @@ Practice the habits you’ll use on a real team: ignore junk, short branches, sy
 
 ## Setup
 
-Use the same GitHub repo from Lab 06, or create another empty repo.
+Use the same GitHub repo from Lab 08, or create another empty repo.
 
 ```bash
 cd labs/09-team-workflow
 mkdir -p playground && cd playground
-git clone https://github.com/YOU/rean-git-lab06.git .
-# or init + remote as in lab 06
+git clone https://github.com/YOU/rean-git-lab08.git .
+# or init + remote as in lab 08
 git switch main
 git pull
 ```
@@ -96,6 +96,8 @@ git branch -d chore/team-checklist
 - [ ] Feature branch rebased (or merged) onto latest `main` before review
 - [ ] PR description explains *why* and how to test
 - [ ] Local branches cleaned up after merge
+
+`./verify.sh` checks your local playground. Rebase quality and the GitHub PR itself are manual — confirm those on GitHub if unsure.
 
 ## Cleanup (optional)
 

@@ -58,6 +58,7 @@ fi
 
 fail=0
 passed=0
+failed_labs=()
 
 cleanup_all() {
   if (( KEEP == 0 )); then
@@ -80,11 +81,13 @@ for lab_id in "${FIXTURES[@]}"; do
   if [[ ! -x "${builder}" && ! -f "${builder}" ]]; then
     echo "FAIL: missing builder ${builder}"
     fail=1
+    failed_labs+=("${lab_id}")
     continue
   fi
   if [[ ! -f "${verifier}" ]]; then
     echo "FAIL: missing verifier labs/${lab_id}/verify.sh"
     fail=1
+    failed_labs+=("${lab_id}")
     continue
   fi
 
@@ -92,6 +95,7 @@ for lab_id in "${FIXTURES[@]}"; do
   if ! bash "${builder}"; then
     echo "FAIL: fixture build failed for ${lab_id}"
     fail=1
+    failed_labs+=("${lab_id}")
     echo
     continue
   fi
@@ -102,6 +106,7 @@ for lab_id in "${FIXTURES[@]}"; do
   ); then
     echo "FAIL: verify.sh failed for ${lab_id}"
     fail=1
+    failed_labs+=("${lab_id}")
     echo
     continue
   fi
@@ -113,6 +118,7 @@ done
 echo "== Summary =="
 echo "Passed: ${passed}/${#FIXTURES[@]}"
 if (( fail != 0 )); then
+  echo "Failed labs: ${failed_labs[*]}"
   echo "Lab verifier fixture run failed."
   exit 1
 fi

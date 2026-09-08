@@ -63,7 +63,7 @@ git push -u origin feat/thanks
 git remote show origin
 ```
 
-You would open a pull request from `origin/feat/thanks` into `upstream` (Lab 06 practiced the GitHub PR itself).
+You would open a pull request from `origin/feat/thanks` into `upstream` (Lab 08 practiced the GitHub PR itself).
 
 ### 3. Upstream moves
 
