@@ -20,6 +20,7 @@ for i in 4 5 6; do
   fixture_commit "After ${i}"
 done
 
-fixture_git bisect start HEAD HEAD~6 >/dev/null
-fixture_git bisect run bash -c 'grep -q BROKEN state.txt && exit 1 || exit 0' >/dev/null
-fixture_git bisect reset >/dev/null
+fixture_git bisect start HEAD HEAD~6 >/dev/null 2>&1
+fixture_git bisect run bash -c 'grep -q BROKEN state.txt && exit 1 || exit 0' >/dev/null 2>&1
+fixture_git bisect reset >/dev/null 2>&1
+fixture_git switch --quiet main >/dev/null 2>&1 || fixture_git checkout -q main >/dev/null 2>&1

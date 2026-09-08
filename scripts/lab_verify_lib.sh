@@ -128,7 +128,9 @@ hook_executable() {
 }
 
 log_matches() {
-  git_pg log --oneline | grep -q "$1"
+  # Avoid `git log | grep -q` under `pipefail`: grep can exit early, SIGPIPE git,
+  # and the pipeline randomly fails even when the commit exists.
+  [[ -n "$(git_pg --no-pager log -1 --oneline --grep="$1" --fixed-strings 2>/dev/null || true)" ]]
 }
 
 file_not_tracked() {
@@ -171,7 +173,7 @@ ref_exists() {
 }
 
 log_all_matches() {
-  git_pg log --all --oneline | grep -q "$1"
+  [[ -n "$(git_pg --no-pager log --all -1 --oneline --grep="$1" --fixed-strings 2>/dev/null || true)" ]]
 }
 
 submodule_dir_present() {

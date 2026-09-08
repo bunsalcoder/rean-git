@@ -17,7 +17,7 @@ git init -b main "${PLAYGROUND}" >/dev/null
 git -C "${PLAYGROUND}" config user.name "Lab Learner"
 git -C "${PLAYGROUND}" config user.email "lab@example.com"
 git -C "${PLAYGROUND}" config commit.gpgsign false
-printf '# Lab 06\n' > "${PLAYGROUND}/README.md"
+printf '# Lab 08\n' > "${PLAYGROUND}/README.md"
 git -C "${PLAYGROUND}" add README.md
 git -C "${PLAYGROUND}" commit -m "Initial commit" >/dev/null
 

@@ -18,5 +18,7 @@ fixture_commit "actually done"
 
 export GIT_SEQUENCE_EDITOR="sed -i -e '2,\$s/^pick/squash/'"
 export GIT_EDITOR="sh -c 'printf \"%s\\n\" \"Implement file updates\" > \"\$1\"' --"
-fixture_git rebase -i HEAD~3 >/dev/null
-unset GIT_SEQUENCE_EDITOR GIT_EDITOR
+# Keep rebase non-interactive even if the runner has a pager or advice prompts.
+export GIT_TERMINAL_PROMPT=0
+fixture_git -c core.editor=true rebase -i HEAD~3 >/dev/null
+unset GIT_SEQUENCE_EDITOR GIT_EDITOR GIT_TERMINAL_PROMPT
