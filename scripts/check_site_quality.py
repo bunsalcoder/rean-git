@@ -578,6 +578,8 @@ def check_shared_runtime() -> int:
         msgs.append("learn.js must use ReanGitUtil.parseGuideChapters for handbook chapters")
     if "appendVerifyHint" not in learn_js or "lab-verify" not in learn_js:
         msgs.append("learn.js must show the lab verify.sh hint")
+    if "data-verify-passed" not in learn_js or "markLabChecklistsDone" not in learn_js:
+        msgs.append("learn.js must bridge verify success to checklist completion")
     if "paintLabNavCompletion" not in learn_js:
         msgs.append("learn.js must mark completed labs in the sidebar")
     if "paintChapterNavCompletion" not in learn_js or "data-mark-done" not in learn_js:

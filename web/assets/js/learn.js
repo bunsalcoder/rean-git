@@ -230,6 +230,19 @@ function syncLabChecklistProgress(labId) {
   window.ReanGitUtil.recordLabChecklist(id, checked, total);
 }
 
+function markLabChecklistsDone() {
+  const root = document.querySelector("[data-lab-body]");
+  if (!root) return false;
+  const boxes = root.querySelectorAll('input[type="checkbox"]');
+  if (!boxes.length) return false;
+  boxes.forEach((input) => {
+    if (input.checked) return;
+    input.checked = true;
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+  return true;
+}
+
 function appendVerifyHint(target, labId) {
   if (!target || !labId) return;
   const lab = getLabs().find((item) => item.id === labId);
@@ -243,10 +256,17 @@ function appendVerifyHint(target, labId) {
     <p>${escapeHtml(t("lab.verifyBody"))}</p>
     <pre><code>cd labs/${escapeHtml(labId)}
 ./verify.sh</code></pre>
+    <p class="lab-verify-pass">${escapeHtml(t("lab.verifyPass"))}</p>
+    <p class="lab-verify-actions">
+      <button type="button" class="btn btn-ghost" data-verify-passed>${escapeHtml(t("lab.verifyPassed"))}</button>
+    </p>
     ${manualNote}
   `;
   target.appendChild(wrap);
   enhanceCodeBlocks(wrap);
+  wrap.querySelector("[data-verify-passed]")?.addEventListener("click", () => {
+    markLabChecklistsDone();
+  });
 }
 
 function labNavItem(lab) {

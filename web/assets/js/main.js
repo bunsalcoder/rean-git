@@ -270,6 +270,27 @@
     });
   }
 
+  function paintFirstLabCta() {
+    const link = document.querySelector("[data-home-first-lab]");
+    if (!link) return;
+    const i18n = window.ReanGitI18n;
+    const labs = window.ReanGitCatalog?.getLabs?.() || [];
+    const next = labs.find((lab) => !window.ReanGitUtil?.isLabComplete?.(lab.id));
+    if (!next) {
+      link.hidden = true;
+      return;
+    }
+    const title = i18n?.t?.(`labs.${next.id}.title`);
+    const hasTitle = Boolean(title && title !== `labs.${next.id}.title`);
+    const labelTitle = hasTitle ? title : next.id;
+    const isFirst = labs[0]?.id === next.id;
+    link.hidden = false;
+    link.href = `./lab.html?id=${encodeURIComponent(next.id)}`;
+    link.textContent = i18n?.t?.(isFirst ? "home.firstLab" : "home.nextLab", {
+      title: labelTitle,
+    }) || labelTitle;
+  }
+
   function wireResetProgress() {
     const btn = document.querySelector("[data-reset-progress]");
     if (!btn || btn.dataset.wired === "true") return;
@@ -281,6 +302,7 @@
       window.ReanGitUtil?.resetProgress?.();
       paintHomeResume();
       paintHomeProgress();
+      paintFirstLabCta();
       paintLabsPageProgress();
     });
   }
@@ -292,6 +314,7 @@
   function refreshProgressViews() {
     paintHomeResume();
     paintHomeProgress();
+    paintFirstLabCta();
     paintLabsPageProgress();
   }
 
@@ -358,6 +381,7 @@
     paintLabsPageProgress();
     paintHomeCounts();
     paintCloneCta();
+    paintFirstLabCta();
     wireResetProgress();
     wireProgressBackup();
   };
@@ -369,6 +393,7 @@
     paintLabsPageProgress();
     paintHomeCounts();
     paintCloneCta();
+    paintFirstLabCta();
   });
   window.ReanGitI18n?.onChange?.(() => {
     paintHomeResume();
@@ -376,16 +401,19 @@
     paintLabsPageProgress();
     paintHomeCounts();
     paintCloneCta();
+    paintFirstLabCta();
   });
 
   window.addEventListener("rean-git:lab-progress", () => {
     paintHomeResume();
     paintHomeProgress();
+    paintFirstLabCta();
     paintLabsPageProgress();
   });
   window.addEventListener("rean-git:chapter-progress", () => {
     paintHomeResume();
     paintHomeProgress();
+    paintFirstLabCta();
   });
 
   const start = () => {

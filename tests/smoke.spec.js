@@ -109,7 +109,33 @@ test("lab page offers a verify.sh self-check", async ({ page }) => {
   await page.goto("/lab.html?id=01-first-repo");
   await expect(page.locator(".lab-verify")).toBeVisible();
   await expect(page.locator(".lab-verify")).toContainText("./verify.sh");
+  await expect(page.locator("[data-verify-passed]")).toBeVisible();
   await expect(page.locator(".lab-verify-manual")).toHaveCount(0);
+});
+
+test("home Day 1 points at the next lab", async ({ page }) => {
+  await page.goto("/");
+  const firstLab = page.locator("[data-home-first-lab]");
+  await expect(firstLab).toBeVisible();
+  await expect(firstLab).toHaveAttribute("href", /lab\.html\?id=00-install-config/);
+  await expect(page.locator("[data-lab-track] li.is-next")).toHaveCount(1);
+  await expect(page.locator("[data-lab-track] li.is-next .lab-next")).toContainText(/Start here/i);
+});
+
+test("home next-lab CTA advances after the first lab is done", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      "rean-git:lab-progress",
+      JSON.stringify({
+        "00-install-config": { checked: 3, total: 3, complete: true },
+      })
+    );
+    localStorage.setItem("rean-git:progress-backup-nudge", "dismissed");
+  });
+  await page.goto("/");
+  const firstLab = page.locator("[data-home-first-lab]");
+  await expect(firstLab).toHaveAttribute("href", /lab\.html\?id=01-first-repo/);
+  await expect(page.locator('[data-lab-track] li.is-next a[data-lab-id="01-first-repo"]')).toHaveCount(1);
 });
 
 test("remote PR lab notes GitHub steps are manual", async ({ page }) => {
