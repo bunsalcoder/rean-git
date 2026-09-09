@@ -94,8 +94,10 @@ def parse_curriculum() -> tuple[list[str], list[str], str]:
         )
     if re.search(r"\bLAB_META\b", learn_js):
         raise SystemExit("learn.js still defines LAB_META; labs belong in web/data/labs.json")
-    if "chapterIdFromHeading" not in learn_js:
-        raise SystemExit("learn.js must derive chapters from handbook headings")
+    if "parseGuideChapters" not in learn_js:
+        raise SystemExit(
+            "learn.js must use ReanGitUtil.parseGuideChapters for handbook chapters"
+        )
 
     if not GUIDE_EN.is_file():
         raise SystemExit("missing web/content/en/guide.md")
@@ -572,6 +574,8 @@ def check_shared_runtime() -> int:
         msgs.append("util.js must dispatch lab progress updates")
 
     learn_js = LEARN_JS.read_text(encoding="utf-8") if LEARN_JS.is_file() else ""
+    if "parseGuideChapters" not in learn_js:
+        msgs.append("learn.js must use ReanGitUtil.parseGuideChapters for handbook chapters")
     if "appendVerifyHint" not in learn_js or "lab-verify" not in learn_js:
         msgs.append("learn.js must show the lab verify.sh hint")
     if "paintLabNavCompletion" not in learn_js:
@@ -891,6 +895,12 @@ def main() -> int:
             write_content_precache(labs)
         if write_sw_cache_mode:
             write_sw_cache()
+        return 0
+
+    if "--write-site-meta" in sys.argv:
+        write_sitemap(chapters, labs)
+        write_content_precache(labs)
+        write_sw_cache()
         return 0
 
     print(f"Curriculum: {len(chapters)} chapters, {len(labs)} labs, cheat sheet {cheat_sheet}")

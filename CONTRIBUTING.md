@@ -28,9 +28,10 @@ If you add or remove a chapter or lab:
 3. Regenerate the sitemap and offline content manifest:
 
 ```bash
-python3 scripts/check_site_quality.py --write-sitemap
-python3 scripts/check_site_quality.py --write-content-precache
+npm run sync:site-meta
 ```
+
+That runs `--write-sitemap`, `--write-content-precache`, and `--write-sw-cache` together.
 
 Chapter IDs come from handbook headings (`## How to use this guide` and `## N. …`). You do not need to list them in JavaScript.
 
@@ -73,7 +74,9 @@ If a Khmer file is missing, the site falls back to English. CI still requires th
 ./scripts/check_km_content_sync.sh      # Khmer structure vs English + prose drift
 ./scripts/check_site_quality.sh         # locales, chapters, Khmer structure, links, SEO
 ./scripts/run_lab_verifier_fixtures.sh  # build fixture playgrounds + run verify.sh
-npm run check                           # all four checks above
+npm run check:fast                      # content + site quality (skip lab fixtures)
+npm run check                           # check:fast + lab verifier fixtures
+npm run sync:site-meta                  # sitemap + content precache + SW cache token
 npm run test:e2e                        # optional; Playwright smoke tests
 npm run dev                             # preview site at http://localhost:4173
 ```
@@ -108,10 +111,12 @@ Use the GitHub issue forms for **content** vs **site bugs**. PRs should include 
 If you change shell assets (CSS, JS, fonts, icons) that the service worker precaches, refresh the cache token:
 
 ```bash
+npm run sync:site-meta
+# or only the SW token:
 python3 scripts/check_site_quality.py --write-sw-cache
 ```
 
-CI fails if `CACHE` in `web/sw.js` is stale relative to those files (and `content-precache.json`). After adding or removing labs, regenerate `web/content-precache.json` (see above), then rewrite the SW cache token. Installable PWA metadata lives in `web/manifest.webmanifest`.
+CI fails if `CACHE` in `web/sw.js` is stale relative to those files (and `content-precache.json`). After adding or removing labs, regenerate site meta (`npm run sync:site-meta`). Installable PWA metadata lives in `web/manifest.webmanifest`.
 
 ## Site UI
 

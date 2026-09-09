@@ -101,7 +101,7 @@
               <path d="M16 16.5 20.5 21" />
             </svg>
           </button>
-          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle dark mode">
+          <button class="theme-toggle" type="button" data-theme-toggle data-i18n="nav.themeToDark" data-i18n-attr="aria-label" aria-label="Switch to dark mode">
             <svg class="theme-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <g class="theme-sun">
                 <circle class="theme-sun-core" cx="12" cy="12" r="4" />
@@ -133,7 +133,7 @@
             </p>
             <div class="cta-row">
               <a class="btn btn-primary" href="./learn.html" data-home-learn data-i18n="home.startLearning">Start learning</a>
-              <a class="btn btn-ghost" href="./labs.html" data-i18n="home.openLabs">Open labs</a>
+              <a class="btn btn-ghost" href="./labs.html" data-home-open-labs data-i18n="home.openLabs">Open labs</a>
               <a class="btn btn-ghost" href="./lab.html" data-home-lab-continue hidden></a>
             </div>
           </div>
@@ -230,8 +230,8 @@
 cd rean-git</code></pre>
             <button type="button" class="copy-btn" data-clone-copy data-i18n="ui.copy">Copy</button>
           </div>
-          <p class="clone-import">
-            <button type="button" class="btn btn-ghost" data-import-progress data-i18n="home.importProgress">Import progress</button>
+          <p class="clone-restore">
+            <button type="button" class="text-btn" data-import-progress data-i18n="home.importProgress">Import progress</button>
             <input type="file" accept="application/json,.json" hidden data-import-progress-file />
           </p>
         </div>

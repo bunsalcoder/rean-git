@@ -74,6 +74,7 @@
   function paintHomeResume() {
     const i18n = window.ReanGitI18n;
     const learnBtn = document.querySelector("[data-home-learn]");
+    const openLabsBtn = document.querySelector("[data-home-open-labs]");
     const labBtn = document.querySelector("[data-home-lab-continue]");
     if (!learnBtn) return;
 
@@ -99,9 +100,11 @@
       labBtn.hidden = false;
       labBtn.href = `./lab.html?id=${encodeURIComponent(labId)}`;
       labBtn.textContent = i18n.t("home.continueLab", { title: labTitle });
+      if (openLabsBtn) openLabsBtn.hidden = true;
     } else {
       labBtn.hidden = true;
       labBtn.removeAttribute("href");
+      if (openLabsBtn) openLabsBtn.hidden = false;
     }
   }
 

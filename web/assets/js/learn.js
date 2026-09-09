@@ -7,35 +7,6 @@ function getLabMeta() {
   return window.ReanGitCatalog?.getLabs?.() || [];
 }
 
-function matchesHeading(line, key, fallback) {
-  const localized = t(key);
-  const patterns = [
-    localized !== key ? new RegExp(localized) : null,
-    fallback,
-  ].filter(Boolean);
-  return patterns.some((re) => re.test(line));
-}
-
-function isHowToUseHeading(line) {
-  return matchesHeading(line, "chapterMatch.howToUse", /^## How to use this guide$/);
-}
-
-function isTocHeading(line) {
-  return matchesHeading(line, "chapterMatch.toc", /^## Table of contents$/);
-}
-
-function chapterIdFromHeading(line) {
-  if (isHowToUseHeading(line)) return "how-to-use";
-  const numbered = /^## (\d+)\. /.exec(line);
-  return numbered ? numbered[1] : null;
-}
-
-function chapterTitle(id, headingLine) {
-  const title = t(`chapters.${id}`);
-  if (title && title !== `chapters.${id}`) return title;
-  return headingLine.replace(/^##\s+/, "").replace(/^\d+\.\s+/, "");
-}
-
 function getLabs() {
   return getLabMeta().map((lab) => ({
     id: lab.id,
@@ -76,21 +47,17 @@ function rewriteChapterAnchors(markdown) {
 }
 
 function splitGuide(markdown) {
-  const lines = markdown.split("\n");
-  const starts = [];
-
-  lines.forEach((line, index) => {
-    const id = chapterIdFromHeading(line);
-    if (!id) return;
-    starts.push({ index, id, title: chapterTitle(id, line) });
-  });
-
-  return starts.map((s, i) => {
-    const end = i + 1 < starts.length ? starts[i + 1].index : lines.length;
-    let body = lines.slice(s.index, end).join("\n").trim();
-    body = body.replace(/^##\s.+\n+/, "");
-    body = rewriteChapterAnchors(body);
-    return { id: s.id, title: s.title, body };
+  const parsed = window.ReanGitUtil?.parseGuideChapters?.(markdown) || [];
+  return parsed.map((chapter) => {
+    const localized = t(`chapters.${chapter.id}`);
+    return {
+      id: chapter.id,
+      title:
+        localized && localized !== `chapters.${chapter.id}`
+          ? localized
+          : chapter.title,
+      body: rewriteChapterAnchors(String(chapter.body || "").trim()),
+    };
   });
 }
 

@@ -1137,6 +1137,12 @@ html.theme-animate body *::after {
   font-weight: 500;
 }
 
+@media (max-width: 719px) {
+  .commit-ribbon {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .masthead-copy .brand {
     animation: rise 0.85s var(--ease-out) 0.05s both;
@@ -1808,6 +1814,29 @@ html.theme-animate body *::after {
 
 .clone-import {
   margin: 0.85rem 0 0;
+}
+
+.clone-restore {
+  margin: 0.85rem 0 0;
+}
+
+.text-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  cursor: pointer;
+}
+
+.text-btn:hover,
+.text-btn:focus-visible {
+  color: var(--ink);
 }
 
 .clone-codespaces {
