@@ -36,15 +36,21 @@
 
   function renderTrack(root) {
     if (!root) return;
+    const nextLab = labs.find((lab) => !window.ReanGitUtil?.isLabComplete?.(lab.id));
     root.innerHTML = labs
       .map((lab, index) => {
         const id = escapeHtml(lab.id);
         const done = window.ReanGitUtil?.isLabComplete?.(lab.id);
-        return `<li${done ? ' class="is-complete"' : ""}>
+        const isNext = Boolean(nextLab && nextLab.id === lab.id && !done);
+        const classes = [done ? "is-complete" : "", isNext ? "is-next" : ""]
+          .filter(Boolean)
+          .join(" ");
+        return `<li${classes ? ` class="${classes}"` : ""}>
           <a href="${labHref(lab.id)}" data-lab-id="${id}">
             <span class="lab-num">${escapeHtml(labNum(lab, index))}</span>
             <h3 class="lab-title" data-i18n="labs.${id}.title"></h3>
             <p class="lab-desc" data-i18n="labs.${id}.teaser"></p>
+            ${isNext ? `<span class="lab-next" data-i18n="home.startHere"></span>` : ""}
             ${done ? `<span class="lab-done" data-i18n="ui.done"></span>` : ""}
           </a>
         </li>`;
