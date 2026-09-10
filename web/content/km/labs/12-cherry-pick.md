@@ -1,4 +1,4 @@
-# មន្ទីរពិសោធន៍ 12 — Cherry-pick — ចម្លង commit
+# លំហាត់ 12 — Cherry-pick — ចម្លង commit
 
 ## គោលដៅ
 

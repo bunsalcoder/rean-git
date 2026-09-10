@@ -491,7 +491,7 @@ test("home celebrates when every lab is complete", async ({ page }) => {
   await expect(panel).toBeVisible();
   await expect(panel).toHaveClass(/is-path-complete/);
   await expect(page.locator("[data-home-progress-title]")).toContainText(
-    /finished every lab|មន្ទីរពិសោធន៍ទាំងអស់/i
+    /finished every lab|លំហាត់ទាំងអស់/i
   );
   await expect(page.locator("[data-home-path-complete-actions]")).toBeVisible();
   await expect(

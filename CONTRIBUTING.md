@@ -39,6 +39,7 @@ Chapter IDs come from handbook headings (`## How to use this guide` and `## N. �
 
 Khmer is translated by hand, but structure stays aligned with English via helper scripts:
 
+- `docs/KM_GLOSSARY.md` — shared terms (lab → លំហាត់, and related wording).
 - `web/content/km/guide.md` — same chapter headings as English (`## 1.`, `## 2.`, … plus the how-to-use heading).
 - `web/content/km/labs/<id>.md` — same `##` section count as the English lab (Goal / Setup / Steps / …, translated).
 - `web/locales/km.json` — UI strings and titles.
@@ -49,7 +50,7 @@ After English adds a chapter or lab (or changes lab section headings):
 ./scripts/sync_km_structure.sh
 ```
 
-That scaffolds missing Khmer files from English structure (Khmer section titles + placeholder body), appends missing chapter stubs to `km/guide.md`, and replaces known English `##` headings in existing lab files. Translate the scaffolded prose before merging.
+That scaffolds missing Khmer files from English structure (Khmer section titles + placeholder body), appends missing chapter stubs to `km/guide.md`, and replaces known English `##` headings in existing lab files. Translate the scaffolded prose before merging (follow `docs/KM_GLOSSARY.md`).
 
 Check Khmer drift any time:
 
@@ -57,9 +58,9 @@ Check Khmer drift any time:
 ./scripts/check_km_content_sync.sh
 ```
 
-English prose changes (not just file timestamps) trigger stale warnings via
-`web/content/km/.prose-baseline.json`. After you review or update Khmer prose,
-refresh the baseline:
+English prose changes (not just file timestamps) **fail CI** via
+`web/content/km/.prose-baseline.json` until Khmer is reviewed. After you update
+Khmer prose to match, refresh the baseline:
 
 ```bash
 python3 scripts/check_km_content_sync.py --write-prose-baseline
