@@ -113,6 +113,32 @@ test("lab page offers a verify.sh self-check", async ({ page }) => {
   await expect(page.locator(".lab-verify-manual")).toHaveCount(0);
 });
 
+test("passing verify marks the lab done and offers the next lab", async ({ page }) => {
+  await page.goto("/lab.html?id=01-first-repo");
+  await page.locator("[data-verify-passed]").click();
+  await expect(page.locator("[data-verify-passed]")).toBeHidden();
+  await expect(page.locator("[data-verify-next]")).toBeVisible();
+  await expect(page.locator('[data-verify-next] a[href*="id=02-branching"]')).toBeVisible();
+});
+
+test("home progress shows a chapter-then-lab session card", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      "rean-git:lab-progress",
+      JSON.stringify({
+        "00-install-config": { checked: 3, total: 3, complete: true },
+      })
+    );
+    localStorage.setItem("rean-git:progress-backup-nudge", "dismissed");
+  });
+  await page.goto("/");
+  const session = page.locator("[data-home-continue-path]");
+  await expect(session).toBeVisible();
+  await expect(page.locator("[data-home-continue-summary]")).toContainText(/First repo|repository|repo/i);
+  await expect(page.locator('[data-home-continue-lab][href*="id=01-first-repo"]')).toBeVisible();
+  await expect(page.locator("[data-home-continue-chapter]")).toBeVisible();
+});
+
 test("home Day 1 points at the next lab", async ({ page }) => {
   await page.goto("/");
   const firstLab = page.locator("[data-home-first-lab]");

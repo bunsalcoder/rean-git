@@ -228,6 +228,8 @@ function syncLabChecklistProgress(labId) {
   const checked = [...boxes].filter((el) => el.checked).length;
   const total = boxes.length;
   window.ReanGitUtil.recordLabChecklist(id, checked, total);
+  const wrap = document.querySelector(".lab-verify");
+  if (wrap) paintVerifyFollowUp(wrap, id);
 }
 
 function markLabChecklistsDone() {
@@ -241,6 +243,73 @@ function markLabChecklistsDone() {
     input.dispatchEvent(new Event("change", { bubbles: true }));
   });
   return true;
+}
+
+function paintVerifyFollowUp(wrap, labId) {
+  if (!wrap || !labId) return;
+  const done = Boolean(window.ReanGitUtil?.isLabComplete?.(labId));
+  const passCopy = wrap.querySelector(".lab-verify-pass");
+  const actions = wrap.querySelector(".lab-verify-actions");
+  const markBtn = wrap.querySelector("[data-verify-passed]");
+  let nextWrap = wrap.querySelector("[data-verify-next]");
+
+  if (!done) {
+    if (passCopy) {
+      passCopy.hidden = false;
+      passCopy.textContent = t("lab.verifyPass");
+    }
+    if (markBtn) markBtn.hidden = false;
+    if (nextWrap) nextWrap.hidden = true;
+    return;
+  }
+
+  if (passCopy) {
+    passCopy.hidden = false;
+    passCopy.textContent = t("lab.verifyDone");
+  }
+  if (markBtn) markBtn.hidden = true;
+
+  if (!nextWrap) {
+    nextWrap = document.createElement("div");
+    nextWrap.className = "lab-verify-next";
+    nextWrap.setAttribute("data-verify-next", "");
+    (actions || wrap).appendChild(nextWrap);
+  }
+
+  const labs = getLabs();
+  const index = labs.findIndex((lab) => lab.id === labId);
+  const nextLab = index >= 0 ? labs.slice(index + 1).find((lab) => lab) : null;
+  const parts = [`<p class="lab-verify-next-label">${escapeHtml(t("lab.verifyNext"))}</p>`];
+
+  if (nextLab) {
+    const titleKey = `labs.${nextLab.id}.title`;
+    const title = t(titleKey);
+    const label = title && title !== titleKey ? title : nextLab.id;
+    parts.push(
+      `<p class="lab-verify-next-actions"><a class="btn btn-primary" href="${labHref(nextLab.id)}">${escapeHtml(
+        t("home.nextLab", { title: label })
+      )}</a></p>`
+    );
+    if (nextLab.chapter) {
+      const chapterTitle = t(`chapters.${nextLab.chapter}`);
+      if (chapterTitle && chapterTitle !== `chapters.${nextLab.chapter}`) {
+        parts.push(
+          `<p class="lab-verify-next-actions"><a class="btn btn-ghost" href="./learn.html?c=${encodeURIComponent(
+            nextLab.chapter
+          )}">${escapeHtml(t("lab.relatedChapter", { title: chapterTitle }))}</a></p>`
+        );
+      }
+    }
+  } else {
+    parts.push(
+      `<p class="lab-verify-next-actions"><a class="btn btn-primary" href="./learn.html?c=26">${escapeHtml(
+        t("home.pathCompleteCheatSheet")
+      )}</a></p>`
+    );
+  }
+
+  nextWrap.innerHTML = parts.join("");
+  nextWrap.hidden = false;
 }
 
 function appendVerifyHint(target, labId) {
@@ -258,7 +327,7 @@ function appendVerifyHint(target, labId) {
 ./verify.sh</code></pre>
     <p class="lab-verify-pass">${escapeHtml(t("lab.verifyPass"))}</p>
     <p class="lab-verify-actions">
-      <button type="button" class="btn btn-ghost" data-verify-passed>${escapeHtml(t("lab.verifyPassed"))}</button>
+      <button type="button" class="btn btn-primary" data-verify-passed>${escapeHtml(t("lab.verifyPassed"))}</button>
     </p>
     ${manualNote}
   `;
@@ -266,7 +335,9 @@ function appendVerifyHint(target, labId) {
   enhanceCodeBlocks(wrap);
   wrap.querySelector("[data-verify-passed]")?.addEventListener("click", () => {
     markLabChecklistsDone();
+    paintVerifyFollowUp(wrap, labId);
   });
+  paintVerifyFollowUp(wrap, labId);
 }
 
 function labNavItem(lab) {

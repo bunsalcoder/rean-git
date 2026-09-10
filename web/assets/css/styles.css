@@ -872,6 +872,10 @@ html.theme-animate body *::after {
     border-color 0.2s var(--ease);
 }
 
+.btn[hidden] {
+  display: none !important;
+}
+
 .btn:hover,
 .btn:focus-visible {
   transform: translateY(-2px);
@@ -1818,6 +1822,36 @@ html.theme-animate body *::after {
   line-height: 1.45;
 }
 
+.progress-continue {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.9rem 0.95rem;
+  border-radius: 0.55rem;
+  border: 1px solid var(--accent-border);
+  background: var(--accent-soft);
+}
+
+.progress-continue-eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.progress-continue-summary {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.progress-continue-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
 .progress-tools {
   display: flex;
   flex-wrap: wrap;
@@ -2377,6 +2411,26 @@ html.theme-animate body *::after {
 
 .lab-verify-actions .btn {
   justify-self: start;
+}
+
+.lab-verify-next {
+  margin: 0.85rem 0 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.lab-verify-next-label {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.lab-verify-next-actions {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
 }
 
 .lab-verify-manual {
