@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Report Khmer content drift vs English structure and translation status."""
+"""Fail if Khmer content drifts from English structure or prose baseline."""
 
 from __future__ import annotations
 
@@ -61,7 +61,7 @@ def write_prose_baseline(chapters: list[str], labs: list[str]) -> None:
     print(f"Wrote {PROSE_BASELINE.relative_to(ROOT)} ({len(entries)} entries)")
 
 
-def prose_stale_warnings(
+def prose_stale_messages(
     chapters: list[str], labs: list[str], baseline: dict[str, str]
 ) -> list[str]:
     if not baseline:
@@ -69,20 +69,20 @@ def prose_stale_warnings(
             "Khmer prose baseline missing — run "
             "python3 scripts/check_km_content_sync.py --write-prose-baseline"
         ]
-    warns: list[str] = []
+    stale: list[str] = []
     current = english_prose_entries(chapters, labs)
     for key, digest in current.items():
         recorded = baseline.get(key)
         if recorded is None:
-            warns.append(f"{key} has no prose baseline entry (English added or renamed?)")
+            stale.append(f"{key} has no prose baseline entry (English added or renamed?)")
         elif recorded != digest:
-            warns.append(
+            stale.append(
                 f"km/{key} may be stale — English prose changed since last Khmer review"
             )
-    return warns
+    return stale
 
 
-def check_km_sync(chapters: list[str], labs: list[str]) -> tuple[int, list[str]]:
+def check_km_sync(chapters: list[str], labs: list[str]) -> int:
     msgs: list[str] = []
     km_chapters = load_json(LOCALES / "km.json").get("chapters", {})
 
@@ -134,13 +134,10 @@ def check_km_sync(chapters: list[str], labs: list[str]) -> tuple[int, list[str]]
         if chapter_id not in km_chapters:
             msgs.append(f"km.json missing chapters.{chapter_id}")
 
-    warns = prose_stale_warnings(chapters, labs, load_prose_baseline())
-    code = fail(msgs, "Khmer content sync vs English")
-    if warns:
-        print("WARN:  Khmer content may need a prose review")
-        for msg in warns:
-            print(f"  - {msg}")
-    return code, warns
+    structure_code = fail(msgs, "Khmer content sync vs English")
+    stale = prose_stale_messages(chapters, labs, load_prose_baseline())
+    prose_code = fail(stale, "Khmer prose review vs English baseline")
+    return 1 if structure_code or prose_code else 0
 
 
 def main() -> int:
@@ -159,12 +156,16 @@ def main() -> int:
 
     print(f"Curriculum: {len(chapters)} chapters, {len(labs)} labs")
     print()
-    code, _warns = check_km_sync(chapters, labs)
+    code = check_km_sync(chapters, labs)
     print()
     if code:
         print("Khmer content sync check failed.")
         print("Scaffold missing files:  ./scripts/sync_km_structure.sh")
         print("Refresh lab headings:    ./scripts/sync_km_structure.sh --fix-headings")
+        print(
+            "After reviewing/updating Khmer prose: "
+            "python3 scripts/check_km_content_sync.py --write-prose-baseline"
+        )
     else:
         print("Khmer content sync check passed.")
     return code

@@ -2,7 +2,7 @@
 
 > **គម្រោង:** `rean-git`  
 > **ទស្សនិកជន:** អ្នកចាប់ផ្តើមពេញលេញរហូតដល់កម្រិតខ្ពស់ — បង្កើតជំនាញពិត មិនមែនជំនឿខុស  
-> **រចនាប័ទ្ម:** បញ្ហាពិតមុន បន្ទាប់មកពាក្យបញ្ជាដែលដោះស្រាយ — រួមទាំងមន្ទីរពិសោធន៍ក្នុង repo នេះ
+> **រចនាប័ទ្ម:** បញ្ហាពិតមុន បន្ទាប់មកពាក្យបញ្ជាដែលដោះស្រាយ — រួមទាំងលំហាត់ក្នុង repo នេះ
 
 ---
 
@@ -10,7 +10,7 @@
 
 1. អានជំពូកនីមួយៗតាមលំដាប់ (ពួកវាស្ថាបនាលើគ្នាទៅវិញទៅមក)។
 2. វាយពាក្យបញ្ជាដោយខ្លួនអ្នក — កុំអានតែប៉ុណ្ណោះ។
-3. បន្ទាប់ពីជំពូកស្នូល បំពេញមន្ទីរពិសោធន៍ដែលត្រូវគ្នាក្រោម `labs/`។
+3. បន្ទាប់ពីជំពូកស្នូល បំពេញលំហាត់ដែលត្រូវគ្នាក្រោម `labs/`។
 4. រក្សា terminal ឲ្យបើកនៅឫសគម្រោងនេះ (កន្លែងដែលអ្នក clone repo):
 
 ```bash
@@ -105,7 +105,7 @@ cd path/to/rean-git
 
 Git ដំណើរការដោយគ្មានអ៊ីនធឺណិត។ GitHub គឺកន្លែងដែលអ្នកចែករំលែក និងសហការ។
 
-### តំណមន្ទីរពិសោធន៍
+### តំណលំហាត់
 
 បន្ទាប់ពីជំពូក 3 → [ដំឡើង និង config](./lab.html?id=00-install-config)  
 បន្ទាប់ពីជំពូក 4–5 → [Repo ដំបូង](./lab.html?id=01-first-repo)
@@ -193,9 +193,9 @@ git config --global core.editor "code --wait"   # or nano / vim
 git config --list --show-origin
 ```
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
-បំពេញ **[ដំឡើង និង config](./lab.html?id=00-install-config)** មុនពេលបន្ត។ ប្រើ config **ក្នុងស្រុក** ក្នុង playground របស់មន្ទីរពិសោធន៍ ដើម្បីកុំប៉ះការកំណត់ Git global របស់អ្នក។
+បំពេញ **[ដំឡើង និង config](./lab.html?id=00-install-config)** មុនពេលបន្ត។ ប្រើ config **ក្នុងស្រុក** ក្នុង playground របស់លំហាត់ ដើម្បីកុំប៉ះការកំណត់ Git global របស់អ្នក។
 
 ---
 
@@ -242,7 +242,7 @@ git commit -m "Add README"
 git log --oneline
 ```
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
 បំពេញ **[Repo ដំបូង](./lab.html?id=01-first-repo)** មុនពេលបន្ត។
 
@@ -357,10 +357,10 @@ feat/contact-page:           D---E
 - ដាក់ឈ្មោះ branches តាមការងារ: `fix/login-crash`, `feat/signup-form`
 - មួយគោលបំណងក្នុងមួយ branch
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
 អនុវត្តភាពដាច់ដោយឡែកជាមុន៖ **[ការបង្កើត branch](./lab.html?id=02-branching)**។  
-បន្ទាប់មក merge ក្នុងមន្ទីរពិសោធន៍ជំពូកបន្ទាប់៖ **[Branch និង merge](./lab.html?id=03-branch-merge)**។
+បន្ទាប់មក merge ក្នុងលំហាត់ជំពូកបន្ទាប់៖ **[Branch និង merge](./lab.html?id=03-branch-merge)**។
 
 ---
 
@@ -395,7 +395,7 @@ git branch -d feat/contact-page
 
 ប្រើ `-D` តែពេលអ្នកចង់ថា “បោះបង់ branch នេះ។”
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
 ការអនុវត្តដូច branching: **[Branch និង merge](./lab.html?id=03-branch-merge)**
 
@@ -445,9 +445,9 @@ git merge --abort
 - និយាយនៅពេលដែលមនុស្សពីរនាក់ជាម្ចាស់ឯកសារក្តៅដូចគ្នា។
 - `git status` បញ្ជីឯកសារនៅតែមិនត្រូវបានបញ្ចូល
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
-**[មន្ទីរពិសោធន៍ 04 — Conflict](./lab.html?id=04-conflict)**
+**[លំហាត់ 04 — Conflict](./lab.html?id=04-conflict)**
 
 ---
 
@@ -487,9 +487,9 @@ git rebase -i HEAD~3
 
 Squash "oops" ចូលទៅក្នុងរឿងច្បាស់លាស់មួយ។ អ្នកនឹងកាន់តែស៊ីជម្រៅនៅក្នុង**ជំពូកទី 17**។ អនុវត្តលើ branch បោះចោលជាមុនសិន។
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
-**[មន្ទីរពិសោធន៍ 05 — Rebase](./lab.html?id=05-rebase)**
+**[លំហាត់ 05 — Rebase](./lab.html?id=05-rebase)**
 
 ---
 
@@ -554,9 +554,9 @@ git reflog
 git switch -c recover HASH       # bring it back on a new branch
 ```
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
-**[មន្ទីរពិសោធន៍ 06 — ត្រឡប់វិញ](./lab.html?id=06-undo)**
+**[លំហាត់ 06 — ត្រឡប់វិញ](./lab.html?id=06-undo)**
 
 ---
 
@@ -599,7 +599,7 @@ git push                  # upload your commits
 - HTTPS + personal access token ឬ
 - SSH (`git@github.com:YOU/REPO.git`)
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
 អនុវត្តពាក្យបញ្ជាដោយគ្មាន GitHub ជាមុន៖ **[Remote ក្នុងស្រុក](./lab.html?id=07-local-remote)**។  
 បន្ទាប់មកប្រើ repo GitHub ពិត៖ **[Remote និង PR](./lab.html?id=08-remote-pr)** (ត្រូវការគណនី GitHub)។
@@ -642,7 +642,7 @@ git branch -d fix/login-redirect
 git push origin --delete fix/login-redirect   # optional cleanup
 ```
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
 បញ្ចប់ការអនុវត្តពីចម្ងាយ៖ **[Remote និង PR](./lab.html?id=08-remote-pr)**
 
@@ -690,9 +690,9 @@ git merge main                 # or: git rebase main (local only)
 
 ធ្វើបច្ចុប្បន្នភាព branch របស់អ្នកជាមួយនឹង `main` ចុងក្រោយបំផុតជាមុនសិន — អ្នកត្រួតពិនិត្យមិនគួរជួសជុល conflict merge របស់អ្នកសម្រាប់អ្នកទេ។
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
-**[មន្ទីរពិសោធន៍ 09 — លំហូរការងារក្រុម](./lab.html?id=09-team-workflow)**
+**[លំហាត់ 09 — លំហូរការងារក្រុម](./lab.html?id=09-team-workflow)**
 
 ---
 
@@ -729,9 +729,9 @@ git stash show -p stash@{0}                # preview
 - ចូលចិត្តដាក់ឈ្មោះ stashes (`-m`) ដូច្នេះអ្នកចងចាំពួកគេ។
 - កុំទុកចោលច្រើនសប្តាហ៍
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
-**[មន្ទីរពិសោធន៍ 10 — Stash](./lab.html?id=10-stash)**
+**[លំហាត់ 10 — Stash](./lab.html?id=10-stash)**
 
 ---
 
@@ -772,9 +772,9 @@ git push origin --delete v1.0.0     # delete remote
 
 `MAJOR.MINOR.PATCH` — breaking / feature / fix។ ហុទាហរណ៍៖ `v2.1.0`។
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
-**[មន្ទីរពិសោធន៍ 11 — Tags](./lab.html?id=11-tags)**
+**[លំហាត់ 11 — Tags](./lab.html?id=11-tags)**
 
 ---
 
@@ -810,9 +810,9 @@ git cherry-pick --abort
 - ចូលចិត្ត merge/rebase នៅពេលអ្នកចង់បាន *ទាំងមូល* branch
 - Cherry-picking ការជួសជុលដូចគ្នាទៅនឹង branches ដែលមានអាយុកាលយូរជាច្រើនអាចបង្កើត commits ស្ទួន — ទំនាក់ទំនងជាមួយក្រុម
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
-**[មន្ទីរពិសោធន៍ 12 — Cherry-pick](./lab.html?id=12-cherry-pick)**
+**[លំហាត់ 12 — Cherry-pick](./lab.html?id=12-cherry-pick)**
 
 ---
 
@@ -855,9 +855,9 @@ pick c333 typo
 - បន្ទាប់ពីសរសេរ branch ដែលបានរុញឡើងវិញ៖ `git push --force-with-lease` (មានសុវត្ថិភាពជាង `--force`)
 - មិនដែល force-push `main`
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
-**[មន្ទីរពិសោធន៍ 13 — Interactive rebase](./lab.html?id=13-interactive-rebase)**
+**[លំហាត់ 13 — Interactive rebase](./lab.html?id=13-interactive-rebase)**
 
 ---
 
@@ -888,9 +888,9 @@ git bisect run ./scripts/check-login.sh
 
 លេខកូដចេញ `0` = ល្អ មិនមែនសូន្យ = អាក្រក់។
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
-**[មន្ទីរពិសោធន៍ 14 — Bisect](./lab.html?id=14-bisect)**
+**[លំហាត់ 14 — Bisect](./lab.html?id=14-bisect)**
 
 ---
 
@@ -936,9 +936,9 @@ worktree នីមួយៗមានឯកសារផ្ទាល់ខ្ល�
 | Worktree | ការងារស្របគ្នាសម្រាប់ម៉ោង/ថ្ងៃ |
 | New clone | ភាពឯកោខ្លាំង (remotes/config ផ្សេងគ្នា) |
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
-**[មន្ទីរពិសោធន៍ 15 — Worktrees](./lab.html?id=15-worktrees)**
+**[លំហាត់ 15 — Worktrees](./lab.html?id=15-worktrees)**
 
 ---
 
@@ -985,9 +985,9 @@ git range-diff main...feat/login  # compare two histories after rebase
 
 គ្រប់គ្រងទាំងនេះ ហើយ UI របស់ GitHub ក្លាយជាជម្រើសសម្រាប់ការស៊ើបអង្កេត។
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
-**[មន្ទីរពិសោធន៍ 16 — ពិនិត្យប្រវត្តិ](./lab.html?id=16-inspect-history)**
+**[លំហាត់ 16 — ពិនិត្យប្រវត្តិ](./lab.html?id=16-inspect-history)**
 
 ---
 
@@ -1023,9 +1023,9 @@ Commit a `scripts/hooks/` ឬប្រើឧបករណ៍ ([Husky](https://typ
 
 ការត្រួតពិនិត្យដែលត្រូវការ GitHub **branch protection** + គឺជា "ម៉ាស៊ីនមេ hook" ទំនើប។ `update` hooks បុរាណមាននៅលើម៉ាស៊ីនមេទទេដែលអ្នកបង្ហោះដោយខ្លួនឯង។
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
-**[មន្ទីរពិសោធន៍ 17 — Hooks](./lab.html?id=17-hooks)**
+**[លំហាត់ 17 — Hooks](./lab.html?id=17-hooks)**
 
 ---
 
@@ -1057,9 +1057,9 @@ git verify-commit HEAD
 
 ក្រុមជាច្រើនធ្វើការចុះហត្ថលេខាជាជម្រើសសម្រាប់ juniors; អ្នកខ្លះត្រូវការវានៅលើ `main`។ ផ្គូផ្គងកន្លែងធ្វើការរបស់អ្នក។
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
-**[មន្ទីរពិសោធន៍ 18 — ចុះហត្ថលេខា commits](./lab.html?id=18-signing)**
+**[លំហាត់ 18 — ចុះហត្ថលេខា commits](./lab.html?id=18-signing)**
 
 ---
 
@@ -1103,9 +1103,9 @@ git push --mirror BACKUP_URL
 
 ប្រើដោយប្រុងប្រយ័ត្ន — កញ្ចក់សរសេរឡើងវិញនូវឯកសារយោងដែលត្រូវគ្នា។
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
-**[មន្ទីរពិសោធន៍ 19 — Forks និង remotes](./lab.html?id=19-forks)**
+**[លំហាត់ 19 — Forks និង remotes](./lab.html?id=19-forks)**
 
 ---
 
@@ -1149,9 +1149,9 @@ LFS រក្សាទុកទ្រនិចនៅក្នុង Git និ�
 - បញ្ជីឈ្មោះកញ្ចប់ / CDN សម្រាប់ទ្រព្យសម្បត្តិ
 - Subtree បញ្ចូលគ្នា (`git subtree`) — មិនសូវសាមញ្ញ ទទួលបានតិចជាង submodules សម្រាប់ក្រុមមួយចំនួន
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
-**[មន្ទីរពិសោធន៍ 20 — Submodules និង LFS](./lab.html?id=20-submodules-lfs)**
+**[លំហាត់ 20 — Submodules និង LFS](./lab.html?id=20-submodules-lfs)**
 
 ---
 
@@ -1225,9 +1225,9 @@ A **branch** គឺជាឯកសារយោងដែលអាចចល័ត�
 
 ការជ្រមុជទឹកជ្រៅជាផ្លូវការ៖ [សៀវភៅ Pro Git](https://git-scm.com/book/en/v2) (ឥតគិតថ្លៃ)។
 
-### មន្ទីរពិសោធន៍
+### លំហាត់
 
-**[មន្ទីរពិសោធន៍ 21 — ផ្នែកខាងក្នុង](./lab.html?id=21-internals)**
+**[លំហាត់ 21 — ផ្នែកខាងក្នុង](./lab.html?id=21-internals)**
 
 ---
 
@@ -1322,27 +1322,27 @@ git show-ref
 
 - [ ] Git បានដំឡើង ហើយ `user.name` / `user.email` បានកំណត់ ([ដំឡើង និង config](./lab.html?id=00-install-config))
 - [ ] អ្នកអាចពន្យល់ working tree vs staging vs commit (រឿងវ៉ាលី)
-- [ ] មន្ទីរពិសោធន៍ [Repo ដំបូង](./lab.html?id=01-first-repo) បានបញ្ចប់
+- [ ] លំហាត់ [Repo ដំបូង](./lab.html?id=01-first-repo) បានបញ្ចប់
 
 ### សហការជាមួយខ្លួនឯងក្នុងមូលដ្ឋាន
 
 - [ ] បង្កើត branches សម្រាប់ features និង bug fixes ([ការបង្កើត branch](./lab.html?id=02-branching))
 - [ ] Merge ការងាររួចទៅក្នុង `main` ([Branch និង merge](./lab.html?id=03-branch-merge))
 - [ ] ដោះស្រាយ conflict មួយដោយចេតនា ([ទំនាស់](./lab.html?id=04-conflict))
-- [ ] មន្ទីរពិសោធន៍ branching, merge និង conflict បានបញ្ចប់
+- [ ] លំហាត់ branching, merge និង conflict បានបញ្ចប់
 
 ### ជំនាញប្រវត្តិ
 
 - [ ] Rebase feature *local* ទៅលើ `main` ចុងក្រោយ
 - [ ] ជ្រើស restore / reset / revert តាមស្ថានការណ៍
-- [ ] មន្ទីរពិសោធន៍ rebase និង undo បានបញ្ចប់
+- [ ] លំហាត់ rebase និង undo បានបញ្ចប់
 
 ### Remote និងក្រុម
 
 - [ ] Push, fetch និង pull ទល់នឹង remote ([Remote ក្នុងស្រុក](./lab.html?id=07-local-remote))
 - [ ] Push branch ហើយបើក PR ([Remote និង PR](./lab.html?id=08-remote-pr))
 - [ ] ប្រើ `.gitignore` និង branches រយៈពេលខ្លី
-- [ ] មន្ទីរពិសោធន៍ remote, PR និង team workflow បានបញ្ចប់
+- [ ] លំហាត់ remote, PR និង team workflow បានបញ្ចប់
 
 ### ឧបករណ៍មានថាមពល
 
@@ -1351,7 +1351,7 @@ git show-ref
 - [ ] Cherry-pick commit មួយទៅ branch ផ្សេង
 - [ ] Squash commits ដោយ interactive rebase
 - [ ] រក commit អាក្រក់ដោយ bisect
-- [ ] មន្ទីរពិសោធន៍ stash ដល់ bisect បានបញ្ចប់
+- [ ] លំហាត់ stash ដល់ bisect បានបញ្ចប់
 
 ### Git វិជ្ជាជីវៈ
 
@@ -1360,12 +1360,12 @@ git show-ref
 - [ ] ដឹងថា hooks និង signed commits សម្រាប់អ្វី
 - [ ] បន្ថែម remote `upstream` លើ fork
 - [ ] ពន្យល់ពេលណាគួរប្រើ submodules vs LFS vs packages
-- [ ] មន្ទីរពិសោធន៍ worktrees ដល់ submodules/LFS បានបញ្ចប់
+- [ ] លំហាត់ worktrees ដល់ submodules/LFS បានបញ្ចប់
 
 ### ជំនាញជាន់ខ្ពស់
 
 - [ ] ពណ៌នា blob / tree / commit / ref ដោយភាសាសាមញ្ញ
-- [ ] មន្ទីរពិសោធន៍ internals បានបញ្ចប់
+- [ ] លំហាត់ internals បានបញ្ចប់
 - [ ] អ្នកចាប់ `git status` មុនពេលទាយ
 
 ---

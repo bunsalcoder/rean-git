@@ -128,7 +128,7 @@ def scaffold_lab_from_en(en_text: str, lab_id: str, title_km: str) -> str:
 
     for index, line in enumerate(lines):
         if index == 0 and line.startswith("# Lab "):
-            out.append(f"# មន្ទីរពិសោធន៍ {number} — {title_km}")
+            out.append(f"# លំហាត់ {number} — {title_km}")
             continue
         if line.startswith("## "):
             out.append(translate_lab_h2(line))

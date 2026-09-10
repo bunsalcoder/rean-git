@@ -1,4 +1,4 @@
-# មន្ទីរពិសោធន៍ 20 — Submodule និង Git LFS
+# លំហាត់ 20 — Submodule និង Git LFS
 
 ## គោលដៅ
 
@@ -89,7 +89,7 @@ git commit -m "Track a large asset with LFS"
 git lfs ls-files
 ```
 
-→ `.gitattributes` រាយ filter LFS។ Git រក្សាទុក **pointer**; bytes ស្ថិតនៅលើម៉ាស៊ីនមេ LFS (ឬឧបករណ៍ផ្ទុក LFS ក្នុងស្រុកក្នុងមន្ទីរពិសោធន៍នេះ)។
+→ `.gitattributes` រាយ filter LFS។ Git រក្សាទុក **pointer**; bytes ស្ថិតនៅលើម៉ាស៊ីនមេ LFS (ឬឧបករណ៍ផ្ទុក LFS ក្នុងស្រុកក្នុងលំហាត់នេះ)។
 
 ### 4. ចងចាំ trade-off
 

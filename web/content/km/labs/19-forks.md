@@ -1,4 +1,4 @@
-# មន្ទីរពិសោធន៍ 19 — Fork និង remote ច្រើន
+# លំហាត់ 19 — Fork និង remote ច្រើន
 
 ## គោលដៅ
 
@@ -63,7 +63,7 @@ git push -u origin feat/thanks
 git remote show origin
 ```
 
-អ្នកនឹងបើក pull request ពី `origin/feat/thanks` ចូល `upstream` (មន្ទីរពិសោធន៍ 08 បានអនុវត្ត PR លើ GitHub)។
+អ្នកនឹងបើក pull request ពី `origin/feat/thanks` ចូល `upstream` (លំហាត់ 08 បានអនុវត្ត PR លើ GitHub)។
 
 ### 3. Upstream ផ្លាស់ទី
 
