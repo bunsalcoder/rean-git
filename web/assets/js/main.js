@@ -71,6 +71,36 @@
     return window.ReanGitUtil?.readStorageItem?.(key) ?? null;
   }
 
+  function chapterTitle(i18n, chapterId) {
+    if (!chapterId || !i18n?.t) return "";
+    const title = i18n.t(`chapters.${chapterId}`);
+    return title && title !== `chapters.${chapterId}` ? title : "";
+  }
+
+  function labTitle(i18n, labId) {
+    if (!labId || !i18n?.t) return "";
+    const title = i18n.t(`labs.${labId}.title`);
+    return title && title !== `labs.${labId}.title` ? title : "";
+  }
+
+  function nextIncompleteLab() {
+    const labs = window.ReanGitCatalog?.getLabs?.() || [];
+    return labs.find((lab) => !window.ReanGitUtil?.isLabComplete?.(lab.id)) || null;
+  }
+
+  function hasLearnerProgress(catalogLabs, chapters) {
+    const completedLabs =
+      window.ReanGitUtil?.completedLabCount?.(catalogLabs.map((lab) => lab.id)) || 0;
+    const completedChapters =
+      window.ReanGitUtil?.completedChapterCount?.(chapters) || 0;
+    return Boolean(
+      readStorage(LAST_CHAPTER_KEY) ||
+        readStorage(LAST_LAB_KEY) ||
+        completedLabs ||
+        completedChapters
+    );
+  }
+
   function paintHomeResume() {
     const i18n = window.ReanGitI18n;
     const learnBtn = document.querySelector("[data-home-learn]");
@@ -78,14 +108,19 @@
     const labBtn = document.querySelector("[data-home-lab-continue]");
     if (!learnBtn) return;
 
-    const chapterId = readStorage(LAST_CHAPTER_KEY);
-    const chapterTitle = chapterId ? i18n?.t?.(`chapters.${chapterId}`) : "";
-    const hasChapter = Boolean(chapterTitle && chapterTitle !== `chapters.${chapterId}`);
+    const chapters = Object.keys(i18n?.getDict?.()?.chapters || {});
+    const catalogLabs = window.ReanGitCatalog?.getLabs?.() || [];
+    const resumed = hasLearnerProgress(catalogLabs, chapters);
+    const nextLab = resumed ? nextIncompleteLab() : null;
+    const sessionChapterId = nextLab?.chapter || readStorage(LAST_CHAPTER_KEY);
+    const sessionLabId = nextLab?.id || readStorage(LAST_LAB_KEY);
+    const sessionChapterName = chapterTitle(i18n, sessionChapterId);
+    const sessionLabName = labTitle(i18n, sessionLabId);
 
-    if (hasChapter) {
-      learnBtn.href = `./learn.html?c=${encodeURIComponent(chapterId)}`;
+    if (sessionChapterName) {
+      learnBtn.href = `./learn.html?c=${encodeURIComponent(sessionChapterId)}`;
       learnBtn.removeAttribute("data-i18n");
-      learnBtn.textContent = i18n.t("home.continueChapter", { title: chapterTitle });
+      learnBtn.textContent = i18n.t("home.continueChapter", { title: sessionChapterName });
     } else {
       learnBtn.href = "./learn.html";
       learnBtn.setAttribute("data-i18n", "home.startLearning");
@@ -93,19 +128,59 @@
     }
 
     if (!labBtn) return;
-    const labId = readStorage(LAST_LAB_KEY);
-    const labTitle = labId ? i18n?.t?.(`labs.${labId}.title`) : "";
-    const hasLab = Boolean(labTitle && labTitle !== `labs.${labId}.title`);
-    if (hasLab) {
+    if (sessionLabName) {
       labBtn.hidden = false;
-      labBtn.href = `./lab.html?id=${encodeURIComponent(labId)}`;
-      labBtn.textContent = i18n.t("home.continueLab", { title: labTitle });
+      labBtn.href = `./lab.html?id=${encodeURIComponent(sessionLabId)}`;
+      labBtn.textContent = i18n.t("home.continueLab", { title: sessionLabName });
       if (openLabsBtn) openLabsBtn.hidden = true;
     } else {
       labBtn.hidden = true;
       labBtn.removeAttribute("href");
       if (openLabsBtn) openLabsBtn.hidden = false;
     }
+  }
+
+  function paintHomeContinuePath(pathComplete) {
+    const card = document.querySelector("[data-home-continue-path]");
+    const summary = document.querySelector("[data-home-continue-summary]");
+    const chapterBtn = document.querySelector("[data-home-continue-chapter]");
+    const labBtn = document.querySelector("[data-home-continue-lab]");
+    if (!card || !summary || !chapterBtn || !labBtn) return;
+
+    if (pathComplete) {
+      card.hidden = true;
+      return;
+    }
+
+    const i18n = window.ReanGitI18n;
+    const nextLab = nextIncompleteLab();
+    if (!nextLab) {
+      card.hidden = true;
+      return;
+    }
+
+    const labName = labTitle(i18n, nextLab.id) || nextLab.id;
+    const chapterId = nextLab.chapter;
+    const chapterName = chapterTitle(i18n, chapterId);
+
+    card.hidden = false;
+    if (chapterName) {
+      summary.textContent = i18n.t("home.sessionSummary", {
+        chapter: chapterName,
+        lab: labName,
+      });
+      chapterBtn.hidden = false;
+      chapterBtn.href = `./learn.html?c=${encodeURIComponent(chapterId)}`;
+      chapterBtn.textContent = i18n.t("home.sessionChapter", { title: chapterName });
+    } else {
+      summary.textContent = i18n.t("home.nextLab", { title: labName });
+      chapterBtn.hidden = true;
+      chapterBtn.removeAttribute("href");
+    }
+
+    labBtn.hidden = false;
+    labBtn.href = `./lab.html?id=${encodeURIComponent(nextLab.id)}`;
+    labBtn.textContent = i18n.t("home.sessionLab", { title: labName });
   }
 
   function paintHomeProgress() {
@@ -132,11 +207,13 @@
 
     if (!chapterIndex && !labIndex && !completedLabs && !completedChapters) {
       panel.hidden = true;
+      paintHomeContinuePath(false);
       return;
     }
 
     panel.hidden = false;
     panel.classList.toggle("is-path-complete", pathComplete);
+    paintHomeContinuePath(pathComplete);
 
     const eyebrow = document.querySelector("[data-home-progress-eyebrow]");
     const title = document.querySelector("[data-home-progress-title]");
