@@ -137,6 +137,9 @@
       <button type="button" class="btn btn-primary" data-progress-backup-export>${util.escapeHtml(
         i18n?.t?.("home.backupExport") || "Export backup"
       )}</button>
+      <button type="button" class="btn btn-ghost" data-progress-backup-import>${util.escapeHtml(
+        i18n?.t?.("home.backupImport") || "Import backup"
+      )}</button>
       <button type="button" class="btn btn-ghost" data-progress-backup-dismiss>${util.escapeHtml(
         i18n?.t?.("home.backupDismiss") || "Not now"
       )}</button>
@@ -145,6 +148,32 @@
     toast.querySelector("[data-progress-backup-export]")?.addEventListener("click", () => {
       util.downloadProgressExport();
       dismissProgressBackupToast();
+    });
+    toast.querySelector("[data-progress-backup-import]")?.addEventListener("click", () => {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "application/json,.json";
+      input.hidden = true;
+      document.body.appendChild(input);
+      input.addEventListener("change", async () => {
+        const file = input.files && input.files[0];
+        input.remove();
+        if (!file) return;
+        const message =
+          i18n?.t?.("home.importConfirm") ||
+          "Replace progress on this device with the imported file?";
+        if (!window.confirm(message)) return;
+        try {
+          const text = await file.text();
+          const payload = JSON.parse(text);
+          util.importProgress?.(payload);
+          dismissProgressBackupToast();
+          window.location.reload();
+        } catch {
+          window.alert(i18n?.t?.("home.importFailed") || "Could not import that progress file.");
+        }
+      });
+      input.click();
     });
     toast.querySelector("[data-progress-backup-dismiss]")?.addEventListener("click", () => {
       util.markProgressBackupNudge("dismissed");

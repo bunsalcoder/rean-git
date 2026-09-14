@@ -6,11 +6,35 @@
   const CHECKLIST_PREFIX = "rean-git:checklist:";
   const PROGRESS_BACKUP_NUDGE_KEY = "rean-git:progress-backup-nudge";
   const CLONE_COMMAND = "git clone https://github.com/bunsalcoder/rean-git.git\ncd rean-git";
+  const CODESPACES_REPO = "https://codespaces.new/bunsalcoder/rean-git";
 
   function escapeHtml(text) {
     return String(text).replace(/[&<>"']/g, (c) =>
       ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
     );
+  }
+
+  function escapeRegExp(text) {
+    return String(text).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  function codespacesLabUrl(labId) {
+    const id = String(labId || "").trim();
+    if (!id) return `${CODESPACES_REPO}?quickstart=1`;
+    return `${CODESPACES_REPO}/tree/main/labs/${encodeURIComponent(id)}?quickstart=1`;
+  }
+
+  /** True when pasted ./verify.sh output looks like a green run for this lab. */
+  function looksLikePassedVerify(output, labId) {
+    const text = String(output || "");
+    const id = String(labId || "").trim();
+    if (!id || !text.trim()) return false;
+    if (/check\(s\) failed/i.test(text)) return false;
+    const passed = new RegExp(
+      `All\\s+\\d+\\s+checks?\\s+passed\\s+for\\s+${escapeRegExp(id)}\\b`,
+      "i"
+    );
+    return passed.test(text);
   }
 
   function readJson(key, fallback) {
@@ -318,6 +342,9 @@
     LAST_CHAPTER_KEY,
     LAST_LAB_KEY,
     CLONE_COMMAND,
+    CODESPACES_REPO,
+    codespacesLabUrl,
+    looksLikePassedVerify,
     readStorageItem,
     writeStorageItem,
     migrateLabIds,

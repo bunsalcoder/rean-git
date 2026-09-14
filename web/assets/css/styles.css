@@ -2433,6 +2433,92 @@ html.theme-animate body *::after {
   gap: 0.45rem;
 }
 
+.lab-verify-scope {
+  margin: 0 0 0.75rem;
+  font-size: 0.88rem;
+  font-weight: 650;
+  color: var(--ink-soft);
+}
+
+.lab-practice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0.75rem;
+  margin: 0 0 0.85rem;
+}
+
+.lab-practice-hint {
+  flex: 1 1 12rem;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+
+.lab-verify-paste {
+  margin: 0.85rem 0 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.lab-verify-paste-label {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.lab-verify-output {
+  width: 100%;
+  min-height: 6.5rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--accent-border);
+  border-radius: 0.5rem;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.lab-verify-output:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.lab-verify-status {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.lab-verify-status.is-ok {
+  color: var(--ink);
+}
+
+.lab-verify-status.is-bad {
+  color: var(--danger, #b42318);
+}
+
+.lab-verify-manual-confirm {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  margin: 0.75rem 0 0;
+  font-size: 0.92rem;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.lab-verify-manual-confirm input {
+  margin-top: 0.2rem;
+  flex: 0 0 auto;
+}
+
+.lab-verify-actions .btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .lab-verify-manual {
   margin: 0.85rem 0 0;
   font-size: 0.92rem;

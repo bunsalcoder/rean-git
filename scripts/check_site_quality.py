@@ -566,6 +566,8 @@ def check_shared_runtime() -> int:
         msgs.append("util.js must export and import learning progress")
     if "shouldPromptProgressBackup" not in util_text or "downloadProgressExport" not in util_text:
         msgs.append("util.js must prompt for and download progress backups")
+    if "looksLikePassedVerify" not in util_text or "codespacesLabUrl" not in util_text:
+        msgs.append("util.js must validate verify output and build Codespaces lab URLs")
     if "parseGuideChapters" not in util_text:
         msgs.append("util.js must parse handbook chapters for search")
     if "LAST_CHAPTER_KEY" not in util_text or "CLONE_COMMAND" not in util_text:
@@ -580,6 +582,8 @@ def check_shared_runtime() -> int:
         msgs.append("learn.js must show the lab verify.sh hint")
     if "data-verify-passed" not in learn_js or "markLabChecklistsDone" not in learn_js:
         msgs.append("learn.js must bridge verify success to checklist completion")
+    if "data-verify-output" not in learn_js or "looksLikePassedVerify" not in learn_js:
+        msgs.append("learn.js must require pasted verify output before marking labs done")
     if "paintLabNavCompletion" not in learn_js:
         msgs.append("learn.js must mark completed labs in the sidebar")
     if "paintChapterNavCompletion" not in learn_js or "data-mark-done" not in learn_js:

@@ -1,4 +1,5 @@
 /* Chapter & lab markdown reader — rean-git */
+(() => {
 function t(key, vars) {
   return window.ReanGitI18n?.t?.(key, vars) ?? key;
 }
@@ -245,12 +246,49 @@ function markLabChecklistsDone() {
   return true;
 }
 
+function syncVerifyMarkReady(wrap, labId) {
+  if (!wrap || !labId) return false;
+  const lab = getLabs().find((item) => item.id === labId);
+  const markBtn = wrap.querySelector("[data-verify-passed]");
+  const paste = wrap.querySelector("[data-verify-output]");
+  const status = wrap.querySelector("[data-verify-status]");
+  const manualBox = wrap.querySelector("[data-verify-manual-confirm]");
+  const output = paste?.value || "";
+  const passed = Boolean(window.ReanGitUtil?.looksLikePassedVerify?.(output, labId));
+  const manualOk = !lab?.verifyManual || Boolean(manualBox?.checked);
+
+  if (status) {
+    if (!output.trim()) {
+      status.hidden = true;
+      status.textContent = "";
+      status.className = "lab-verify-status";
+    } else if (passed) {
+      status.hidden = false;
+      status.className = "lab-verify-status is-ok";
+      status.textContent = t("lab.verifyOutputOk");
+    } else {
+      status.hidden = false;
+      status.className = "lab-verify-status is-bad";
+      status.textContent = t("lab.verifyOutputBad");
+    }
+  }
+
+  if (markBtn) {
+    const ready = passed && manualOk;
+    markBtn.disabled = !ready;
+    markBtn.setAttribute("aria-disabled", ready ? "false" : "true");
+  }
+  return passed && manualOk;
+}
+
 function paintVerifyFollowUp(wrap, labId) {
   if (!wrap || !labId) return;
   const done = Boolean(window.ReanGitUtil?.isLabComplete?.(labId));
   const passCopy = wrap.querySelector(".lab-verify-pass");
   const actions = wrap.querySelector(".lab-verify-actions");
   const markBtn = wrap.querySelector("[data-verify-passed]");
+  const pasteBlock = wrap.querySelector("[data-verify-paste]");
+  const practice = wrap.querySelector("[data-lab-practice]");
   let nextWrap = wrap.querySelector("[data-verify-next]");
 
   if (!done) {
@@ -259,7 +297,10 @@ function paintVerifyFollowUp(wrap, labId) {
       passCopy.textContent = t("lab.verifyPass");
     }
     if (markBtn) markBtn.hidden = false;
+    if (pasteBlock) pasteBlock.hidden = false;
+    if (practice) practice.hidden = false;
     if (nextWrap) nextWrap.hidden = true;
+    syncVerifyMarkReady(wrap, labId);
     return;
   }
 
@@ -268,6 +309,8 @@ function paintVerifyFollowUp(wrap, labId) {
     passCopy.textContent = t("lab.verifyDone");
   }
   if (markBtn) markBtn.hidden = true;
+  if (pasteBlock) pasteBlock.hidden = true;
+  if (practice) practice.hidden = true;
 
   if (!nextWrap) {
     nextWrap = document.createElement("div");
@@ -317,23 +360,60 @@ function appendVerifyHint(target, labId) {
   const lab = getLabs().find((item) => item.id === labId);
   const wrap = document.createElement("aside");
   wrap.className = "lab-verify";
+  const codespacesUrl =
+    window.ReanGitUtil?.codespacesLabUrl?.(labId) ||
+    `https://codespaces.new/bunsalcoder/rean-git/tree/main/labs/${encodeURIComponent(labId)}?quickstart=1`;
+  const scopeLabel = lab?.verifyManual ? t("lab.verifyScopeMixed") : t("lab.verifyScopeLocal");
   const manualNote = lab?.verifyManual
-    ? `<p class="lab-verify-manual">${escapeHtml(t("lab.verifyManualNote"))}</p>`
+    ? `<p class="lab-verify-manual">${escapeHtml(t("lab.verifyManualNote"))}</p>
+    <label class="lab-verify-manual-confirm">
+      <input type="checkbox" data-verify-manual-confirm />
+      <span>${escapeHtml(t("lab.verifyManualConfirm"))}</span>
+    </label>`
     : "";
   wrap.innerHTML = `
     <p class="lab-verify-title">${escapeHtml(t("lab.verifyTitle"))}</p>
+    <p class="lab-verify-scope">${escapeHtml(scopeLabel)}</p>
+    <p class="lab-practice" data-lab-practice>
+      <a class="btn btn-ghost" href="${escapeHtml(codespacesUrl)}" target="_blank" rel="noopener noreferrer" data-codespaces-lab>${escapeHtml(
+        t("lab.openCodespaces")
+      )}</a>
+      <span class="lab-practice-hint">${escapeHtml(t("lab.codespacesHint"))}</span>
+    </p>
     <p>${escapeHtml(t("lab.verifyBody"))}</p>
     <pre><code>cd labs/${escapeHtml(labId)}
 ./verify.sh</code></pre>
+    <div class="lab-verify-paste" data-verify-paste>
+      <label class="lab-verify-paste-label" for="verify-output-${escapeHtml(labId)}">${escapeHtml(
+        t("lab.verifyPasteLabel")
+      )}</label>
+      <textarea
+        id="verify-output-${escapeHtml(labId)}"
+        class="lab-verify-output"
+        data-verify-output
+        rows="5"
+        spellcheck="false"
+        autocomplete="off"
+        placeholder="${escapeHtml(t("lab.verifyPastePlaceholder"))}"
+      ></textarea>
+      <p class="lab-verify-status" data-verify-status hidden></p>
+    </div>
     <p class="lab-verify-pass">${escapeHtml(t("lab.verifyPass"))}</p>
-    <p class="lab-verify-actions">
-      <button type="button" class="btn btn-primary" data-verify-passed>${escapeHtml(t("lab.verifyPassed"))}</button>
-    </p>
     ${manualNote}
+    <p class="lab-verify-actions">
+      <button type="button" class="btn btn-primary" data-verify-passed disabled aria-disabled="true">${escapeHtml(
+        t("lab.verifyPassed")
+      )}</button>
+    </p>
   `;
   target.appendChild(wrap);
   enhanceCodeBlocks(wrap);
+
+  const refresh = () => syncVerifyMarkReady(wrap, labId);
+  wrap.querySelector("[data-verify-output]")?.addEventListener("input", refresh);
+  wrap.querySelector("[data-verify-manual-confirm]")?.addEventListener("change", refresh);
   wrap.querySelector("[data-verify-passed]")?.addEventListener("click", () => {
+    if (!syncVerifyMarkReady(wrap, labId)) return;
     markLabChecklistsDone();
     paintVerifyFollowUp(wrap, labId);
   });
@@ -1148,4 +1228,5 @@ async function initLabPage(signal, { animate = true } = {}) {
   } else {
     start();
   }
+})();
 })();
