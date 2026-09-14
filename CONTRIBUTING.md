@@ -12,6 +12,27 @@ Handbook and labs are the product. Edit those first, then keep the site copies, 
 
 Lab folder IDs are **`NN-slug`** where `NN` is the zero-padded catalog index (`00`, `01`, …). Catalog order, folder name, locale keys, and fixture scripts must all use the same id. When renaming a lab, keep the old id in `labIdAliases` so bookmarks and saved progress still resolve.
 
+### Add a new lab (checklist)
+
+1. Create `labs/<id>/` with `README.md` and `verify.sh` (use `scripts/lab_verify_lib.sh`).
+2. Add the lab to `web/data/labs.json` (`id`, `level`, `chapter`, and `verifyManual: true` only if GitHub browser steps cannot be checked offline).
+3. Add locale keys in both `web/locales/en.json` and `web/locales/km.json`:
+   `labs.<id>.title`, `teaser`, `summary`.
+4. Prefer a fixture builder at `scripts/lab_fixtures/<id>.sh` so CI can run `./verify.sh` offline.
+5. Sync English site copies, scaffold Khmer structure, then refresh site meta:
+
+```bash
+./scripts/sync_en_content.sh
+./scripts/sync_km_structure.sh
+# translate web/content/km/labs/<id>.md (and any new guide stubs)
+python3 scripts/check_km_content_sync.py --write-prose-baseline
+npm run sync:site-meta
+npm run check:fast
+./scripts/run_lab_verifier_fixtures.sh --only <id>
+```
+
+6. Confirm the lab appears on Home / Labs / the reader, and that `./verify.sh` output ends with `All N checks passed for <id>.` (the site gates “mark done” on that line).
+
 After English edits:
 
 ```bash
@@ -78,13 +99,14 @@ If a Khmer file is missing, the site falls back to English. CI still requires th
 npm run check:fast                      # content + site quality (skip lab fixtures)
 npm run check                           # check:fast + lab verifier fixtures
 npm run sync:site-meta                  # sitemap + content precache + SW cache token
+npm run test:unit                       # fast Node tests (verify paste, handbook parse)
 npm run test:e2e                        # optional; Playwright smoke tests
 npm run dev                             # preview site at http://localhost:4173
 ```
 
-CI also runs a **secret scan** (Gitleaks) on every push and PR.
+Checks and sync scripts need **Python 3** on your PATH (`python3`). CI also runs a **secret scan** (Gitleaks) on every push and PR.
 
-CI runs the content checks, lab verifier fixtures, and Playwright on pushes and PRs to `main` and `develop`.
+CI runs the content checks, lab verifier fixtures, unit tests, and Playwright on pushes and PRs to `main` and `develop`.
 
 ## Lab self-check
 

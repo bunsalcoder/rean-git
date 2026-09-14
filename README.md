@@ -10,6 +10,8 @@ A guided path from absolute beginner through advanced Git: everyday workflow, po
 
 ## Open the site locally
 
+Requires **Python 3** (local preview + `scripts/*.py` checks), **Bash**, and **Git**. Node.js 20+ is only needed for Playwright (`npm run test:e2e`) and the small unit suite (`npm run test:unit`).
+
 ```bash
 cd web
 python3 -m http.server 4173
@@ -45,6 +47,7 @@ Edit `docs/GIT_FROM_ZERO.md` and the lab `README.md` files, then sync into `web/
 npm run check:fast               # content + site quality (skip lab fixtures)
 npm run check                    # check:fast + lab verifier fixtures
 npm run sync:site-meta           # sitemap + content precache + SW cache token
+npm run test:unit                # fast Node tests for progress / verify helpers
 npm run dev                      # preview at http://localhost:4173
 ```
 
