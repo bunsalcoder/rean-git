@@ -349,10 +349,16 @@
 
   function paintFirstLabCta() {
     const link = document.querySelector("[data-home-first-lab]");
-    if (!link) return;
+    const codespaces = document.querySelector("[data-codespaces-home]");
     const i18n = window.ReanGitI18n;
     const labs = window.ReanGitCatalog?.getLabs?.() || [];
     const next = labs.find((lab) => !window.ReanGitUtil?.isLabComplete?.(lab.id));
+    if (codespaces) {
+      codespaces.href =
+        window.ReanGitUtil?.codespacesLabUrl?.(next?.id || labs[0]?.id) ||
+        "https://codespaces.new/bunsalcoder/rean-git?quickstart=1";
+    }
+    if (!link) return;
     if (!next) {
       link.hidden = true;
       return;

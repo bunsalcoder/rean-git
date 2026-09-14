@@ -109,12 +109,21 @@ test("lab page offers a verify.sh self-check", async ({ page }) => {
   await page.goto("/lab.html?id=01-first-repo");
   await expect(page.locator(".lab-verify")).toBeVisible();
   await expect(page.locator(".lab-verify")).toContainText("./verify.sh");
-  await expect(page.locator("[data-verify-passed]")).toBeVisible();
+  await expect(page.locator("[data-verify-output]")).toBeVisible();
+  await expect(page.locator("[data-verify-passed]")).toBeDisabled();
   await expect(page.locator(".lab-verify-manual")).toHaveCount(0);
+  await expect(page.locator("[data-codespaces-lab]")).toHaveAttribute(
+    "href",
+    /codespaces\.new\/bunsalcoder\/rean-git\/tree\/main\/labs\/01-first-repo/
+  );
 });
 
 test("passing verify marks the lab done and offers the next lab", async ({ page }) => {
   await page.goto("/lab.html?id=01-first-repo");
+  await page.locator("[data-verify-output]").fill(
+    "== Lab verify: 01-first-repo ==\n  ok  playground is a git repo\n\nAll 3 checks passed for 01-first-repo.\n"
+  );
+  await expect(page.locator("[data-verify-passed]")).toBeEnabled();
   await page.locator("[data-verify-passed]").click();
   await expect(page.locator("[data-verify-passed]")).toBeHidden();
   await expect(page.locator("[data-verify-next]")).toBeVisible();
@@ -168,6 +177,14 @@ test("remote PR lab notes GitHub steps are manual", async ({ page }) => {
   await page.goto("/lab.html?id=08-remote-pr");
   await expect(page.locator(".lab-verify-manual")).toBeVisible();
   await expect(page.locator(".lab-verify-manual")).toContainText(/GitHub/i);
+  await expect(page.locator(".lab-verify-scope")).toContainText(/manual|Mixed|ចម្រុះ/i);
+  await expect(page.locator("[data-verify-manual-confirm]")).toBeVisible();
+  await page.locator("[data-verify-output]").fill(
+    "== Lab verify: 08-remote-pr ==\n\nAll 7 checks passed for 08-remote-pr.\n"
+  );
+  await expect(page.locator("[data-verify-passed]")).toBeDisabled();
+  await page.locator("[data-verify-manual-confirm]").check();
+  await expect(page.locator("[data-verify-passed]")).toBeEnabled();
 });
 
 test("home shows completed lab count from local progress", async ({ page }) => {
@@ -199,6 +216,7 @@ test("home nudges export after the first completed lab", async ({ page }) => {
   const toast = page.locator("[data-progress-backup]");
   await expect(toast).toBeVisible();
   await expect(toast).toContainText(/Export|backup|device/i);
+  await expect(page.locator("[data-progress-backup-import]")).toBeVisible();
   await page.locator("[data-progress-backup-dismiss]").click();
   await expect(toast).toHaveCount(0);
   await page.reload();
@@ -347,9 +365,13 @@ test("home asks visitors to clone the repo", async ({ page }) => {
 
 test("home offers Codespaces for zero-setup practice", async ({ page }) => {
   await page.goto("/");
-  const link = page.locator('a[href*="codespaces.new/bunsalcoder/rean-git"]');
+  const link = page.locator("[data-codespaces-home]");
   await expect(link).toBeVisible();
   await expect(link).toHaveClass(/btn-primary/);
+  await expect(link).toHaveAttribute(
+    "href",
+    /codespaces\.new\/bunsalcoder\/rean-git\/tree\/main\/labs\/00-install-config/
+  );
   await expect(page.locator("[data-clone-cta] h2")).toContainText(/Codespaces/i);
 });
 
