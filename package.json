@@ -6,6 +6,7 @@
     "check:fast": "./scripts/check_content_sync.sh && ./scripts/check_km_content_sync.sh && ./scripts/check_site_quality.sh",
     "check": "npm run check:fast && ./scripts/run_lab_verifier_fixtures.sh",
     "sync:site-meta": "python3 scripts/check_site_quality.py --write-site-meta",
+    "test:unit": "node --test tests/unit/*.test.js",
     "test:e2e": "playwright test",
     "test:e2e:install": "playwright install chromium"
   },
