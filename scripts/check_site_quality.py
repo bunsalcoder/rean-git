@@ -784,6 +784,113 @@ def check_lab_verifiers(labs: list[str]) -> int:
     return fail(msgs, "lab verify scripts")
 
 
+CHROME_PARTIALS = ROOT / "scripts" / "chrome_partials"
+CHROME_PAGES = {
+    "index.html": {"nav": "home", "logo_href": "./"},
+    "learn.html": {"nav": "learn", "logo_href": "./index.html"},
+    "labs.html": {"nav": "labs", "logo_href": "./index.html"},
+    "lab.html": {"nav": "labs", "logo_href": "./index.html"},
+    "404.html": {"nav": None, "logo_href": "./"},
+}
+CHROME_REGION_RE = re.compile(
+    r"([ \t]*<!-- rean:chrome:([a-z0-9-]+) -->\n)(.*?)(\n[ \t]*<!-- /rean:chrome:\2 -->)",
+    re.S,
+)
+
+
+def _indent_chrome(text: str, indent: str = "    ") -> str:
+    lines = text.strip("\n").split("\n")
+    return "\n".join(f"{indent}{line}" if line else "" for line in lines)
+
+
+def _nav_current_attr(current: str | None, name: str) -> str:
+    return ' aria-current="page"' if current == name else ""
+
+
+def render_chrome_region(name: str, page: str, cheat_sheet: str) -> str:
+    cfg = CHROME_PAGES[page]
+    if name == "head-assets":
+        raw = (CHROME_PARTIALS / "head-assets.html").read_text(encoding="utf-8")
+        return _indent_chrome(raw)
+    if name == "header":
+        raw = (CHROME_PARTIALS / "header.html").read_text(encoding="utf-8")
+        rendered = (
+            raw.replace("{{LOGO_HREF}}", cfg["logo_href"])
+            .replace("{{NAV_HOME}}", _nav_current_attr(cfg["nav"], "home"))
+            .replace("{{NAV_LEARN}}", _nav_current_attr(cfg["nav"], "learn"))
+            .replace("{{NAV_LABS}}", _nav_current_attr(cfg["nav"], "labs"))
+            .replace(
+                "{{CHEAT_SHEET_HREF}}",
+                f"./learn.html?c={cheat_sheet}",
+            )
+        )
+        return _indent_chrome(rendered)
+    raise SystemExit(f"unknown chrome region: {name}")
+
+
+def apply_chrome_regions(html: str, page: str, cheat_sheet: str) -> str:
+    found: set[str] = set()
+
+    def repl(match: re.Match[str]) -> str:
+        name = match.group(2)
+        found.add(name)
+        body = render_chrome_region(name, page, cheat_sheet)
+        return f"{match.group(1)}{body}{match.group(4)}"
+
+    updated = CHROME_REGION_RE.sub(repl, html)
+    missing = {"head-assets", "header"} - found
+    if missing:
+        raise SystemExit(f"{page}: missing chrome markers for {', '.join(sorted(missing))}")
+    return updated
+
+
+def write_chrome(cheat_sheet: str) -> None:
+    if not CHROME_PARTIALS.is_dir():
+        raise SystemExit(f"missing chrome partials at {CHROME_PARTIALS}")
+    for page in CHROME_PAGES:
+        path = WEB / page
+        if not path.is_file():
+            raise SystemExit(f"missing {path.relative_to(ROOT)}")
+        original = path.read_text(encoding="utf-8")
+        updated = apply_chrome_regions(original, page, cheat_sheet)
+        if updated != original:
+            path.write_text(updated, encoding="utf-8")
+            print(f"Wrote chrome regions in {path.relative_to(ROOT)}")
+        else:
+            print(f"Chrome already current: {path.relative_to(ROOT)}")
+
+
+def check_chrome(cheat_sheet: str) -> int:
+    msgs: list[str] = []
+    if not CHROME_PARTIALS.is_dir():
+        return fail(["missing scripts/chrome_partials/"], "shared HTML chrome")
+    for partial in ("head-assets.html", "header.html"):
+        if not (CHROME_PARTIALS / partial).is_file():
+            msgs.append(f"missing scripts/chrome_partials/{partial}")
+    if msgs:
+        return fail(msgs, "shared HTML chrome")
+
+    for page in CHROME_PAGES:
+        path = WEB / page
+        if not path.is_file():
+            msgs.append(f"missing web/{page}")
+            continue
+        text = path.read_text(encoding="utf-8")
+        if "<!-- rean:chrome:head-assets -->" not in text or "<!-- rean:chrome:header -->" not in text:
+            msgs.append(
+                f"{page}: missing rean:chrome markers — run: "
+                "python3 scripts/check_site_quality.py --write-chrome"
+            )
+            continue
+        expected = apply_chrome_regions(text, page, cheat_sheet)
+        if text != expected:
+            msgs.append(
+                f"{page}: shared chrome drifted from scripts/chrome_partials/ — run: "
+                "python3 scripts/check_site_quality.py --write-chrome"
+            )
+    return fail(msgs, "shared HTML chrome")
+
+
 def write_sitemap(chapters: list[str], labs: list[str]) -> None:
     path = WEB / "sitemap.xml"
     path.write_text(build_sitemap(chapters, labs), encoding="utf-8")
@@ -903,8 +1010,11 @@ def main() -> int:
     write_sitemap_mode = "--write-sitemap" in sys.argv
     write_precache_mode = "--write-content-precache" in sys.argv
     write_sw_cache_mode = "--write-sw-cache" in sys.argv
+    write_chrome_mode = "--write-chrome" in sys.argv
     chapters, labs, cheat_sheet = parse_curriculum()
-    if write_sitemap_mode or write_precache_mode or write_sw_cache_mode:
+    if write_chrome_mode or write_sitemap_mode or write_precache_mode or write_sw_cache_mode:
+        if write_chrome_mode:
+            write_chrome(cheat_sheet)
         if write_sitemap_mode:
             write_sitemap(chapters, labs)
         if write_precache_mode:
@@ -914,6 +1024,7 @@ def main() -> int:
         return 0
 
     if "--write-site-meta" in sys.argv:
+        write_chrome(cheat_sheet)
         write_sitemap(chapters, labs)
         write_content_precache(labs)
         write_sw_cache()
@@ -933,6 +1044,8 @@ def main() -> int:
     failures += check_markdown_links(labs)
     print()
     failures += check_html_assets(labs)
+    print()
+    failures += check_chrome(cheat_sheet)
     print()
     failures += check_seo(chapters, labs)
     print()
