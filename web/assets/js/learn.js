@@ -344,8 +344,10 @@ function paintVerifyFollowUp(wrap, labId) {
       }
     }
   } else {
+    const cheatHref =
+      window.ReanGitCatalog?.cheatSheetHref?.() || "./learn.html?c=26";
     parts.push(
-      `<p class="lab-verify-next-actions"><a class="btn btn-primary" href="./learn.html?c=26">${escapeHtml(
+      `<p class="lab-verify-next-actions"><a class="btn btn-primary" href="${cheatHref}" data-cheat-sheet>${escapeHtml(
         t("home.pathCompleteCheatSheet")
       )}</a></p>`
     );

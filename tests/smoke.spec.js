@@ -499,10 +499,12 @@ test("404 page is served for the dedicated not-found document", async ({ page })
 });
 
 test("cheat sheet nav uses the catalog chapter id", async ({ page }) => {
+  const catalog = require("../web/data/labs.json");
+  const chapter = catalog.cheatSheetChapter;
   await page.goto("/");
   await expect(page.locator("[data-cheat-sheet]").first()).toHaveAttribute(
     "href",
-    /learn\.html\?c=26/
+    new RegExp(`learn\\.html\\?c=${chapter}$`)
   );
 });
 
@@ -526,6 +528,7 @@ test("reset progress clears completed labs on home", async ({ page }) => {
 test("home celebrates when every lab is complete", async ({ page }) => {
   const labs = require("../web/data/labs.json");
   const labIds = (labs.labs || []).map((lab) => lab.id);
+  const chapter = labs.cheatSheetChapter;
   await page.addInitScript((ids) => {
     const progress = {};
     for (const id of ids) {
@@ -543,7 +546,9 @@ test("home celebrates when every lab is complete", async ({ page }) => {
   );
   await expect(page.locator("[data-home-path-complete-actions]")).toBeVisible();
   await expect(
-    page.locator('[data-home-path-complete-actions] a[href*="c=26"]')
+    page.locator(
+      `[data-home-path-complete-actions] a[data-cheat-sheet][href*="c=${chapter}"]`
+    )
   ).toBeVisible();
 });
 
