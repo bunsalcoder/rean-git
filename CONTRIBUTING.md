@@ -52,7 +52,7 @@ If you add or remove a chapter or lab:
 npm run sync:site-meta
 ```
 
-That runs `--write-sitemap`, `--write-content-precache`, and `--write-sw-cache` together.
+That runs `--write-chrome`, `--write-sitemap`, `--write-content-precache`, and `--write-sw-cache` together.
 
 Chapter IDs come from handbook headings (`## How to use this guide` and `## N. …`). You do not need to list them in JavaScript.
 
@@ -98,7 +98,7 @@ If a Khmer file is missing, the site falls back to English. CI still requires th
 ./scripts/run_lab_verifier_fixtures.sh  # build fixture playgrounds + run verify.sh
 npm run check:fast                      # content + site quality (skip lab fixtures)
 npm run check                           # check:fast + lab verifier fixtures
-npm run sync:site-meta                  # sitemap + content precache + SW cache token
+npm run sync:site-meta                  # shared chrome + sitemap + precache + SW cache token
 npm run test:unit                       # fast Node tests (verify paste, handbook parse)
 npm run test:e2e                        # optional; Playwright smoke tests
 npm run dev                             # preview site at http://localhost:4173
@@ -144,6 +144,8 @@ CI fails if `CACHE` in `web/sw.js` is stale relative to those files (and `conten
 ## Site UI
 
 Strings in `web/locales/*.json` cover chrome (nav, buttons, search). Keep `en.json` and `km.json` on the same keys.
+
+Shared head assets and the site header live in `scripts/chrome_partials/`. Edit those partials, then run `npm run sync:site-meta` (or `python3 scripts/check_site_quality.py --write-chrome`) so `web/*.html` stay in sync. Do not hand-edit the `<!-- rean:chrome:* -->` regions.
 
 Preview:
 
