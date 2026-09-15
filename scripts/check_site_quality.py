@@ -383,6 +383,14 @@ def check_html_assets(labs: list[str]) -> int:
             msgs.append(f"{name}: missing {marker} catalog mount point")
         if "catalog.js" not in text:
             msgs.append(f"{name}: missing catalog.js")
+        if name == "index.html" and not re.search(
+            r'data-cheat-sheet[^>]*data-i18n="home\.pathCompleteCheatSheet"|'
+            r'data-i18n="home\.pathCompleteCheatSheet"[^>]*data-cheat-sheet',
+            text,
+        ):
+            msgs.append(
+                "index.html: path-complete cheat sheet CTA must use data-cheat-sheet"
+            )
 
     for name in ("learn.html", "lab.html"):
         text = (WEB / name).read_text(encoding="utf-8")
@@ -578,6 +586,8 @@ def check_shared_runtime() -> int:
     learn_js = LEARN_JS.read_text(encoding="utf-8") if LEARN_JS.is_file() else ""
     if "parseGuideChapters" not in learn_js:
         msgs.append("learn.js must use ReanGitUtil.parseGuideChapters for handbook chapters")
+    if "cheatSheetHref" not in learn_js:
+        msgs.append("learn.js must use ReanGitCatalog.cheatSheetHref for the cheat sheet CTA")
     if "appendVerifyHint" not in learn_js or "lab-verify" not in learn_js:
         msgs.append("learn.js must show the lab verify.sh hint")
     if "data-verify-passed" not in learn_js or "markLabChecklistsDone" not in learn_js:
