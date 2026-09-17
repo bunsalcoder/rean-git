@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
 
-function loadUtil() {
+function loadUtil(options = {}) {
   const store = new Map();
   const localStorage = {
     getItem(key) {
@@ -38,6 +38,7 @@ function loadUtil() {
     localStorage,
     CustomEvent,
     dispatchEvent() {},
+    ReanGitCatalog: options.catalog || undefined,
   };
 
   const context = vm.createContext({
@@ -48,7 +49,11 @@ function loadUtil() {
 
   const utilPath = path.join(__dirname, "../../web/assets/js/util.js");
   vm.runInContext(fs.readFileSync(utilPath, "utf8"), context);
-  return context.window.ReanGitUtil;
+  return {
+    util: context.window.ReanGitUtil,
+    localStorage,
+    window: context.window,
+  };
 }
 
 module.exports = { loadUtil };

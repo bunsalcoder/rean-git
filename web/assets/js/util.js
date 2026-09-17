@@ -31,7 +31,7 @@
     if (!id || !text.trim()) return false;
     if (/check\(s\) failed/i.test(text)) return false;
     const passed = new RegExp(
-      `All\\s+\\d+\\s+checks?\\s+passed\\s+for\\s+${escapeRegExp(id)}\\b`,
+      `All\\s+\\d+\\s+checks?\\s+passed\\s+for\\s+${escapeRegExp(id)}(?![\\w-])`,
       "i"
     );
     return passed.test(text);
@@ -261,7 +261,7 @@
         !relative ||
         !isPlainObject(state) ||
         relative.includes("..") ||
-        !/^[a-zA-Z0-9._/-]+$/.test(relative)
+        !/^[a-zA-Z0-9._:/-]+$/.test(relative)
       ) {
         return;
       }
@@ -304,6 +304,21 @@
         body: lines.slice(start.index + 1, end).join("\n"),
       };
     });
+  }
+
+  /** Map GitHub-style handbook heading anchors to the Learn reader. */
+  function rewriteChapterAnchors(markdown) {
+    return String(markdown || "").replace(
+      /\]\(#(\d+)(?:-[^)\s]*)?\)/g,
+      "](./learn.html?c=$1)"
+    );
+  }
+
+  /** Prefer an explicit route id, then a saved resume id, then a fallback. */
+  function resolveRouteOrResume(routedId, savedId, fallbackId) {
+    if (routedId) return { id: routedId, fromRoute: true };
+    if (savedId) return { id: savedId, fromRoute: false };
+    return { id: fallbackId || null, fromRoute: false };
   }
 
   function progressBackupNudgeState() {
@@ -359,6 +374,8 @@
     exportProgress,
     importProgress,
     parseGuideChapters,
+    rewriteChapterAnchors,
+    resolveRouteOrResume,
     progressBackupNudgeState,
     markProgressBackupNudge,
     shouldPromptProgressBackup,
