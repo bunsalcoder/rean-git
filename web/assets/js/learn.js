@@ -39,16 +39,9 @@ function labHref(id) {
   return `./lab.html?id=${encodeURIComponent(id)}`;
 }
 
-function rewriteChapterAnchors(markdown) {
-  // Handbook TOC / cross-refs use GitHub-style heading slugs; map to the reader.
-  return String(markdown || "").replace(
-    /\]\(#(\d+)(?:-[^)\s]*)?\)/g,
-    "](./learn.html?c=$1)"
-  );
-}
-
 function splitGuide(markdown) {
   const parsed = window.ReanGitUtil?.parseGuideChapters?.(markdown) || [];
+  const rewrite = window.ReanGitUtil?.rewriteChapterAnchors || ((md) => md);
   return parsed.map((chapter) => {
     const localized = t(`chapters.${chapter.id}`);
     return {
@@ -57,7 +50,7 @@ function splitGuide(markdown) {
         localized && localized !== `chapters.${chapter.id}`
           ? localized
           : chapter.title,
-      body: rewriteChapterAnchors(String(chapter.body || "").trim()),
+      body: rewrite(String(chapter.body || "").trim()),
     };
   });
 }
@@ -142,6 +135,10 @@ function writeLastLab(id) {
 }
 
 function resolveRouteOrResume(queryKey, savedId, fallbackId) {
+  const resolve = window.ReanGitUtil?.resolveRouteOrResume;
+  if (typeof resolve === "function") {
+    return resolve(getRouteId(queryKey), savedId, fallbackId);
+  }
   const routed = getRouteId(queryKey);
   if (routed) return { id: routed, fromRoute: true };
   if (savedId) return { id: savedId, fromRoute: false };
