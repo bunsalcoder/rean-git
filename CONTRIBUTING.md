@@ -22,24 +22,28 @@ Lab folder IDs are **`NN-slug`** where `NN` is the zero-padded catalog index (`0
 5. Sync English site copies, scaffold Khmer structure, then refresh site meta:
 
 ```bash
-./scripts/sync_en_content.sh
-./scripts/sync_km_structure.sh
+npm run sync
 # translate web/content/km/labs/<id>.md (and any new guide stubs)
 python3 scripts/check_km_content_sync.py --write-prose-baseline
-npm run sync:site-meta
 npm run check:fast
 ./scripts/run_lab_verifier_fixtures.sh --only <id>
 ```
 
-6. Confirm the lab appears on Home / Labs / the reader, and that `./verify.sh` output ends with `All N checks passed for <id>.` (the site gates “mark done” on that line).
+6. Confirm the lab appears on Home / Labs / the reader, and that `./verify.sh` output ends with `All N checks passed for <id>.` (the site gates “mark done” on that line — honor system; anyone can paste a matching line).
 
 After English edits:
 
 ```bash
-./scripts/sync_en_content.sh
+npm run sync:en
 ```
 
-That copies sources into `web/content/en/` and rewrites handbook lab links to `./lab.html?id=<id>`. Do not edit `web/content/en/` by hand.
+That copies sources into `web/content/en/` and rewrites handbook lab links to `./lab.html?id=<id>`. Do not edit `web/content/en/` by hand (`web/content/en/README.md` repeats this).
+
+**Optional:** install a git pre-commit hook so staged handbook/lab README changes run `sync:en` automatically:
+
+```bash
+npm run hooks:install
+```
 
 If you add or remove a chapter or lab:
 
@@ -92,12 +96,17 @@ If a Khmer file is missing, the site falls back to English. CI still requires th
 ## Checks
 
 ```bash
+npm run sync:en                         # English sources → web/content/en/
+npm run sync:km                         # scaffold Khmer structure from English
+npm run sync                            # sync:en + sync:km + sync:site-meta
+npm run hooks:install                   # optional pre-commit auto sync:en
 ./scripts/check_content_sync.sh         # English copies match sources
 ./scripts/check_km_content_sync.sh      # Khmer structure vs English + prose drift
 ./scripts/check_site_quality.sh         # locales, chapters, Khmer structure, links, SEO
 ./scripts/run_lab_verifier_fixtures.sh  # build fixture playgrounds + run verify.sh
 npm run check:fast                      # content + site quality (skip lab fixtures)
 npm run check                           # check:fast + lab verifier fixtures
+npm run lint                            # ESLint on web/assets/js + tests
 npm run sync:site-meta                  # shared chrome + sitemap + precache + SW cache token
 npm run test:unit                       # fast Node tests (verify paste, handbook parse)
 npm run test:e2e                        # optional; Playwright smoke tests
