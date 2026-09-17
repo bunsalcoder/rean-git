@@ -16,7 +16,7 @@
     "test:e2e:install": "playwright install chromium"
   },
   "devDependencies": {
-    "@playwright/test": "^1.49.1",
+    "@playwright/test": "^1.63.0",
     "eslint": "^9.21.0",
     "globals": "^15.15.0"
   }
