@@ -57,7 +57,9 @@ done
 echo
 if [[ "$fail" -ne 0 ]]; then
   echo "Content sync check failed."
-  echo "Fix drift manually, or run:  ./scripts/sync_en_content.sh"
+  echo "Do not edit web/content/en/ by hand. Refresh from sources:"
+  echo "  npm run sync:en"
+  echo "(Optional auto-sync on commit: npm run hooks:install)"
   exit 1
 fi
 

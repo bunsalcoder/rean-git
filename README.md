@@ -31,7 +31,7 @@ The site UI supports **English** and **Khmer** (header language switch). Handboo
 | `docs/GIT_FROM_ZERO.md` | Handbook (source of truth) |
 | `labs/` | Hands-on Git practice folders |
 | `web/` | Static site (GitHub Pages) |
-| `web/content/en/` | English Markdown for the site reader |
+| `web/content/en/` | **Generated** English Markdown for the site reader (do not edit by hand) |
 | `web/content/km/` | Optional Khmer Markdown (falls back to `en`) |
 | `docs/KM_GLOSSARY.md` | Shared Khmer terms for handbook, labs, and UI |
 | `web/locales/` | UI string dictionaries (`en.json`, `km.json`) |
@@ -41,11 +41,12 @@ The site UI supports **English** and **Khmer** (header language switch). Handboo
 Edit `docs/GIT_FROM_ZERO.md` and the lab `README.md` files, then sync into `web/content/en/`. See [CONTRIBUTING.md](CONTRIBUTING.md) for Khmer updates, locale keys, and the full check list.
 
 ```bash
-./scripts/sync_en_content.sh     # copy sources → web/content/en/
-./scripts/check_content_sync.sh  # fail if English copies drifted
-./scripts/check_site_quality.sh  # locale parity, chapters/labs, internal links
+npm run sync:en                  # copy sources → web/content/en/
+npm run sync                     # EN + Khmer structure + site meta
+npm run hooks:install            # optional: auto sync:en when sources are committed
 npm run check:fast               # content + site quality (skip lab fixtures)
 npm run check                    # check:fast + lab verifier fixtures
+npm run lint                     # ESLint on site JS + tests
 npm run sync:site-meta           # sitemap + content precache + SW cache token
 npm run test:unit                # fast Node tests for progress / verify helpers
 npm run dev                      # preview at http://localhost:4173
