@@ -1,4 +1,4 @@
-const CACHE = "rean-git-e6607cc18d03";
+const CACHE = "rean-git-d27dab3627ff";
 
 const PRECACHE = [
   "./",
