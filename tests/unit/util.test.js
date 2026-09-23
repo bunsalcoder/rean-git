@@ -33,7 +33,7 @@ describe("looksLikePassedVerify", () => {
     assert.equal(util.looksLikePassedVerify("", "01-first-repo"), false);
     assert.equal(util.looksLikePassedVerify(null, "01-first-repo"), false);
     assert.equal(
-      util.looksLikePassedVerify("All 3 checks passed for 02-branching.", "01-first-repo"),
+      util.looksLikePassedVerify("All 3 checks passed for 03-branching.", "01-first-repo"),
       false
     );
     assert.equal(
@@ -156,10 +156,10 @@ describe("resolveRouteOrResume", () => {
 describe("lab progress", () => {
   it("records checklist completion and counts finished labs", () => {
     util.recordLabChecklist("01-first-repo", 2, 2);
-    util.recordLabChecklist("02-branching", 1, 3);
+    util.recordLabChecklist("03-branching", 1, 3);
     assert.equal(util.isLabComplete("01-first-repo"), true);
-    assert.equal(util.isLabComplete("02-branching"), false);
-    assert.equal(util.completedLabCount(["01-first-repo", "02-branching", "03-branch-merge"]), 1);
+    assert.equal(util.isLabComplete("03-branching"), false);
+    assert.equal(util.completedLabCount(["01-first-repo", "03-branching", "04-branch-merge"]), 1);
   });
 
   it("tracks chapter completion independently", () => {
@@ -179,8 +179,8 @@ describe("lab id aliases in progress", () => {
         "00-branching": { checked: 2, total: 2, complete: true },
       })
     );
-    util.migrateLabIds((id) => (id === "00-branching" ? "02-branching" : id));
-    assert.equal(util.isLabComplete("02-branching"), true);
+    util.migrateLabIds((id) => (id === "00-branching" ? "03-branching" : id));
+    assert.equal(util.isLabComplete("03-branching"), true);
     assert.equal(util.isLabComplete("00-branching"), false);
   });
 });
@@ -216,7 +216,7 @@ describe("progress export / import", () => {
     ({ util } = loadUtil({
       catalog: {
         resolveLabId(id) {
-          return id === "00-branching" ? "02-branching" : id;
+          return id === "00-branching" ? "03-branching" : id;
         },
       },
     }));
@@ -233,9 +233,9 @@ describe("progress export / import", () => {
       },
     });
 
-    assert.equal(util.readStorageItem(util.LAST_LAB_KEY), "02-branching");
-    assert.equal(util.isLabComplete("02-branching"), true);
-    assert.equal(util.readStorageItem("rean-git:checklist:lab:02-branching"), '{"0":true}');
+    assert.equal(util.readStorageItem(util.LAST_LAB_KEY), "03-branching");
+    assert.equal(util.isLabComplete("03-branching"), true);
+    assert.equal(util.readStorageItem("rean-git:checklist:lab:03-branching"), '{"0":true}');
   });
 
   it("skips checklist keys that look like path traversal", () => {

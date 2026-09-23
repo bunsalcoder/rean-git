@@ -108,7 +108,8 @@ Git ដំណើរការដោយគ្មានអ៊ីនធឺណិត�
 ### តំណលំហាត់
 
 បន្ទាប់ពីជំពូក 3 → [ដំឡើង និង config](./lab.html?id=00-install-config)  
-បន្ទាប់ពីជំពូក 4–5 → [Repo ដំបូង](./lab.html?id=01-first-repo)
+បន្ទាប់ពីជំពូក 4 → [Repo ដំបូង](./lab.html?id=01-first-repo)  
+បន្ទាប់ពីជំពូក 5 → [Staging](./lab.html?id=02-staging)
 
 ### ពិនិត្យការយល់ដឹង
 
@@ -310,6 +311,10 @@ git show HEAD         # latest commit details
 - [ ] ខ្ញុំអាចសរសេរ commit message ដែលជួយនរណាម្នាក់ស្វែងរកប្រវត្តិក្រោយមក
 - [ ] ខ្ញុំដឹងថា `HEAD` ចង្អុលទៅអ្វី
 
+### លំហាត់
+
+អនុវត្តការដាក់ stage ជ្រើសរើស៖ **[Staging](./lab.html?id=02-staging)**
+
 ---
 
 ## 6. Branching
@@ -359,8 +364,8 @@ feat/contact-page:           D---E
 
 ### លំហាត់
 
-អនុវត្តភាពដាច់ដោយឡែកជាមុន៖ **[ការបង្កើត branch](./lab.html?id=02-branching)**។  
-បន្ទាប់មក merge ក្នុងលំហាត់ជំពូកបន្ទាប់៖ **[Branch និង merge](./lab.html?id=03-branch-merge)**។
+អនុវត្តភាពដាច់ដោយឡែកជាមុន៖ **[ការបង្កើត branch](./lab.html?id=03-branching)**។  
+បន្ទាប់មក merge ក្នុងលំហាត់ជំពូកបន្ទាប់៖ **[Branch និង merge](./lab.html?id=04-branch-merge)**។
 
 ---
 
@@ -397,7 +402,7 @@ git branch -d feat/contact-page
 
 ### លំហាត់
 
-ការអនុវត្តដូច branching: **[Branch និង merge](./lab.html?id=03-branch-merge)**
+ការអនុវត្តដូច branching: **[Branch និង merge](./lab.html?id=04-branch-merge)**
 
 ---
 
@@ -447,7 +452,7 @@ git merge --abort
 
 ### លំហាត់
 
-**[លំហាត់ 04 — Conflict](./lab.html?id=04-conflict)**
+**[លំហាត់ 04 — Conflict](./lab.html?id=05-conflict)**
 
 ---
 
@@ -489,7 +494,7 @@ Squash "oops" ចូលទៅក្នុងរឿងច្បាស់លាស
 
 ### លំហាត់
 
-**[លំហាត់ 05 — Rebase](./lab.html?id=05-rebase)**
+**[លំហាត់ 05 — Rebase](./lab.html?id=06-rebase)**
 
 ---
 
@@ -556,7 +561,7 @@ git switch -c recover HASH       # bring it back on a new branch
 
 ### លំហាត់
 
-**[លំហាត់ 06 — ត្រឡប់វិញ](./lab.html?id=06-undo)**
+**[លំហាត់ 06 — ត្រឡប់វិញ](./lab.html?id=07-undo)**
 
 ---
 
@@ -601,8 +606,8 @@ git push                  # upload your commits
 
 ### លំហាត់
 
-អនុវត្តពាក្យបញ្ជាដោយគ្មាន GitHub ជាមុន៖ **[Remote ក្នុងស្រុក](./lab.html?id=07-local-remote)**។  
-បន្ទាប់មកប្រើ repo GitHub ពិត៖ **[Remote និង PR](./lab.html?id=08-remote-pr)** (ត្រូវការគណនី GitHub)។
+អនុវត្តពាក្យបញ្ជាដោយគ្មាន GitHub ជាមុន៖ **[Remote ក្នុងស្រុក](./lab.html?id=08-local-remote)**។  
+បន្ទាប់មកប្រើ repo GitHub ពិត៖ **[Remote និង PR](./lab.html?id=09-remote-pr)** (ត្រូវការគណនី GitHub)។
 
 ---
 
@@ -644,7 +649,7 @@ git push origin --delete fix/login-redirect   # optional cleanup
 
 ### លំហាត់
 
-បញ្ចប់ការអនុវត្តពីចម្ងាយ៖ **[Remote និង PR](./lab.html?id=08-remote-pr)**
+បញ្ចប់ការអនុវត្តពីចម្ងាយ៖ **[Remote និង PR](./lab.html?id=09-remote-pr)**
 
 ---
 
@@ -692,7 +697,7 @@ git merge main                 # or: git rebase main (local only)
 
 ### លំហាត់
 
-**[លំហាត់ 09 — លំហូរការងារក្រុម](./lab.html?id=09-team-workflow)**
+**[លំហាត់ 09 — លំហូរការងារក្រុម](./lab.html?id=10-team-workflow)**
 
 ---
 
@@ -731,7 +736,7 @@ git stash show -p stash@{0}                # preview
 
 ### លំហាត់
 
-**[លំហាត់ 10 — Stash](./lab.html?id=10-stash)**
+**[លំហាត់ 10 — Stash](./lab.html?id=11-stash)**
 
 ---
 
@@ -774,7 +779,7 @@ git push origin --delete v1.0.0     # delete remote
 
 ### លំហាត់
 
-**[លំហាត់ 11 — Tags](./lab.html?id=11-tags)**
+**[លំហាត់ 11 — Tags](./lab.html?id=12-tags)**
 
 ---
 
@@ -794,7 +799,7 @@ git cherry-pick abc1234
 git push
 ```
 
-### Conflicts
+### ទំនាស់ (Conflicts)
 
 សញ្ញាសម្គាល់ដូចគ្នានឹង merge។ ជួសជុលឯកសារបន្ទាប់មក៖
 
@@ -812,7 +817,7 @@ git cherry-pick --abort
 
 ### លំហាត់
 
-**[លំហាត់ 12 — Cherry-pick](./lab.html?id=12-cherry-pick)**
+**[លំហាត់ 12 — Cherry-pick](./lab.html?id=13-cherry-pick)**
 
 ---
 
@@ -857,7 +862,7 @@ pick c333 typo
 
 ### លំហាត់
 
-**[លំហាត់ 13 — Interactive rebase](./lab.html?id=13-interactive-rebase)**
+**[លំហាត់ 13 — Interactive rebase](./lab.html?id=14-interactive-rebase)**
 
 ---
 
@@ -890,7 +895,7 @@ git bisect run ./scripts/check-login.sh
 
 ### លំហាត់
 
-**[លំហាត់ 14 — Bisect](./lab.html?id=14-bisect)**
+**[លំហាត់ 14 — Bisect](./lab.html?id=15-bisect)**
 
 ---
 
@@ -915,7 +920,7 @@ git switch -c hotfix/from-tag
 
 `git status` នឹងព្រមានអ្នកនៅពេលអ្នកត្រូវបានផ្ដាច់។ សូមអានការព្រមាននោះ។
 
-### Worktrees
+### Worktrees (ថតការងារបន្ថែម)
 
 ```bash
 git worktree add ../rean-git-pr-42 pr-42-branch
@@ -938,7 +943,7 @@ worktree នីមួយៗមានឯកសារផ្ទាល់ខ្ល�
 
 ### លំហាត់
 
-**[លំហាត់ 15 — Worktrees](./lab.html?id=15-worktrees)**
+**[លំហាត់ 15 — Worktrees](./lab.html?id=16-worktrees)**
 
 ---
 
@@ -955,7 +960,7 @@ git blame FILE
 git blame -L 20,40 FILE
 ```
 
-### Powerful `log`
+### `log` ដ៏មានឥទ្ធិពល
 
 ```bash
 git log --oneline --graph --all --decorate
@@ -967,7 +972,7 @@ git show HASH
 git show HASH:path/to/file        # file contents at that commit
 ```
 
-### Compare branches / ranges
+### ប្រៀបធៀប branches / ranges
 
 ```bash
 git log main..feat/login          # on feat but not main
@@ -975,7 +980,7 @@ git diff main...feat/login        # triple-dot: changes since branches diverged
 git shortlog -sn                  # commit counts by author
 ```
 
-### Cleaner diffs
+### diffs ដែលស្អាតជាង
 
 ```bash
 git diff --stat
@@ -987,7 +992,7 @@ git range-diff main...feat/login  # compare two histories after rebase
 
 ### លំហាត់
 
-**[លំហាត់ 16 — ពិនិត្យប្រវត្តិ](./lab.html?id=16-inspect-history)**
+**[លំហាត់ 16 — ពិនិត្យប្រវត្តិ](./lab.html?id=17-inspect-history)**
 
 ---
 
@@ -1019,13 +1024,13 @@ npm test || exit 1
 
 Commit a `scripts/hooks/` ឬប្រើឧបករណ៍ ([Husky](https://typicode.github.io/husky/), `pre-commit` framework) ដូច្នេះអ្នកគ្រប់គ្នាចែករំលែកការត្រួតពិនិត្យដូចគ្នា។ កុំពឹងផ្អែកលើ hooks ក្នុងស្រុក - នៅតែដំណើរការ CI។
 
-### Server / platform hooks
+### Hooks ម៉ាស៊ីនមេ / platform
 
 ការត្រួតពិនិត្យដែលត្រូវការ GitHub **branch protection** + គឺជា "ម៉ាស៊ីនមេ hook" ទំនើប។ `update` hooks បុរាណមាននៅលើម៉ាស៊ីនមេទទេដែលអ្នកបង្ហោះដោយខ្លួនឯង។
 
 ### លំហាត់
 
-**[លំហាត់ 17 — Hooks](./lab.html?id=17-hooks)**
+**[លំហាត់ 17 — Hooks](./lab.html?id=18-hooks)**
 
 ---
 
@@ -1059,7 +1064,7 @@ git verify-commit HEAD
 
 ### លំហាត់
 
-**[លំហាត់ 18 — ចុះហត្ថលេខា commits](./lab.html?id=18-signing)**
+**[លំហាត់ 18 — ចុះហត្ថលេខា commits](./lab.html?id=19-signing)**
 
 ---
 
@@ -1094,7 +1099,7 @@ git push staging feat/demo:main
 
 ឈ្មោះគឺបំពាន - `origin` គ្រាន់តែជាអនុសញ្ញាប៉ុណ្ណោះ។
 
-### Mirror / backup
+### Mirror / ទិន្នន័យបម្រុង
 
 ```bash
 git clone --mirror URL
@@ -1105,7 +1110,7 @@ git push --mirror BACKUP_URL
 
 ### លំហាត់
 
-**[លំហាត់ 19 — Forks និង remotes](./lab.html?id=19-forks)**
+**[លំហាត់ 19 — Forks និង remotes](./lab.html?id=20-forks)**
 
 ---
 
@@ -1115,7 +1120,7 @@ git push --mirror BACKUP_URL
 
 កម្មវិធីរបស់អ្នកត្រូវការការចែករំលែកប្រព័ន្ធរចនាដែលបានចែករំលែក ឬទ្រព្យសកម្មវីដេអូ 2 GB។ Git commits ធម្មតាស្អប់ប្រព័ន្ធគោលពីរដ៏ធំ ហើយ nested-repos គឺឆ្គង។
 
-### Submodules (nested Git repos)
+### Submodules (Git repos ដែលសំបុក)
 
 ```bash
 git submodule add https://github.com/Acme/design-system.git libs/design
@@ -1130,9 +1135,9 @@ git clone --recurse-submodules URL
 git submodule update --init --recursive
 ```
 
-**Trade-off:** Submodules កំណត់ commit ជាក់លាក់។ មិត្តរួមក្រុមត្រូវតែចងចាំដើម្បី init/update។ ចូលចិត្តកម្មវិធីគ្រប់គ្រងកញ្ចប់នៅពេលដែលអ្នកអាចធ្វើបាន។ ប្រើ submodules នៅពេលដែលអ្នកពិតជាត្រូវការគម្រោង Git ដែលមានមូលដ្ឋាន។
+**ការជ្រើសរើស:** Submodules កំណត់ commit ជាក់លាក់។ មិត្តរួមក្រុមត្រូវតែចងចាំដើម្បី init/update។ ចូលចិត្តកម្មវិធីគ្រប់គ្រងកញ្ចប់នៅពេលដែលអ្នកអាចធ្វើបាន។ ប្រើ submodules នៅពេលដែលអ្នកពិតជាត្រូវការគម្រោង Git ដែលមានមូលដ្ឋាន។
 
-### Git LFS (Large File Storage)
+### Git LFS (រក្សាឯកសារធំ)
 
 ```bash
 git lfs install
@@ -1144,14 +1149,14 @@ git commit -m "Add hero artwork via LFS"
 
 LFS រក្សាទុកទ្រនិចនៅក្នុង Git និងឯកសារធំៗនៅលើម៉ាស៊ីនមេ LFS។ ត្រូវការ `git-lfs` ដំឡើងសម្រាប់អ្នកគ្រប់គ្នាដែលពិនិត្យឯកសារទាំងនោះ។
 
-### Alternatives
+### ជម្រើសផ្សេង
 
 - បញ្ជីឈ្មោះកញ្ចប់ / CDN សម្រាប់ទ្រព្យសម្បត្តិ
 - Subtree បញ្ចូលគ្នា (`git subtree`) — មិនសូវសាមញ្ញ ទទួលបានតិចជាង submodules សម្រាប់ក្រុមមួយចំនួន
 
 ### លំហាត់
 
-**[លំហាត់ 20 — Submodules និង LFS](./lab.html?id=20-submodules-lfs)**
+**[លំហាត់ 20 — Submodules និង LFS](./lab.html?id=21-submodules-lfs)**
 
 ---
 
@@ -1197,7 +1202,7 @@ A **branch** គឺជាឯកសារយោងដែលអាចចល័ត�
 
 `git status` ប្រៀបធៀបទាំងបីនេះ។
 
-### Packfiles
+### Packfiles (ឯកសារខ្ចប់)
 
 វត្ថុរលុងនៅទីបំផុតខ្ចប់ទៅជាឯកសារ `.git/objects/pack/` ប្រកបដោយប្រសិទ្ធភាព។ `git gc` សម្អាត។ អ្នកកម្រត្រូវការប៉ះនេះណាស់។
 
@@ -1227,13 +1232,13 @@ A **branch** គឺជាឯកសារយោងដែលអាចចល័ត�
 
 ### លំហាត់
 
-**[លំហាត់ 21 — ផ្នែកខាងក្នុង](./lab.html?id=21-internals)**
+**[លំហាត់ 21 — ផ្នែកខាងក្នុង](./lab.html?id=22-internals)**
 
 ---
 
 ## 26. តារាងសង្ខេប
 
-### Setup
+### ការរៀបចំ
 
 ```bash
 git config --global user.name "Your Name"
@@ -1323,12 +1328,13 @@ git show-ref
 - [ ] Git បានដំឡើង ហើយ `user.name` / `user.email` បានកំណត់ ([ដំឡើង និង config](./lab.html?id=00-install-config))
 - [ ] អ្នកអាចពន្យល់ working tree vs staging vs commit (រឿងវ៉ាលី)
 - [ ] លំហាត់ [Repo ដំបូង](./lab.html?id=01-first-repo) បានបញ្ចប់
+- [ ] លំហាត់ [Staging](./lab.html?id=02-staging) បានបញ្ចប់ — `git add` ជ្រើសរើស និងសារច្បាស់
 
 ### សហការជាមួយខ្លួនឯងក្នុងមូលដ្ឋាន
 
-- [ ] បង្កើត branches សម្រាប់ features និង bug fixes ([ការបង្កើត branch](./lab.html?id=02-branching))
-- [ ] Merge ការងាររួចទៅក្នុង `main` ([Branch និង merge](./lab.html?id=03-branch-merge))
-- [ ] ដោះស្រាយ conflict មួយដោយចេតនា ([ទំនាស់](./lab.html?id=04-conflict))
+- [ ] បង្កើត branches សម្រាប់ features និង bug fixes ([ការបង្កើត branch](./lab.html?id=03-branching))
+- [ ] Merge ការងាររួចទៅក្នុង `main` ([Branch និង merge](./lab.html?id=04-branch-merge))
+- [ ] ដោះស្រាយ conflict មួយដោយចេតនា ([ទំនាស់](./lab.html?id=05-conflict))
 - [ ] លំហាត់ branching, merge និង conflict បានបញ្ចប់
 
 ### ជំនាញប្រវត្តិ
@@ -1339,8 +1345,8 @@ git show-ref
 
 ### Remote និងក្រុម
 
-- [ ] Push, fetch និង pull ទល់នឹង remote ([Remote ក្នុងស្រុក](./lab.html?id=07-local-remote))
-- [ ] Push branch ហើយបើក PR ([Remote និង PR](./lab.html?id=08-remote-pr))
+- [ ] Push, fetch និង pull ទល់នឹង remote ([Remote ក្នុងស្រុក](./lab.html?id=08-local-remote))
+- [ ] Push branch ហើយបើក PR ([Remote និង PR](./lab.html?id=09-remote-pr))
 - [ ] ប្រើ `.gitignore` និង branches រយៈពេលខ្លី
 - [ ] លំហាត់ remote, PR និង team workflow បានបញ្ចប់
 

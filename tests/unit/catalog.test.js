@@ -37,11 +37,11 @@ describe("ReanGitCatalog resolveLabId", () => {
   it("follows labIdAliases", async () => {
     const { catalog } = loadCatalog({
       cheatSheetChapter: "26",
-      labIdAliases: { "00-branching": "02-branching" },
-      labs: [{ id: "02-branching", level: "beginner", chapter: "5" }],
+      labIdAliases: { "00-branching": "03-branching" },
+      labs: [{ id: "03-branching", level: "beginner", chapter: "5" }],
     });
     await catalog.ready;
-    assert.equal(catalog.resolveLabId("00-branching"), "02-branching");
-    assert.equal(catalog.getLabForChapter("5")?.id, "02-branching");
+    assert.equal(catalog.resolveLabId("00-branching"), "03-branching");
+    assert.equal(catalog.getLabForChapter("5")?.id, "03-branching");
   });
 });

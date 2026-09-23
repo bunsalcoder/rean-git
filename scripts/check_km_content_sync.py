@@ -20,6 +20,7 @@ from check_site_quality import (  # noqa: E402
 )
 from lib_km_content import (  # noqa: E402
     english_h2_in_km,
+    english_h3_in_km,
     is_scaffolded,
     load_json,
     prose_fingerprint,
@@ -97,10 +98,19 @@ def check_km_sync(chapters: list[str], labs: list[str]) -> int:
                 "(## / ### / code blocks)"
             )
 
-        km_ids = parse_guide_chapter_ids(km_guide.read_text(encoding="utf-8"), "km")
+        km_guide_text = km_guide.read_text(encoding="utf-8")
+        km_ids = parse_guide_chapter_ids(km_guide_text, "km")
         missing = [cid for cid in chapters if cid not in km_ids]
         if missing:
             msgs.append(f"km/guide.md missing chapters: {missing}")
+
+        english_h3 = english_h3_in_km(km_guide_text)
+        if english_h3:
+            preview = ", ".join(english_h3[:8])
+            more = f" (+{len(english_h3) - 8} more)" if len(english_h3) > 8 else ""
+            msgs.append(
+                f"km/guide.md still has English ### headings: {preview}{more}"
+            )
 
     for lab_id in labs:
         en_lab = CONTENT / "en" / "labs" / f"{lab_id}.md"

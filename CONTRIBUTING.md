@@ -126,9 +126,9 @@ cd labs/01-first-repo
 ./verify.sh
 ```
 
-Shared helpers live in `scripts/lab_verify_lib.sh`. Verifiers inspect local git state (clean tree, branches, tags, hooks, etc.). Labs `08-remote-pr` and `09-team-workflow` still warn when `origin` points at GitHub, because opening/merging the PR in the browser cannot be checked offline.
+Shared helpers live in `scripts/lab_verify_lib.sh`. Verifiers inspect local git state (clean tree, branches, tags, hooks, etc.). Labs `09-remote-pr` and `10-team-workflow` still warn when `origin` points at GitHub, because opening/merging the PR in the browser cannot be checked offline.
 
-Representative offline labs also have **fixture builders** under `scripts/lab_fixtures/<id>.sh`. CI builds a completed `playground/` for each, runs `verify.sh`, then deletes the playground (and any `sandbox/` or `review/` folders the fixture created). Covered labs: **all labs with `verify.sh`**, including `08-remote-pr` and `09-team-workflow` via local bare remotes that stand in for GitHub (browser PR steps still warn when `origin` is a real GitHub URL). When you change a covered lab’s steps or verifier, update the matching fixture and re-run:
+Representative offline labs also have **fixture builders** under `scripts/lab_fixtures/<id>.sh`. CI builds a completed `playground/` for each, runs `verify.sh`, then deletes the playground (and any `sandbox/` or `review/` folders the fixture created). Covered labs: **all labs with `verify.sh`**, including `09-remote-pr` and `10-team-workflow` via local bare remotes that stand in for GitHub (browser PR steps still warn when `origin` is a real GitHub URL). When you change a covered lab’s steps or verifier, update the matching fixture and re-run:
 
 ```bash
 ./scripts/run_lab_verifier_fixtures.sh --only 01-first-repo

@@ -108,6 +108,21 @@ def english_h2_in_km(text: str) -> list[str]:
     return english
 
 
+KHMER_CHAR_RE = re.compile(r"[\u1780-\u17FF]")
+
+
+def english_h3_in_km(text: str) -> list[str]:
+    """Return ### headings outside code fences that contain no Khmer letters."""
+    english: list[str] = []
+    for line, in_fence in iter_markdown_lines(text):
+        if in_fence or not line.startswith("### "):
+            continue
+        heading = line.removeprefix("### ").strip()
+        if heading and not KHMER_CHAR_RE.search(heading):
+            english.append(heading)
+    return english
+
+
 def is_scaffolded(text: str) -> bool:
     return SCAFFOLD_START in text
 

@@ -222,102 +222,107 @@
       "teaser": "បង្កើត repo, ដាក់ stage, រួច commit។",
       "summary": "Init, stage, commit — ប្រវត្តិពិតដំបូងរបស់អ្នក។"
     },
-    "02-branching": {
+    "02-staging": {
+      "title": "ការដាក់ stage",
+      "teaser": "Commit តែអ្វីដែលសមនឹងគ្នា។",
+      "summary": "Stage ឯកសារពាក់ព័ន្ធ ទុក WIP ចេញ ហើយសរសេរសារដែលស្វែងរកបាន។"
+    },
+    "03-branching": {
       "title": "សាខា",
       "teaser": "ញែកការងារលើសាខា។",
       "summary": "បង្កើត topic branches ហើយមើលថា commits នៅដាច់ដោយឡែក។"
     },
-    "03-branch-merge": {
+    "04-branch-merge": {
       "title": "ការបញ្ចូលសាខា",
       "teaser": "បំបែកការងារ បន្ទាប់មកបញ្ចូលគ្នា។",
       "summary": "បំបែកការងារដោយសុវត្ថិភាព បន្ទាប់មកនាំមករួមគ្នាវិញ។"
     },
-    "04-conflict": {
+    "05-conflict": {
       "title": "ទំនាស់",
       "teaser": "ដោះស្រាយ merge conflict។",
       "summary": "ជួប merge conflict ហើយដោះស្រាយដោយស្ងប់ស្ងាត់។"
     },
-    "05-rebase": {
+    "06-rebase": {
       "title": "Rebase (ប្រើដោយប្រុងប្រយ័ត្ន)",
       "teaser": "ចាក់ commits ឡើងវិញឲ្យស្អាត។",
       "summary": "ចាក់ commits ឡើងវិញ ហើយរក្សាប្រវត្តិឲ្យអានបានងាយ។"
     },
-    "06-undo": {
+    "07-undo": {
       "title": "ត្រឡប់កំហុស",
       "teaser": "ស្តារ, reset, និង revert។",
       "summary": "Restore, amend, reset និង revert ដោយមានគោលបំណាង។"
     },
-    "07-local-remote": {
+    "08-local-remote": {
       "title": "Remote ក្នុងស្រុក",
       "teaser": "Push, fetch, pull ដោយគ្មាន GitHub។",
       "summary": "ប្រើ bare repo ក្នុងស្រុកជា origin — push, fetch និង pull ដោយគ្មាន GitHub។"
     },
-    "08-remote-pr": {
+    "09-remote-pr": {
       "title": "Remote និងសំណើទាញ",
       "teaser": "Push ហើយបើកសំណើទាញ (PR)។",
       "summary": "Push branch ហើយបើក pull request ឲ្យស្អាត។"
     },
-    "09-team-workflow": {
+    "10-team-workflow": {
       "title": "លំហូរការងារក្រុម",
       "teaser": "ទម្លាប់ដែលអាចពង្រីកបាន។",
       "summary": "មិនអើពើឯកសារឥតប្រយោជន៍ sync ញឹកញាប់ សរសេរ PR ដែលពិនិត្យបាន។"
     },
-    "10-stash": {
+    "11-stash": {
       "title": "Stash — ទុកការងារបណ្តោះអាសន្ន",
       "teaser": "ទុកការងារមិនទាន់រួច រួចប្តូរបរិបទ។",
       "summary": "ទុកការងារមិនទាន់រួច ប្តូរបរិបទ រួចស្តារវិញ។"
     },
-    "11-tags": {
+    "12-tags": {
       "title": "Tags និងការចេញផ្សាយ",
       "teaser": "ដាក់ស្លាកការចេញផ្សាយ។",
       "summary": "ចំណាំការចេញផ្សាយ ហើយ checkout tag កំណែ។"
     },
-    "12-cherry-pick": {
+    "13-cherry-pick": {
       "title": "Cherry-pick — ចម្លង commit",
       "teaser": "ចម្លង commit មួយទៅសាខាផ្សេង។",
       "summary": "នាំ commit មួយទៅ branch ផ្សេង។"
     },
-    "13-interactive-rebase": {
+    "14-interactive-rebase": {
       "title": "Rebase អន្តរកម្ម",
       "teaser": "បង្រួមប្រវត្តិឲ្យច្បាស់។",
       "summary": "បង្រួម commits រញ៉េរញ៉ៃទៅជារៀងច្បាស់លាស់។"
     },
-    "14-bisect": {
+    "15-bisect": {
       "title": "Bisect — រក commit ខុស",
       "teaser": "រក commit ដែលបំបែក។",
       "summary": "ស្វែងរកប្រវត្តិតាម binary search រក commit ដែលបំបែក។"
     },
-    "15-worktrees": {
+    "16-worktrees": {
       "title": "Worktree និង detached HEAD",
       "teaser": "ថតទីពីរ សម្រាប់ repo តែមួយ។",
       "summary": "ប្រើ detached HEAD ដោយសុវត្ថិភាព ហើយធ្វើការក្នុង worktree ទីពីរ។"
     },
-    "16-inspect-history": {
+    "17-inspect-history": {
       "title": "ពិនិត្យប្រវត្តិ",
       "teaser": "Blame, pickaxe និង ranges។",
       "summary": "តាមដានការផ្លាស់ប្តូរដោយ blame, pickaxe search និង branch ranges។"
     },
-    "17-hooks": {
+    "18-hooks": {
       "title": "Hooks — ទំពក់ Git",
       "teaser": "រារាំង commit អាក្រក់ក្នុងស្រុក។",
       "summary": "ដំឡើង pre-commit hook ហើយមើលវាចាប់ commit អាក្រក់។"
     },
-    "18-signing": {
+    "19-signing": {
       "title": "ចុះហត្ថលេខា commits",
       "teaser": "ចុះហត្ថលេខាដោយ SSH key។",
       "summary": "ចុះហត្ថលេខា commit ដោយ SSH ហើយផ្ទៀងផ្ទាត់ហត្ថលេខាក្នុងស្រុក។"
     },
-    "19-forks": {
+    "20-forks": {
       "title": "Fork និង remote ច្រើន",
       "teaser": "Origin, upstream និង fetch។",
       "summary": "បន្ថែម upstream លើ fork, push feature, ហើយ fetch ពេលដើមផ្លាស់ទី។"
     },
-    "20-submodules-lfs": {
+    "21-submodules-lfs": {
       "title": "Submodule និង Git LFS",
       "teaser": "ខ្ទាស់ repo nested និងឯកសារធំ។",
       "summary": "ខ្ទាស់ repo nested ដោយ submodule បន្ទាប់មកតាមដានឯកសារធំដោយ Git LFS។"
     },
-    "21-internals": {
+    "22-internals": {
       "title": "ផ្នែកខាងក្នុង",
       "teaser": "មើល commits, trees និង blobs។",
       "summary": "ដើរតាម commits, trees, blobs និង refs។"

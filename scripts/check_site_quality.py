@@ -158,8 +158,8 @@ def parse_curriculum() -> tuple[list[str], list[str], str]:
 
     if cheat_sheet not in chapters:
         raise SystemExit(f"cheatSheetChapter {cheat_sheet!r} is not a handbook chapter")
-    if labs and labs[-1] != "21-internals":
-        raise SystemExit("lab catalog should list 21-internals last (mastery)")
+    if labs and labs[-1] != "22-internals":
+        raise SystemExit("lab catalog should list 22-internals last (mastery)")
     return chapters, labs, cheat_sheet
 
 
