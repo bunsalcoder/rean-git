@@ -360,7 +360,7 @@ test("home asks visitors to clone the repo", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("[data-clone-command]")).toContainText("git clone");
   await expect(page.locator("[data-home-lede]")).toContainText("27");
-  await expect(page.locator("[data-home-lede]")).toContainText("22");
+  await expect(page.locator("[data-home-lede]")).toContainText("23");
 });
 
 test("home offers Codespaces for zero-setup practice", async ({ page }) => {
