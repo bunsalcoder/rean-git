@@ -1,4 +1,4 @@
-# លំហាត់ 08 — Remote និងសំណើទាញ
+# លំហាត់ 09 — Remote និងសំណើទាញ
 
 ## គោលដៅ
 
@@ -14,7 +14,7 @@ Push branch ទៅ GitHub ហើយបើក pull request។
 
 ### 1. Fork ឬប្រើ repo បោះចោល
 
-ងាយបំផុត៖ បង្កើត repository **ទទេថ្មី** នៅលើ GitHub ឈ្មោះ `rean-git-lab08` (គ្មាន README)។
+ងាយបំផុត៖ បង្កើត repository **ទទេថ្មី** នៅលើ GitHub ឈ្មោះ `rean-git-lab09` (គ្មាន README)។
 
 ### 2. គម្រោង local
 
@@ -24,11 +24,11 @@ mkdir -p playground && cd playground
 git init
 git config user.name "Your Name"
 git config user.email "you@example.com"
-echo "# Lab 08" > README.md
+echo "# Lab 09" > README.md
 git add README.md
 git commit -m "Initial commit"
 git branch -M main
-git remote add origin https://github.com/YOU/rean-git-lab08.git
+git remote add origin https://github.com/YOU/rean-git-lab09.git
 git push -u origin main
 ```
 
@@ -49,7 +49,7 @@ git push -u origin feat/hello-pr
 **ជាមួយ GitHub CLI:**
 
 ```bash
-gh pr create --title "Practice PR" --body "Lab 08 for rean-git."
+gh pr create --title "Practice PR" --body "Lab 09 for rean-git."
 ```
 
 **ឬក្នុង browser:** បើក repo → ប្រអប់ប្រៀបធៀប & បើក PR សម្រាប់ `feat/hello-pr` → បង្កើតវា។

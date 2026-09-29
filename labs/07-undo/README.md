@@ -1,4 +1,4 @@
-# Lab 06 — Undo
+# Lab 07 — Undo
 
 ## Goal
 
@@ -79,6 +79,8 @@ git log --oneline
 - [ ] You unstaged without losing work
 - [ ] You amended a local commit message
 - [ ] You used `revert` and still have a clean log story
+
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 
 ## Cleanup (optional)
 

@@ -1,4 +1,4 @@
-# Lab 13 — Interactive rebase
+# Lab 14 — Interactive rebase
 
 ## Goal
 
@@ -65,6 +65,8 @@ Only rewrite **local** commits nobody else has built on.
 - [ ] Three WIP commits became one clean commit (plus `Start`)
 - [ ] You understand `pick` vs `squash`
 - [ ] You only rewrote *local* history
+
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 
 ## Cleanup (optional)
 

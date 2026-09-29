@@ -1,4 +1,4 @@
-# Lab 04 — Conflict
+# Lab 05 — Conflict
 
 ## Goal
 
@@ -79,6 +79,8 @@ git merge --abort
 - [ ] You triggered a conflict (Git refused to auto-merge)
 - [ ] Markers are gone and the file reads correctly
 - [ ] Merge completed with a clean `git status`
+
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 
 ## Cleanup (optional)
 

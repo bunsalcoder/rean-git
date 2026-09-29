@@ -78,6 +78,8 @@ Optional (interactive): `git add -p` lets you pick hunks inside one file. Skip i
 - [ ] `dark-mode.css` and `notes.md` edits are still unstaged
 - [ ] You used `git diff --staged` before committing
 
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
+
 ## Cleanup (optional)
 
 ```bash

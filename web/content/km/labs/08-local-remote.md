@@ -1,8 +1,8 @@
-# លំហាត់ 07 — Remote ក្នុងស្រុក
+# លំហាត់ 08 — Remote ក្នុងស្រុក
 
 ## គោលដៅ
 
-អនុវត្ត `remote`, `push`, `fetch` និង `pull` ដោយប្រើ **bare repo ក្នុងស្រុក** ជា `origin` — មិនត្រូវការគណនី GitHub។ លំហាត់ 08 បន្ថែម PR ពិតនៅលើ GitHub បន្ទាប់មក។
+អនុវត្ត `remote`, `push`, `fetch` និង `pull` ដោយប្រើ **bare repo ក្នុងស្រុក** ជា `origin` — មិនត្រូវការគណនី GitHub។ លំហាត់ 09 បន្ថែម PR ពិតនៅលើ GitHub បន្ទាប់មក។
 
 ## ការរៀបចំ
 
@@ -63,6 +63,8 @@ git status
 - [ ] `git remote -v` បង្ហាញ `origin` ចង្អុលទៅ `sandbox/origin.git`
 - [ ] `README.md` ក្នុង playground មានបន្ទាត់ពី clone ផ្សេង
 - [ ] Working tree ស្អាតនៅលើ `main`
+
+ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
 
 ## សម្អាត (ស្រេចចិត្ត)
 

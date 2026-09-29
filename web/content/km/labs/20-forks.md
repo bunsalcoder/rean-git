@@ -1,4 +1,4 @@
-# លំហាត់ 19 — Fork និង remote ច្រើន
+# លំហាត់ 20 — Fork និង remote ច្រើន
 
 ## គោលដៅ
 
@@ -63,7 +63,7 @@ git push -u origin feat/thanks
 git remote show origin
 ```
 
-អ្នកនឹងបើក pull request ពី `origin/feat/thanks` ចូល `upstream` (លំហាត់ 08 បានអនុវត្ត PR លើ GitHub)។
+អ្នកនឹងបើក pull request ពី `origin/feat/thanks` ចូល `upstream` (លំហាត់ 09 បានអនុវត្ត PR លើ GitHub)។
 
 ### 3. Upstream ផ្លាស់ទី
 
@@ -94,6 +94,8 @@ git log --oneline -2
 - [ ] `feat/thanks` ត្រូវបាន push ទៅ origin
 - [ ] `git fetch upstream` នាំមក `Maintainer update`
 - [ ] អ្នកអាចពន្យល់ origin = fork របស់អ្នក, upstream = ដើម
+
+ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
 
 ## សម្អាត (ស្រេចចិត្ត)
 

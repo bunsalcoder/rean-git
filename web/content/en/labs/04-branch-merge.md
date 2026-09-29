@@ -1,4 +1,4 @@
-# Lab 02 — Branch & merge
+# Lab 04 — Branch & merge
 
 ## Goal
 
@@ -58,6 +58,8 @@ git branch
 - [ ] You saw different file contents on `main` vs `feature/greeting`
 - [ ] Merge brought the greeting into `main`
 - [ ] Feature branch is deleted locally
+
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 
 ## Cleanup (optional)
 

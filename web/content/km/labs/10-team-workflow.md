@@ -1,4 +1,4 @@
-# លំហាត់ 09 — លំហូរការងារក្រុម
+# លំហាត់ 10 — លំហូរការងារក្រុម
 
 ## គោលដៅ
 
@@ -6,12 +6,12 @@
 
 ## ការរៀបចំ
 
-ប្រើ GitHub repo ដូចគ្នាពី លំហាត់ 08 ឬបង្កើត repo ទទេមួយទៀត។
+ប្រើ GitHub repo ដូចគ្នាពី លំហាត់ 09 ឬបង្កើត repo ទទេមួយទៀត។
 
 ```bash
 cd labs/10-team-workflow
 mkdir -p playground && cd playground
-git clone https://github.com/YOU/rean-git-lab08.git .
+git clone https://github.com/YOU/rean-git-lab09.git .
 # or init + remote as in lab 08
 git switch main
 git pull

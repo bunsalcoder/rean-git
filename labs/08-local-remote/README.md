@@ -1,8 +1,8 @@
-# Local remote
+# Lab 08 — Local remote
 
 ## Goal
 
-Practice `remote`, `push`, `fetch`, and `pull` using a **local bare repo** as `origin` — no GitHub account required. Lab 08 adds a real PR on GitHub afterward.
+Practice `remote`, `push`, `fetch`, and `pull` using a **local bare repo** as `origin` — no GitHub account required. Lab 09 adds a real PR on GitHub afterward.
 
 ## Setup
 
@@ -63,6 +63,8 @@ git status
 - [ ] `git remote -v` shows `origin` pointing at `sandbox/origin.git`
 - [ ] Playground `README.md` contains the other clone’s line
 - [ ] Working tree is clean on `main`
+
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 
 ## Cleanup (optional)
 

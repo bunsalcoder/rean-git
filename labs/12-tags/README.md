@@ -1,4 +1,4 @@
-# Lab 11 — Tags
+# Lab 12 — Tags
 
 ## Goal
 
@@ -53,6 +53,8 @@ git switch main
 - [ ] You created annotated tags with messages
 - [ ] `git show` displays tag metadata
 - [ ] You visited a tag and returned to `main`
+
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 
 ## Cleanup (optional)
 

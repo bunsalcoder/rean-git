@@ -57,6 +57,8 @@ git status
 - [ ] Playground នេះមាន `user.name` និង `user.email` ក្នុងស្រុក
 - [ ] `git log --oneline` បង្ហាញ commit មួយ ហើយ working tree ស្អាត
 
+ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
+
 ## សម្អាត (ស្រេចចិត្ត)
 
 ```bash

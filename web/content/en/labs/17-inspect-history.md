@@ -1,4 +1,4 @@
-# Lab 16 — Inspect history
+# Lab 17 — Inspect history
 
 ## Goal
 
@@ -67,6 +67,8 @@ git shortlog -sn --all
 - [ ] `git blame` shows which commit owns the redirect line
 - [ ] `git log -S "redirect"` finds the change commit
 - [ ] You listed only the feature commits with `main..feat/banner`
+
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 
 ## Cleanup (optional)
 

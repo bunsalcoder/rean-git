@@ -59,6 +59,8 @@ git status
 - [ ] `git log --oneline` បង្ហាញយ៉ាងហោចណាស់ពីរ commits
 - [ ] អ្នកអាចពន្យល់បានថា `git add` ធ្វើអ្វីមុន commit នីមួយៗ
 
+ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
+
 ## សម្អាត (ស្រេចចិត្ត)
 
 ```bash

@@ -107,9 +107,9 @@ Git works offline. GitHub is where you share and collaborate.
 
 ### Lab link
 
-After chapter 3 → [Install & config](../labs/00-install-config/)  
-After chapter 4 → [First repo](../labs/01-first-repo/)  
-After chapter 5 → [Staging](../labs/02-staging/)
+After chapter 3 → [Lab 00 — Install & config](../labs/00-install-config/)  
+After chapter 4 → [Lab 01 — First repo](../labs/01-first-repo/)  
+After chapter 5 → [Lab 02 — Staging](../labs/02-staging/)
 
 ### Check your understanding
 
@@ -196,7 +196,7 @@ git config --list --show-origin
 
 ### Lab
 
-Complete **[Install & config](../labs/00-install-config/)** before continuing. Use **local** config in the lab playground so your global Git settings stay untouched.
+Complete **[Lab 00 — Install & config](../labs/00-install-config/)** before continuing. Use **local** config in the lab playground so your global Git settings stay untouched.
 
 ---
 
@@ -245,7 +245,7 @@ git log --oneline
 
 ### Lab
 
-Complete **[First repo](../labs/01-first-repo/)** before continuing.
+Complete **[Lab 01 — First repo](../labs/01-first-repo/)** before continuing.
 
 ---
 
@@ -313,7 +313,7 @@ git show HEAD         # latest commit details
 
 ### Lab
 
-Practice selective staging: **[Staging](../labs/02-staging/)**
+Practice selective staging: **[Lab 02 — Staging](../labs/02-staging/)**
 
 ---
 
@@ -364,8 +364,8 @@ Each letter is a commit. A branch is just a pointer with a name.
 
 ### Lab
 
-Practice isolation first: **[Branching](../labs/03-branching/)**.  
-Then merge in the next chapter’s lab: **[Branch & merge](../labs/04-branch-merge/)**.
+Practice isolation first: **[Lab 03 — Branching](../labs/03-branching/)**.  
+Then merge in the next chapter’s lab: **[Lab 04 — Branch & merge](../labs/04-branch-merge/)**.
 
 ---
 
@@ -402,7 +402,7 @@ Use `-D` only when you mean “throw this branch away.”
 
 ### Lab
 
-Same practice as branching: **[Branch & merge](../labs/04-branch-merge/)**
+Same practice as branching: **[Lab 04 — Branch & merge](../labs/04-branch-merge/)**
 
 ---
 
@@ -452,7 +452,7 @@ git merge --abort
 
 ### Lab
 
-**[Lab 04 — Conflict](../labs/05-conflict/)**
+**[Lab 05 — Conflict](../labs/05-conflict/)**
 
 ---
 
@@ -494,7 +494,7 @@ Squash “oops” commits into one clear story. You’ll go deeper in **chapter 
 
 ### Lab
 
-**[Lab 05 — Rebase](../labs/06-rebase/)**
+**[Lab 06 — Rebase](../labs/06-rebase/)**
 
 ---
 
@@ -561,7 +561,7 @@ git switch -c recover HASH       # bring it back on a new branch
 
 ### Lab
 
-**[Lab 06 — Undo](../labs/07-undo/)**
+**[Lab 07 — Undo](../labs/07-undo/)**
 
 ---
 
@@ -606,8 +606,8 @@ git push                  # upload your commits
 
 ### Lab
 
-Practice the commands offline first: **[Local remote](../labs/08-local-remote/)**.  
-Then use a real GitHub repo: **[Remote & PR](../labs/09-remote-pr/)** (needs a GitHub account).
+Practice the commands offline first: **[Lab 08 — Local remote](../labs/08-local-remote/)**.  
+Then use a real GitHub repo: **[Lab 09 — Remote & PR](../labs/09-remote-pr/)** (needs a GitHub account).
 
 ---
 
@@ -649,7 +649,7 @@ git push origin --delete fix/login-redirect   # optional cleanup
 
 ### Lab
 
-Finish the remote practice: **[Remote & PR](../labs/09-remote-pr/)**
+Finish the remote practice: **[Lab 09 — Remote & PR](../labs/09-remote-pr/)**
 
 ---
 
@@ -697,7 +697,7 @@ Update your branch with latest `main` first — reviewers shouldn’t fix your m
 
 ### Lab
 
-**[Lab 09 — Team workflow](../labs/10-team-workflow/)**
+**[Lab 10 — Team workflow](../labs/10-team-workflow/)**
 
 ---
 
@@ -738,7 +738,7 @@ git stash show -p stash@{0}                # preview
 
 ### Lab
 
-**[Lab 10 — Stash](../labs/11-stash/)**
+**[Lab 11 — Stash](../labs/11-stash/)**
 
 ---
 
@@ -781,7 +781,7 @@ Moving a published tag breaks people who already pulled it. Prefer a new version
 
 ### Lab
 
-**[Lab 11 — Tags](../labs/12-tags/)**
+**[Lab 12 — Tags](../labs/12-tags/)**
 
 ---
 
@@ -819,7 +819,7 @@ git cherry-pick --abort
 
 ### Lab
 
-**[Lab 12 — Cherry-pick](../labs/13-cherry-pick/)**
+**[Lab 13 — Cherry-pick](../labs/13-cherry-pick/)**
 
 ---
 
@@ -864,7 +864,7 @@ Save & close → Git replays. Resolve conflicts with `--continue` / `--abort` li
 
 ### Lab
 
-**[Lab 13 — Interactive rebase](../labs/14-interactive-rebase/)**
+**[Lab 14 — Interactive rebase](../labs/14-interactive-rebase/)**
 
 ---
 
@@ -897,7 +897,7 @@ Exit code `0` = good, non-zero = bad.
 
 ### Lab
 
-**[Lab 14 — Bisect](../labs/15-bisect/)**
+**[Lab 15 — Bisect](../labs/15-bisect/)**
 
 ---
 
@@ -945,7 +945,7 @@ Each worktree has its own files; they share the same `.git` object database.
 
 ### Lab
 
-**[Lab 15 — Worktrees](../labs/16-worktrees/)**
+**[Lab 16 — Worktrees](../labs/16-worktrees/)**
 
 ---
 
@@ -994,7 +994,7 @@ Master these and GitHub’s UI becomes optional for investigation.
 
 ### Lab
 
-**[Lab 16 — Inspect history](../labs/17-inspect-history/)**
+**[Lab 17 — Inspect history](../labs/17-inspect-history/)**
 
 ---
 
@@ -1032,7 +1032,7 @@ GitHub **branch protection** + required checks is the modern “server hook.” 
 
 ### Lab
 
-**[Lab 17 — Hooks](../labs/18-hooks/)**
+**[Lab 18 — Hooks](../labs/18-hooks/)**
 
 ---
 
@@ -1066,7 +1066,7 @@ Many teams make signing optional for juniors; some require it on `main`. Match y
 
 ### Lab
 
-**[Lab 18 — Signing commits](../labs/19-signing/)**
+**[Lab 19 — Signing commits](../labs/19-signing/)**
 
 ---
 
@@ -1112,7 +1112,7 @@ Use carefully — mirrors rewrite matching refs.
 
 ### Lab
 
-**[Lab 19 — Forks & remotes](../labs/20-forks/)**
+**[Lab 20 — Forks & remotes](../labs/20-forks/)**
 
 ---
 
@@ -1158,7 +1158,7 @@ LFS stores pointers in Git and big files on an LFS server. Needs `git-lfs` insta
 
 ### Lab
 
-**[Lab 20 — Submodules & LFS](../labs/21-submodules-lfs/)**
+**[Lab 21 — Submodules & LFS](../labs/21-submodules-lfs/)**
 
 ---
 
@@ -1234,7 +1234,7 @@ Official deep dive: [Pro Git book](https://git-scm.com/book/en/v2) (free).
 
 ### Lab
 
-**[Lab 21 — Internals](../labs/22-internals/)**
+**[Lab 22 — Internals](../labs/22-internals/)**
 
 ---
 
@@ -1327,16 +1327,16 @@ Use this as your progress board — foundations first, then hero skills. Check i
 
 ### Foundations
 
-- [ ] Git installed and `user.name` / `user.email` set ([Install & config](../labs/00-install-config/))
+- [ ] Git installed and `user.name` / `user.email` set ([Lab 00 — Install & config](../labs/00-install-config/))
 - [ ] You can explain working tree vs staging vs commit (suitcase story)
-- [ ] [First repo](../labs/01-first-repo/) lab complete
-- [ ] [Staging](../labs/02-staging/) lab complete — selective `git add` and clear messages
+- [ ] [Lab 01 — First repo](../labs/01-first-repo/) lab complete
+- [ ] [Lab 02 — Staging](../labs/02-staging/) lab complete — selective `git add` and clear messages
 
 ### Local collaboration with yourself
 
-- [ ] Create branches for features and bug fixes ([Branching](../labs/03-branching/))
-- [ ] Merge finished work into `main` ([Branch & merge](../labs/04-branch-merge/))
-- [ ] Resolve one conflict on purpose ([Conflict](../labs/05-conflict/))
+- [ ] Create branches for features and bug fixes ([Lab 03 — Branching](../labs/03-branching/))
+- [ ] Merge finished work into `main` ([Lab 04 — Branch & merge](../labs/04-branch-merge/))
+- [ ] Resolve one conflict on purpose ([Lab 05 — Conflict](../labs/05-conflict/))
 - [ ] Branching, merge, and conflict labs complete
 
 ### History skills
@@ -1347,8 +1347,8 @@ Use this as your progress board — foundations first, then hero skills. Check i
 
 ### Remote & team
 
-- [ ] Push, fetch, and pull against a remote ([Local remote](../labs/08-local-remote/))
-- [ ] Push a branch and open a PR ([Remote & PR](../labs/09-remote-pr/))
+- [ ] Push, fetch, and pull against a remote ([Lab 08 — Local remote](../labs/08-local-remote/))
+- [ ] Push a branch and open a PR ([Lab 09 — Remote & PR](../labs/09-remote-pr/))
 - [ ] Use `.gitignore` and short-lived branches
 - [ ] Remote, PR, and team workflow labs complete
 

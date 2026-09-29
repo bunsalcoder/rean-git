@@ -1,4 +1,4 @@
-# Lab 14 — Bisect
+# Lab 15 — Bisect
 
 ## Goal
 
@@ -66,6 +66,8 @@ git log --oneline
 
 - [ ] Bisect identified the commit that introduced `BROKEN`
 - [ ] You returned to your branch with `git bisect reset`
+
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 
 ## Cleanup (optional)
 

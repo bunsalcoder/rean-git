@@ -1,4 +1,4 @@
-# លំហាត់ 16 — ពិនិត្យប្រវត្តិ
+# លំហាត់ 17 — ពិនិត្យប្រវត្តិ
 
 ## គោលដៅ
 
@@ -67,6 +67,8 @@ git shortlog -sn --all
 - [ ] `git blame` បង្ហាញ commit ដែលជាម្ចាស់បន្ទាត់ redirect
 - [ ] `git log -S "redirect"` រកឃើញ commit ផ្លាស់ប្តូរ
 - [ ] អ្នករាយតែ feature commits ដោយ `main..feat/banner`
+
+ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
 
 ## សម្អាត (ស្រេចចិត្ត)
 

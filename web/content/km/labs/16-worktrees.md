@@ -1,4 +1,4 @@
-# លំហាត់ 15 — Worktree និង detached HEAD
+# លំហាត់ 16 — Worktree និង detached HEAD
 
 ## គោលដៅ
 
@@ -75,6 +75,8 @@ git restore app.txt
 - [ ] អ្នកបានឃើញការព្រមាន detached HEAD ហើយបង្កើត rescue branch
 - [ ] `git worktree list` បង្ហាញ checkout ពីរដែលចែក repo តែមួយ
 - [ ] អ្នកបានលុប worktree បន្ថែមដោយស្អាត
+
+ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
 
 ## សម្អាត (ស្រេចចិត្ត)
 

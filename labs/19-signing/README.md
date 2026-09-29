@@ -1,4 +1,4 @@
-# Lab 18 — Signing commits
+# Lab 19 — Signing commits
 
 ## Goal
 
@@ -80,6 +80,8 @@ The first commit (`Start unsigned`) has no signature. Rewriting history (amend, 
 - [ ] `gpg.format` is `ssh` and `commit.gpgsign` is on in this repo
 - [ ] `git verify-commit HEAD` succeeds
 - [ ] You can explain why GitHub still needs the public key added as a signing key
+
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 
 ## Cleanup (optional)
 

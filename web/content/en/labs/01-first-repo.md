@@ -59,6 +59,8 @@ git status
 - [ ] `git log --oneline` shows at least two commits
 - [ ] You can explain what `git add` did before each commit
 
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
+
 ## Cleanup (optional)
 
 ```bash

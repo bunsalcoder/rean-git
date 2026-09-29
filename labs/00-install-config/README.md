@@ -1,4 +1,4 @@
-# Install & config
+# Lab 00 — Install & config
 
 ## Goal
 
@@ -56,6 +56,8 @@ git status
 - [ ] `git --version` prints a version
 - [ ] This playground has local `user.name` and `user.email`
 - [ ] `git log --oneline` shows one commit and the tree is clean
+
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 
 ## Cleanup (optional)
 

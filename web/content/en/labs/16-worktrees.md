@@ -1,4 +1,4 @@
-# Lab 15 — Worktrees
+# Lab 16 — Worktrees
 
 ## Goal
 
@@ -75,6 +75,8 @@ git restore app.txt
 - [ ] You saw the detached HEAD warning and created a rescue branch
 - [ ] `git worktree list` showed two checkouts sharing one repo
 - [ ] You removed the extra worktree cleanly
+
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 
 ## Cleanup (optional)
 

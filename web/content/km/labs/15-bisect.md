@@ -1,4 +1,4 @@
-# លំហាត់ 14 — Bisect — រក commit ខុស
+# លំហាត់ 15 — Bisect — រក commit ខុស
 
 ## គោលដៅ
 
@@ -66,6 +66,8 @@ git log --oneline
 
 - [ ] Bisect រកឃើញ commit ដែលនាំមក `BROKEN`
 - [ ] អ្នកត្រឡប់ទៅ branch របស់អ្នកដោយ `git bisect reset`
+
+ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
 
 ## សម្អាត (ស្រេចចិត្ត)
 

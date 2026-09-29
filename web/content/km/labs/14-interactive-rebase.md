@@ -1,4 +1,4 @@
-# លំហាត់ 13 — Rebase អន្តរកម្ម
+# លំហាត់ 14 — Rebase អន្តរកម្ម
 
 ## គោលដៅ
 
@@ -65,6 +65,8 @@ unset GIT_SEQUENCE_EDITOR GIT_EDITOR
 - [ ] បី WIP commits ក្លាយជា commit ស្គាតមួយ (បូក `Start`)
 - [ ] អ្នកយល់ `pick` vs `squash`
 - [ ] អ្នកសរសេរឡើងវិញតែប្រវត្តិ *local*
+
+ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
 
 ## សម្អាត (ស្រេចចិត្ត)
 

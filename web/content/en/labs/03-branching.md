@@ -1,4 +1,4 @@
-# Branching
+# Lab 03 — Branching
 
 ## Goal
 
@@ -66,6 +66,8 @@ git log --oneline --graph --all
 - [ ] `feat/contact-page` and `fix/homepage-crash` both exist
 - [ ] `main` does not contain either draft line yet
 - [ ] You are on `main` with a clean working tree
+
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 
 ## Cleanup (optional)
 

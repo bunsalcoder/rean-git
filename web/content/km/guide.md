@@ -107,9 +107,9 @@ Git ដំណើរការដោយគ្មានអ៊ីនធឺណិត�
 
 ### តំណលំហាត់
 
-បន្ទាប់ពីជំពូក 3 → [ដំឡើង និង config](./lab.html?id=00-install-config)  
-បន្ទាប់ពីជំពូក 4 → [Repo ដំបូង](./lab.html?id=01-first-repo)  
-បន្ទាប់ពីជំពូក 5 → [Staging](./lab.html?id=02-staging)
+បន្ទាប់ពីជំពូក 3 → [លំហាត់ 00 — ដំឡើង និង config](./lab.html?id=00-install-config)  
+បន្ទាប់ពីជំពូក 4 → [លំហាត់ 01 — Repo ដំបូង](./lab.html?id=01-first-repo)  
+បន្ទាប់ពីជំពូក 5 → [លំហាត់ 02 — Staging](./lab.html?id=02-staging)
 
 ### ពិនិត្យការយល់ដឹង
 
@@ -196,7 +196,7 @@ git config --list --show-origin
 
 ### លំហាត់
 
-បំពេញ **[ដំឡើង និង config](./lab.html?id=00-install-config)** មុនពេលបន្ត។ ប្រើ config **ក្នុងស្រុក** ក្នុង playground របស់លំហាត់ ដើម្បីកុំប៉ះការកំណត់ Git global របស់អ្នក។
+បំពេញ **[លំហាត់ 00 — ដំឡើង និង config](./lab.html?id=00-install-config)** មុនពេលបន្ត។ ប្រើ config **ក្នុងស្រុក** ក្នុង playground របស់លំហាត់ ដើម្បីកុំប៉ះការកំណត់ Git global របស់អ្នក។
 
 ---
 
@@ -245,7 +245,7 @@ git log --oneline
 
 ### លំហាត់
 
-បំពេញ **[Repo ដំបូង](./lab.html?id=01-first-repo)** មុនពេលបន្ត។
+បំពេញ **[លំហាត់ 01 — Repo ដំបូង](./lab.html?id=01-first-repo)** មុនពេលបន្ត។
 
 ---
 
@@ -313,7 +313,7 @@ git show HEAD         # latest commit details
 
 ### លំហាត់
 
-អនុវត្តការដាក់ stage ជ្រើសរើស៖ **[Staging](./lab.html?id=02-staging)**
+អនុវត្តការដាក់ stage ជ្រើសរើស៖ **[លំហាត់ 02 — Staging](./lab.html?id=02-staging)**
 
 ---
 
@@ -364,8 +364,8 @@ feat/contact-page:           D---E
 
 ### លំហាត់
 
-អនុវត្តភាពដាច់ដោយឡែកជាមុន៖ **[ការបង្កើត branch](./lab.html?id=03-branching)**។  
-បន្ទាប់មក merge ក្នុងលំហាត់ជំពូកបន្ទាប់៖ **[Branch និង merge](./lab.html?id=04-branch-merge)**។
+អនុវត្តភាពដាច់ដោយឡែកជាមុន៖ **[លំហាត់ 03 — ការបង្កើត branch](./lab.html?id=03-branching)**។  
+បន្ទាប់មក merge ក្នុងលំហាត់ជំពូកបន្ទាប់៖ **[លំហាត់ 04 — Branch និង merge](./lab.html?id=04-branch-merge)**។
 
 ---
 
@@ -402,7 +402,7 @@ git branch -d feat/contact-page
 
 ### លំហាត់
 
-ការអនុវត្តដូច branching: **[Branch និង merge](./lab.html?id=04-branch-merge)**
+ការអនុវត្តដូច branching: **[លំហាត់ 04 — Branch និង merge](./lab.html?id=04-branch-merge)**
 
 ---
 
@@ -452,7 +452,7 @@ git merge --abort
 
 ### លំហាត់
 
-**[លំហាត់ 04 — Conflict](./lab.html?id=05-conflict)**
+**[លំហាត់ 05 — Conflict](./lab.html?id=05-conflict)**
 
 ---
 
@@ -494,7 +494,7 @@ Squash "oops" ចូលទៅក្នុងរឿងច្បាស់លាស
 
 ### លំហាត់
 
-**[លំហាត់ 05 — Rebase](./lab.html?id=06-rebase)**
+**[លំហាត់ 06 — Rebase](./lab.html?id=06-rebase)**
 
 ---
 
@@ -561,7 +561,7 @@ git switch -c recover HASH       # bring it back on a new branch
 
 ### លំហាត់
 
-**[លំហាត់ 06 — ត្រឡប់វិញ](./lab.html?id=07-undo)**
+**[លំហាត់ 07 — ត្រឡប់វិញ](./lab.html?id=07-undo)**
 
 ---
 
@@ -606,8 +606,8 @@ git push                  # upload your commits
 
 ### លំហាត់
 
-អនុវត្តពាក្យបញ្ជាដោយគ្មាន GitHub ជាមុន៖ **[Remote ក្នុងស្រុក](./lab.html?id=08-local-remote)**។  
-បន្ទាប់មកប្រើ repo GitHub ពិត៖ **[Remote និង PR](./lab.html?id=09-remote-pr)** (ត្រូវការគណនី GitHub)។
+អនុវត្តពាក្យបញ្ជាដោយគ្មាន GitHub ជាមុន៖ **[លំហាត់ 08 — Remote ក្នុងស្រុក](./lab.html?id=08-local-remote)**។  
+បន្ទាប់មកប្រើ repo GitHub ពិត៖ **[លំហាត់ 09 — Remote និង PR](./lab.html?id=09-remote-pr)** (ត្រូវការគណនី GitHub)។
 
 ---
 
@@ -649,7 +649,7 @@ git push origin --delete fix/login-redirect   # optional cleanup
 
 ### លំហាត់
 
-បញ្ចប់ការអនុវត្តពីចម្ងាយ៖ **[Remote និង PR](./lab.html?id=09-remote-pr)**
+បញ្ចប់ការអនុវត្តពីចម្ងាយ៖ **[លំហាត់ 09 — Remote និង PR](./lab.html?id=09-remote-pr)**
 
 ---
 
@@ -697,7 +697,7 @@ git merge main                 # or: git rebase main (local only)
 
 ### លំហាត់
 
-**[លំហាត់ 09 — លំហូរការងារក្រុម](./lab.html?id=10-team-workflow)**
+**[លំហាត់ 10 — លំហូរការងារក្រុម](./lab.html?id=10-team-workflow)**
 
 ---
 
@@ -736,7 +736,7 @@ git stash show -p stash@{0}                # preview
 
 ### លំហាត់
 
-**[លំហាត់ 10 — Stash](./lab.html?id=11-stash)**
+**[លំហាត់ 11 — Stash](./lab.html?id=11-stash)**
 
 ---
 
@@ -779,7 +779,7 @@ git push origin --delete v1.0.0     # delete remote
 
 ### លំហាត់
 
-**[លំហាត់ 11 — Tags](./lab.html?id=12-tags)**
+**[លំហាត់ 12 — Tags](./lab.html?id=12-tags)**
 
 ---
 
@@ -817,7 +817,7 @@ git cherry-pick --abort
 
 ### លំហាត់
 
-**[លំហាត់ 12 — Cherry-pick](./lab.html?id=13-cherry-pick)**
+**[លំហាត់ 13 — Cherry-pick](./lab.html?id=13-cherry-pick)**
 
 ---
 
@@ -862,7 +862,7 @@ pick c333 typo
 
 ### លំហាត់
 
-**[លំហាត់ 13 — Interactive rebase](./lab.html?id=14-interactive-rebase)**
+**[លំហាត់ 14 — Interactive rebase](./lab.html?id=14-interactive-rebase)**
 
 ---
 
@@ -895,7 +895,7 @@ git bisect run ./scripts/check-login.sh
 
 ### លំហាត់
 
-**[លំហាត់ 14 — Bisect](./lab.html?id=15-bisect)**
+**[លំហាត់ 15 — Bisect](./lab.html?id=15-bisect)**
 
 ---
 
@@ -943,7 +943,7 @@ worktree នីមួយៗមានឯកសារផ្ទាល់ខ្ល�
 
 ### លំហាត់
 
-**[លំហាត់ 15 — Worktrees](./lab.html?id=16-worktrees)**
+**[លំហាត់ 16 — Worktrees](./lab.html?id=16-worktrees)**
 
 ---
 
@@ -992,7 +992,7 @@ git range-diff main...feat/login  # compare two histories after rebase
 
 ### លំហាត់
 
-**[លំហាត់ 16 — ពិនិត្យប្រវត្តិ](./lab.html?id=17-inspect-history)**
+**[លំហាត់ 17 — ពិនិត្យប្រវត្តិ](./lab.html?id=17-inspect-history)**
 
 ---
 
@@ -1030,7 +1030,7 @@ Commit a `scripts/hooks/` ឬប្រើឧបករណ៍ ([Husky](https://typ
 
 ### លំហាត់
 
-**[លំហាត់ 17 — Hooks](./lab.html?id=18-hooks)**
+**[លំហាត់ 18 — Hooks](./lab.html?id=18-hooks)**
 
 ---
 
@@ -1064,7 +1064,7 @@ git verify-commit HEAD
 
 ### លំហាត់
 
-**[លំហាត់ 18 — ចុះហត្ថលេខា commits](./lab.html?id=19-signing)**
+**[លំហាត់ 19 — ចុះហត្ថលេខា commits](./lab.html?id=19-signing)**
 
 ---
 
@@ -1110,7 +1110,7 @@ git push --mirror BACKUP_URL
 
 ### លំហាត់
 
-**[លំហាត់ 19 — Forks និង remotes](./lab.html?id=20-forks)**
+**[លំហាត់ 20 — Forks និង remotes](./lab.html?id=20-forks)**
 
 ---
 
@@ -1156,7 +1156,7 @@ LFS រក្សាទុកទ្រនិចនៅក្នុង Git និ�
 
 ### លំហាត់
 
-**[លំហាត់ 20 — Submodules និង LFS](./lab.html?id=21-submodules-lfs)**
+**[លំហាត់ 21 — Submodules និង LFS](./lab.html?id=21-submodules-lfs)**
 
 ---
 
@@ -1232,7 +1232,7 @@ A **branch** គឺជាឯកសារយោងដែលអាចចល័ត�
 
 ### លំហាត់
 
-**[លំហាត់ 21 — ផ្នែកខាងក្នុង](./lab.html?id=22-internals)**
+**[លំហាត់ 22 — ផ្នែកខាងក្នុង](./lab.html?id=22-internals)**
 
 ---
 
@@ -1325,10 +1325,10 @@ git show-ref
 
 ### មូលដ្ឋាន
 
-- [ ] Git បានដំឡើង ហើយ `user.name` / `user.email` បានកំណត់ ([ដំឡើង និង config](./lab.html?id=00-install-config))
+- [ ] Git បានដំឡើង ហើយ `user.name` / `user.email` បានកំណត់ ([លំហាត់ 00 — ដំឡើង និង config](./lab.html?id=00-install-config))
 - [ ] អ្នកអាចពន្យល់ working tree vs staging vs commit (រឿងវ៉ាលី)
-- [ ] លំហាត់ [Repo ដំបូង](./lab.html?id=01-first-repo) បានបញ្ចប់
-- [ ] លំហាត់ [Staging](./lab.html?id=02-staging) បានបញ្ចប់ — `git add` ជ្រើសរើស និងសារច្បាស់
+- [ ] លំហាត់ [លំហាត់ 01 — Repo ដំបូង](./lab.html?id=01-first-repo) បានបញ្ចប់
+- [ ] លំហាត់ [លំហាត់ 02 — Staging](./lab.html?id=02-staging) បានបញ្ចប់ — `git add` ជ្រើសរើស និងសារច្បាស់
 
 ### សហការជាមួយខ្លួនឯងក្នុងមូលដ្ឋាន
 
@@ -1345,8 +1345,8 @@ git show-ref
 
 ### Remote និងក្រុម
 
-- [ ] Push, fetch និង pull ទល់នឹង remote ([Remote ក្នុងស្រុក](./lab.html?id=08-local-remote))
-- [ ] Push branch ហើយបើក PR ([Remote និង PR](./lab.html?id=09-remote-pr))
+- [ ] Push, fetch និង pull ទល់នឹង remote ([លំហាត់ 08 — Remote ក្នុងស្រុក](./lab.html?id=08-local-remote))
+- [ ] Push branch ហើយបើក PR ([លំហាត់ 09 — Remote និង PR](./lab.html?id=09-remote-pr))
 - [ ] ប្រើ `.gitignore` និង branches រយៈពេលខ្លី
 - [ ] លំហាត់ remote, PR និង team workflow បានបញ្ចប់
 

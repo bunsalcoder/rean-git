@@ -36,6 +36,14 @@ HTML_HREF_RE = re.compile(r"""(?:href|src)=["']([^"']+)["']""")
 DATA_I18N_RE = re.compile(r'data-i18n="([^"]+)"')
 JS_T_RE = re.compile(r"""(?:\bt\(|\.t\()\s*['"]([^'"]+)['"]""")
 LAB_QUERY_RE = re.compile(r"(?:^\./)?lab\.html\?id=([a-z0-9-]+)$")
+LAB_H1_EN_RE = re.compile(r"^# Lab (\d{2}) — .+$")
+LAB_H1_KM_RE = re.compile(r"^# លំហាត់ (\d{2}) — .+$")
+LAB_LINK_LABEL_EN_RE = re.compile(
+    r"\[Lab (\d{1,2}) — [^\]]+\]\(\.\./labs/(\d{2})-[a-z0-9-]+/\)"
+)
+LAB_LINK_LABEL_KM_RE = re.compile(
+    r"\[លំហាត់ (\d{1,2}) — [^\]]+\]\(\./lab\.html\?id=(\d{2})-[a-z0-9-]+\)"
+)
 
 
 def flatten(obj: dict, prefix: str = "") -> dict[str, object]:
@@ -784,6 +792,72 @@ def check_lab_verifiers(labs: list[str]) -> int:
     return fail(msgs, "lab verify scripts")
 
 
+def check_lab_readme_consistency(labs: list[str]) -> int:
+    """H1 numbers must match folder NN; every lab README must mention verify.sh."""
+    msgs: list[str] = []
+    guide = ROOT / "docs" / "GIT_FROM_ZERO.md"
+    km_guide = CONTENT / "km" / "guide.md"
+
+    for lab_id in labs:
+        nn = lab_id[:2]
+        readme = ROOT / "labs" / lab_id / "README.md"
+        if not readme.is_file():
+            msgs.append(f"labs/{lab_id}/README.md missing")
+            continue
+        text = readme.read_text(encoding="utf-8")
+        first = text.splitlines()[0] if text.splitlines() else ""
+        match = LAB_H1_EN_RE.match(first)
+        if not match:
+            msgs.append(
+                f"labs/{lab_id}/README.md H1 must be `# Lab {nn} — …` (got {first!r})"
+            )
+        elif match.group(1) != nn:
+            msgs.append(
+                f"labs/{lab_id}/README.md H1 number {match.group(1)} != folder {nn}"
+            )
+        if "verify.sh" not in text:
+            msgs.append(f"labs/{lab_id}/README.md must mention ./verify.sh")
+
+        km_lab = CONTENT / "km" / "labs" / f"{lab_id}.md"
+        if km_lab.is_file():
+            km_text = km_lab.read_text(encoding="utf-8")
+            km_first = km_text.splitlines()[0] if km_text.splitlines() else ""
+            km_match = LAB_H1_KM_RE.match(km_first)
+            if not km_match:
+                msgs.append(
+                    f"km/labs/{lab_id}.md H1 must be `# លំហាត់ {nn} — …` "
+                    f"(got {km_first!r})"
+                )
+            elif km_match.group(1) != nn:
+                msgs.append(
+                    f"km/labs/{lab_id}.md H1 number {km_match.group(1)} != folder {nn}"
+                )
+            if "verify.sh" not in km_text:
+                msgs.append(f"km/labs/{lab_id}.md must mention ./verify.sh")
+
+    if guide.is_file():
+        for match in LAB_LINK_LABEL_EN_RE.finditer(guide.read_text(encoding="utf-8")):
+            label_nn = match.group(1).zfill(2)
+            path_nn = match.group(2)
+            if label_nn != path_nn:
+                msgs.append(
+                    f"docs/GIT_FROM_ZERO.md lab link label Lab {match.group(1)} "
+                    f"!= path labs/{path_nn}-… ({match.group(0)})"
+                )
+
+    if km_guide.is_file():
+        for match in LAB_LINK_LABEL_KM_RE.finditer(km_guide.read_text(encoding="utf-8")):
+            label_nn = match.group(1).zfill(2)
+            path_nn = match.group(2)
+            if label_nn != path_nn:
+                msgs.append(
+                    f"km/guide.md lab link label លំហាត់ {match.group(1)} "
+                    f"!= id {path_nn}-… ({match.group(0)})"
+                )
+
+    return fail(msgs, "lab README numbering + verify hints")
+
+
 CHROME_PARTIALS = ROOT / "scripts" / "chrome_partials"
 CHROME_PAGES = {
     "index.html": {"nav": "home", "logo_href": "./"},
@@ -1064,6 +1138,8 @@ def main() -> int:
     failures += check_sw_cache()
     print()
     failures += check_lab_verifiers(labs)
+    print()
+    failures += check_lab_readme_consistency(labs)
     print()
     if failures:
         print("Site quality check failed.")
