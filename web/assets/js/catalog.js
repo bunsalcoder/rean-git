@@ -45,11 +45,15 @@
         const classes = [done ? "is-complete" : "", isNext ? "is-next" : ""]
           .filter(Boolean)
           .join(" ");
+        const githubBadge = lab.verifyManual
+          ? `<span class="lab-github" data-i18n="lab.githubRequiredBadge"></span>`
+          : "";
         return `<li${classes ? ` class="${classes}"` : ""}>
           <a href="${labHref(lab.id)}" data-lab-id="${id}">
             <span class="lab-num">${escapeHtml(labNum(lab, index))}</span>
             <h3 class="lab-title" data-i18n="labs.${id}.title"></h3>
             <p class="lab-desc" data-i18n="labs.${id}.teaser"></p>
+            ${githubBadge}
             ${isNext ? `<span class="lab-next" data-i18n="home.startHere"></span>` : ""}
             ${done ? `<span class="lab-done" data-i18n="ui.done"></span>` : ""}
           </a>
@@ -66,11 +70,15 @@
         const id = escapeHtml(lab.id);
         const index = labs.indexOf(lab);
         const done = window.ReanGitUtil?.isLabComplete?.(lab.id);
+        const githubBadge = lab.verifyManual
+          ? `<span class="lab-github" data-i18n="lab.githubRequiredBadge"></span>`
+          : "";
         return `<a href="${labHref(lab.id)}" class="is-visible${done ? " is-complete" : ""}" data-lab-id="${id}">
           <span class="num">${escapeHtml(labNum(lab, index))}</span>
           <div>
             <h3 data-i18n="labs.${id}.title"></h3>
             <p data-i18n="labs.${id}.summary"></p>
+            ${githubBadge}
             ${done ? `<span class="lab-done" data-i18n="ui.done"></span>` : ""}
           </div>
         </a>`;

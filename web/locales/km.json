@@ -162,7 +162,11 @@
     "openCodespaces": "បើកលំហាត់នេះក្នុង Codespaces",
     "codespacesHint": "Terminal បើកក្នុងថតលំហាត់នេះ — បញ្ចប់ជំហាន រួចបិទភ្ជាប់ verify output នៅទីនេះ។",
     "relatedChapter": "សៀវភៅណែនាំ — {title}",
-    "relatedChapterFallback": "បើកជំពូកសៀវភៅណែនាំដែលត្រូវគ្នា"
+    "relatedChapterFallback": "បើកជំពូកសៀវភៅណែនាំដែលត្រូវគ្នា",
+    "githubRequiredBadge": "ត្រូវការ GitHub",
+    "githubDeferTitle": "មិនទាន់មានគណនី GitHub?",
+    "githubDeferBody": "គោលដៅពេញលេញនៃលំហាត់នេះត្រូវការគណនី GitHub។ លំហាត់ 08 បានគ្របដណ្តប់ remote ដោយគ្មាន GitHub រួចហើយ — រំលងទៅ {title} រួចត្រឡប់មកវិញពេលមានគណនី។",
+    "githubDeferCta": "បន្តជាមួយ {title}"
   },
   "ui": {
     "copy": "ចម្លង",

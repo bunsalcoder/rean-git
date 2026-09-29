@@ -1521,6 +1521,48 @@ html.theme-animate body *::after {
   width: max-content;
 }
 
+.lab-github {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  width: max-content;
+}
+
+.lab-github-defer {
+  margin: 0 0 1.5rem;
+  padding: 0.85rem 1rem 1rem;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 0.55rem 0.55rem 0;
+  background: var(--accent-soft);
+}
+
+.lab-github-defer-title {
+  margin: 0 0 0.35rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.lab-github-defer > p {
+  margin: 0 0 0.65rem;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.lab-github-defer-actions {
+  margin: 0;
+}
+
+.lab-github-defer-actions .btn {
+  justify-self: start;
+}
+
 .site-footer {
   position: relative;
   z-index: 1;
