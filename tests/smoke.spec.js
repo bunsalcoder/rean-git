@@ -175,6 +175,10 @@ test("home next-lab CTA advances after the first lab is done", async ({ page }) 
 
 test("remote PR lab notes GitHub steps are manual", async ({ page }) => {
   await page.goto("/lab.html?id=09-remote-pr");
+  const defer = page.locator("[data-lab-github-defer]");
+  await expect(defer).toBeVisible();
+  await expect(defer).toContainText(/GitHub/i);
+  await expect(defer.locator('a[data-lab-id="11-stash"]')).toBeVisible();
   await expect(page.locator(".lab-verify-manual")).toBeVisible();
   await expect(page.locator(".lab-verify-manual")).toContainText(/GitHub/i);
   await expect(page.locator(".lab-verify-scope")).toContainText(/manual|Mixed|ចម្រុះ/i);
@@ -185,6 +189,16 @@ test("remote PR lab notes GitHub steps are manual", async ({ page }) => {
   await expect(page.locator("[data-verify-passed]")).toBeDisabled();
   await page.locator("[data-verify-manual-confirm]").check();
   await expect(page.locator("[data-verify-passed]")).toBeEnabled();
+});
+
+test("labs grid badges GitHub-required labs", async ({ page }) => {
+  await page.goto("/labs.html");
+  await expect(
+    page.locator('[data-lab-grid] a[data-lab-id="09-remote-pr"] .lab-github')
+  ).toBeVisible();
+  await expect(
+    page.locator('[data-lab-grid] a[data-lab-id="11-stash"] .lab-github')
+  ).toHaveCount(0);
 });
 
 test("home shows completed lab count from local progress", async ({ page }) => {

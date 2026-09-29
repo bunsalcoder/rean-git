@@ -354,6 +354,34 @@ function paintVerifyFollowUp(wrap, labId) {
   nextWrap.hidden = false;
 }
 
+function nextOfflineLab(labs, fromId) {
+  const start = labs.findIndex((item) => item.id === fromId);
+  if (start < 0) return null;
+  for (let i = start + 1; i < labs.length; i += 1) {
+    if (!labs[i].verifyManual) return labs[i];
+  }
+  return null;
+}
+
+function prependGithubDeferNote(target, lab, labs) {
+  if (!target || !lab?.verifyManual) return;
+  const offline = nextOfflineLab(labs, lab.id);
+  if (!offline) return;
+  const note = document.createElement("aside");
+  note.className = "lab-github-defer";
+  note.setAttribute("data-lab-github-defer", "");
+  note.innerHTML = `
+    <p class="lab-github-defer-title">${escapeHtml(t("lab.githubDeferTitle"))}</p>
+    <p>${escapeHtml(t("lab.githubDeferBody", { title: offline.title }))}</p>
+    <p class="lab-github-defer-actions">
+      <a class="btn btn-ghost" href="${labHref(offline.id)}" data-lab-id="${escapeHtml(offline.id)}">${escapeHtml(
+        t("lab.githubDeferCta", { title: offline.title })
+      )}</a>
+    </p>
+  `;
+  target.insertAdjacentElement("afterbegin", note);
+}
+
 function appendVerifyHint(target, labId) {
   if (!target || !labId) return;
   const lab = getLabs().find((item) => item.id === labId);
@@ -1047,6 +1075,7 @@ async function initLabPage(signal, { animate = true } = {}) {
       const md = await loadLabMarkdown(lab.id);
       renderMarkdown(bodyEl, md);
       bodyEl.querySelector("h1")?.remove();
+      prependGithubDeferNote(bodyEl, lab, labs);
       appendVerifyHint(bodyEl, lab.id);
       syncLabChecklistProgress(lab.id);
     } catch (err) {
