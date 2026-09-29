@@ -1,4 +1,4 @@
-# Lab 10 — Stash
+# Lab 11 — Stash
 
 ## Goal
 
@@ -60,6 +60,8 @@ cat notes.txt
 - [ ] You stashed tracked + untracked changes with a message
 - [ ] You committed something else on a clean tree
 - [ ] `git stash pop` restored your WIP
+
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 
 ## Cleanup (optional)
 

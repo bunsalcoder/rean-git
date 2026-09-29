@@ -12,6 +12,8 @@ Handbook and labs are the product. Edit those first, then keep the site copies, 
 
 Lab folder IDs are **`NN-slug`** where `NN` is the zero-padded catalog index (`00`, `01`, …). Catalog order, folder name, locale keys, and fixture scripts must all use the same id. When renaming a lab, keep the old id in `labIdAliases` so bookmarks and saved progress still resolve.
 
+Lab README H1s must match the folder index: `# Lab NN — Title` (Khmer: `# លំហាត់ NN — …`). Handbook / guide link labels that say `Lab NN` or `លំហាត់ NN` must use the same `NN` as the path. Every lab README should mention `./verify.sh` so terminal-first learners can self-check.
+
 ### Add a new lab (checklist)
 
 1. Create `labs/<id>/` with `README.md` and `verify.sh` (use `scripts/lab_verify_lib.sh`).

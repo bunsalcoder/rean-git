@@ -78,6 +78,8 @@ git diff
 - [ ] ការកែ `dark-mode.css` និង `notes.md` នៅតែ unstaged
 - [ ] អ្នកបានប្រើ `git diff --staged` មុន commit
 
+ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
+
 ## សម្អាត (ស្រេចចិត្ត)
 
 ```bash

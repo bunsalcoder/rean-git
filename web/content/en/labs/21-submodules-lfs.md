@@ -1,4 +1,4 @@
-# Lab 20 — Submodules & Git LFS
+# Lab 21 — Submodules & Git LFS
 
 ## Goal
 
@@ -101,6 +101,8 @@ Submodules pin a commit. LFS keeps huge binaries out of normal Git objects. Neit
 - [ ] The parent has a commit that bumps the submodule
 - [ ] If Git LFS is installed: `*.bin` is tracked and `hero.bin` is committed
 - [ ] You can explain clone `--recurse-submodules` vs `git lfs install`
+
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 
 ## Cleanup (optional)
 

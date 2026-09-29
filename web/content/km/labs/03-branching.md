@@ -1,4 +1,4 @@
-# លំហាត់ 02 — សាខា
+# លំហាត់ 03 — សាខា
 
 ## គោលដៅ
 
@@ -66,6 +66,8 @@ git log --oneline --graph --all
 - [ ] `feat/contact-page` និង `fix/homepage-crash` មានទាំងពីរ
 - [ ] `main` មិនទាន់មានបន្ទាត់ draft ណាមួយ
 - [ ] អ្នកស្ថិតនៅលើ `main` ជាមួយ working tree ស្អាត
+
+ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
 
 ## សម្អាត (ស្រេចចិត្ត)
 

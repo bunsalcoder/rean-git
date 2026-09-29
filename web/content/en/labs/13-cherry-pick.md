@@ -1,4 +1,4 @@
-# Lab 12 — Cherry-pick
+# Lab 13 — Cherry-pick
 
 ## Goal
 
@@ -51,6 +51,8 @@ ls
 - [ ] Feature branch still has both commits
 - [ ] `main` gained only the fix commit via cherry-pick
 - [ ] Graph shows the pick clearly
+
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 
 ## Cleanup (optional)
 

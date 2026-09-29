@@ -1,4 +1,4 @@
-# Lab 17 — Hooks
+# Lab 18 — Hooks
 
 ## Goal
 
@@ -63,6 +63,8 @@ Hooks in `.git/hooks/` are **local** — they are not shared when someone clones
 - [ ] A commit containing `SECRET` was rejected by the hook
 - [ ] A clean commit succeeded afterward
 - [ ] You can explain why teammates do not get your `.git/hooks/` automatically
+
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 
 ## Cleanup (optional)
 

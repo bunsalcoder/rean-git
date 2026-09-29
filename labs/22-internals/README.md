@@ -1,4 +1,4 @@
-# Lab 21 — Internals
+# Lab 22 — Internals
 
 ## Goal
 
@@ -61,6 +61,8 @@ ls .git/objects
 - [ ] You can explain HEAD → branch → commit → tree → blob
 - [ ] `git cat-file -p` showed commit, tree, and blob contents
 - [ ] You know a branch is a movable pointer file under `.git/refs`
+
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 
 ## Cleanup (optional)
 

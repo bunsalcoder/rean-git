@@ -1,4 +1,4 @@
-# លំហាត់ 12 — Cherry-pick — ចម្លង commit
+# លំហាត់ 13 — Cherry-pick — ចម្លង commit
 
 ## គោលដៅ
 
@@ -51,6 +51,8 @@ ls
 - [ ] Feature branch នៅតែមានទាំងពីរ commits
 - [ ] `main` ទទួលបានតែ fix commit តាម cherry-pick
 - [ ] Graph បង្ខាញការរើសយ៉ាងច្បាស់
+
+ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
 
 ## សម្អាត (ស្រេចចិត្ត)
 

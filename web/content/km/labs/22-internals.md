@@ -1,4 +1,4 @@
-# លំហាត់ 21 — ផ្នែកខាងក្នុង
+# លំហាត់ 22 — ផ្នែកខាងក្នុង
 
 ## គោលដៅ
 
@@ -61,6 +61,8 @@ ls .git/objects
 - [ ] អ្នកអាចពន្យល់ HEAD → branch → commit → tree → blob
 - [ ] `git cat-file -p` បង្ខាញខ្លីមសារ commit, tree និង blob
 - [ ] អ្នកដឹងថា branch គី pointer file ដែលផ្លាស់ទីបាននៅក្រោម `.git/refs`
+
+ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
 
 ## សម្អាត (ស្រេចចិត្ត)
 

@@ -1,4 +1,4 @@
-# លំហាត់ 20 — Submodule និង Git LFS
+# លំហាត់ 21 — Submodule និង Git LFS
 
 ## គោលដៅ
 
@@ -101,6 +101,8 @@ Submodules ខ្ទាស់ commit មួយ។ LFS ទុក binary ធំៗ
 - [ ] មេមាន commit ដែល bump submodule
 - [ ] បើ Git LFS បានដំឡើង៖ `*.bin` ត្រូវបានតាមដាន ហើយ `hero.bin` ត្រូវបាន commit
 - [ ] អ្នកអាចពន្យល់ clone `--recurse-submodules` vs `git lfs install`
+
+ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
 
 ## សម្អាត (ស្រេចចិត្ត)
 

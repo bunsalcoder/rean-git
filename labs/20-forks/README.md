@@ -1,4 +1,4 @@
-# Lab 19 — Forks & multiple remotes
+# Lab 20 — Forks & multiple remotes
 
 ## Goal
 
@@ -63,7 +63,7 @@ git push -u origin feat/thanks
 git remote show origin
 ```
 
-You would open a pull request from `origin/feat/thanks` into `upstream` (Lab 08 practiced the GitHub PR itself).
+You would open a pull request from `origin/feat/thanks` into `upstream` (Lab 09 practiced the GitHub PR itself).
 
 ### 3. Upstream moves
 
@@ -94,6 +94,8 @@ git log --oneline -2
 - [ ] `feat/thanks` was pushed to origin
 - [ ] `git fetch upstream` brought in `Maintainer update`
 - [ ] You can explain origin = your fork, upstream = the original
+
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 
 ## Cleanup (optional)
 

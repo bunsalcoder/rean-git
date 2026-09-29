@@ -1,4 +1,4 @@
-# លំហាត់ 18 — ចុះហត្ថលេខា commits
+# លំហាត់ 19 — ចុះហត្ថលេខា commits
 
 ## គោលដៅ
 
@@ -80,6 +80,8 @@ Commit ដំបូង (`Start unsigned`) គ្មានហត្ថលេខ�
 - [ ] `gpg.format` គឺ `ssh` ហើយ `commit.gpgsign` បើកក្នុង repo នេះ
 - [ ] `git verify-commit HEAD` ជោគជ័យ
 - [ ] អ្នកអាចពន្យល់ថាហេតុអ្វី GitHub នៅតែត្រូវការបន្ថែម public key ជា signing key
+
+ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
 
 ## សម្អាត (ស្រេចចិត្ត)
 

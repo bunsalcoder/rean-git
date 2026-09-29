@@ -1,4 +1,4 @@
-# Lab 05 — Rebase
+# Lab 06 — Rebase
 
 ## Goal
 
@@ -74,6 +74,8 @@ git log --oneline --graph --all
 - [ ] Rebase completed (with or without a conflict fix)
 - [ ] Graph looks linear compared to a merge commit workflow
 - [ ] You can say when *not* to rebase (shared published commits)
+
+From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 
 ## Cleanup (optional)
 
