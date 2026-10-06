@@ -253,8 +253,8 @@
     },
     "07-undo": {
       "title": "Undo",
-      "teaser": "Restore, reset, revert.",
-      "summary": "Restore, amend, reset, and revert with intent."
+      "teaser": "Restore, reset, revert, reflog.",
+      "summary": "Restore, amend, reset, revert, and recover a lost commit with reflog."
     },
     "08-local-remote": {
       "title": "Local remote",

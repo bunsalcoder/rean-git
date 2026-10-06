@@ -1,5 +1,5 @@
 {
-  "guide.md": "6f4cbc1421f431fe",
+  "guide.md": "89bc4bc9bc7f61bb",
   "labs/00-install-config.md": "0697371b914c6e37",
   "labs/01-first-repo.md": "feafe9df7dcb04b4",
   "labs/02-staging.md": "57157034da8f40b6",
@@ -7,7 +7,7 @@
   "labs/04-branch-merge.md": "d709e139ffc90079",
   "labs/05-conflict.md": "aa130b3ddf8a80ab",
   "labs/06-rebase.md": "e6f00118db62ea88",
-  "labs/07-undo.md": "6544cd62cb8d15da",
+  "labs/07-undo.md": "857478f238f2ce2f",
   "labs/08-local-remote.md": "4b91da145d32953a",
   "labs/09-remote-pr.md": "8076ccdb25a3cf0a",
   "labs/10-team-workflow.md": "03a665289217841c",

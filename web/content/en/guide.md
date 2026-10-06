@@ -1343,6 +1343,7 @@ Use this as your progress board — foundations first, then hero skills. Check i
 
 - [ ] Rebase a *local* feature onto latest `main`
 - [ ] Choose restore / reset / revert for the situation
+- [ ] Recover a “lost” commit with `reflog`
 - [ ] Rebase and undo labs complete
 
 ### Remote & team

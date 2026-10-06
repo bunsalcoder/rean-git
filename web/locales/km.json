@@ -253,8 +253,8 @@
     },
     "07-undo": {
       "title": "ត្រឡប់កំហុស",
-      "teaser": "ស្តារ, reset, និង revert។",
-      "summary": "Restore, amend, reset និង revert ដោយមានគោលបំណាង។"
+      "teaser": "ស្តារ, reset, revert, reflog។",
+      "summary": "Restore, amend, reset, revert និងស្តារការបាត់ commit ដោយ reflog។"
     },
     "08-local-remote": {
       "title": "Remote ក្នុងស្រុក",

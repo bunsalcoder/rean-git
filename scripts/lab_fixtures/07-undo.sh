@@ -12,3 +12,9 @@ fixture_commit "Add file"
 printf 'v2\n' >> file.txt
 fixture_commit "Bump file to v2"
 fixture_git revert HEAD --no-edit >/dev/null
+
+printf 'keeper\n' > keep.txt
+fixture_commit "Keep this commit"
+lost="$(fixture_git rev-parse HEAD)"
+fixture_git reset --hard HEAD~1 >/dev/null
+fixture_git switch -c recover "${lost}" >/dev/null
