@@ -607,7 +607,7 @@ git push                  # upload your commits
 ### Lab
 
 Practice the commands offline first: **[Lab 08 — Local remote](./lab.html?id=08-local-remote)**.  
-Then use a real GitHub repo: **[Lab 09 — Remote & PR](./lab.html?id=09-remote-pr)** (needs a GitHub account).
+Then practice a PR-style merge: **[Lab 09 — Remote & PR](./lab.html?id=09-remote-pr)** (local bare remote works; GitHub is optional).
 
 ---
 
@@ -649,7 +649,7 @@ git push origin --delete fix/login-redirect   # optional cleanup
 
 ### Lab
 
-Finish the remote practice: **[Lab 09 — Remote & PR](./lab.html?id=09-remote-pr)**
+Finish the remote practice: **[Lab 09 — Remote & PR](./lab.html?id=09-remote-pr)** (offline merge simulation or a real GitHub PR).
 
 ---
 

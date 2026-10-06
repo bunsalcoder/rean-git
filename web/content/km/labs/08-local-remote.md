@@ -2,7 +2,7 @@
 
 ## គោលដៅ
 
-អនុវត្ត `remote`, `push`, `fetch` និង `pull` ដោយប្រើ **bare repo ក្នុងស្រុក** ជា `origin` — មិនត្រូវការគណនី GitHub។ លំហាត់ 09 បន្ថែម PR ពិតនៅលើ GitHub បន្ទាប់មក។
+អនុវត្ត `remote`, `push`, `fetch` និង `pull` ដោយប្រើ **bare repo ក្នុងស្រុក** ជា `origin` — មិនត្រូវការគណនី GitHub។ លំហាត់ 09 បន្ថែមការបញ្ចូលបែប PR (នៅតែ offline បាន; GitHub ស្រេចចិត្ត)។
 
 ## ការរៀបចំ
 
@@ -20,7 +20,7 @@ git commit -m "Initial commit"
 
 ## ជំហាន
 
-### 1. បង្កើត bare remote (ជំនួស GitHub)
+### 1. Create a bare remote (stand-in for GitHub)
 
 ```bash
 cd ..
@@ -31,7 +31,7 @@ git remote -v
 git push -u origin main
 ```
 
-### 2. សម្រាប់ម៉ាស៊ីនផ្សេង ដោយ clone ទីពីរ
+### 2. Simulate another machine with a second clone
 
 ```bash
 cd ..
@@ -45,7 +45,7 @@ git commit -m "Add note from other clone"
 git push origin main
 ```
 
-### 3. នាំ commits ទាំងនោះចូល playground របស់អ្នក
+### 3. Bring those commits into your playground
 
 ```bash
 cd ../../playground
@@ -56,15 +56,15 @@ cat README.md
 git status
 ```
 
-→ `main` ក្នុង playground របស់អ្នកគួរមានបន្ទាត់ពី clone ផ្សេង។
+→ Your playground `main` should include the other clone’s line.
 
 ## លក្ខខណ្ឌជោគជ័យ
 
-- [ ] `git remote -v` បង្ហាញ `origin` ចង្អុលទៅ `sandbox/origin.git`
-- [ ] `README.md` ក្នុង playground មានបន្ទាត់ពី clone ផ្សេង
-- [ ] Working tree ស្អាតនៅលើ `main`
+- [ ] `git remote -v` shows `origin` pointing at `sandbox/origin.git`
+- [ ] Playground `README.md` contains the other clone’s line
+- [ ] Working tree is clean on `main`
 
-ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
+ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីប្ងាផ្ទាត់។
 
 ## សម្អាត (ស្រេចចិត្ត)
 

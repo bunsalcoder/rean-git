@@ -151,10 +151,10 @@
     "verifyPassed": "Mark lab done",
     "verifyDone": "Lab marked done on this device.",
     "verifyNext": "Next up",
-    "verifyManualNote": "Local checks only. PR / merge steps on GitHub are not verified by ./verify.sh — confirm those in the browser (or with gh).",
-    "verifyManualConfirm": "I confirmed the GitHub PR / merge steps for this lab.",
+    "verifyManualNote": "Local checks only. Confirm you completed the PR-style merge — offline (second-clone merge) or on GitHub (browser / gh).",
+    "verifyManualConfirm": "I confirmed the PR-style merge for this lab (offline or GitHub).",
     "verifyScopeLocal": "Auto-checked: local Git state via ./verify.sh",
-    "verifyScopeMixed": "Mixed: local Git is auto-checked; GitHub PR / merge is manual",
+    "verifyScopeMixed": "Mixed: local Git is auto-checked; PR-style merge is confirmed by you",
     "verifyPasteLabel": "Paste verify output",
     "verifyPastePlaceholder": "All 3 checks passed for …",
     "verifyOutputOk": "Looks like a green verify for this lab (honor system).",
@@ -165,7 +165,7 @@
     "relatedChapterFallback": "Open the matching handbook chapter",
     "githubRequiredBadge": "Needs GitHub",
     "githubDeferTitle": "No GitHub account yet?",
-    "githubDeferBody": "Full goals for this lab need a GitHub account. Lab 08 already covered remotes offline — skip ahead to {title} and come back when you have an account.",
+    "githubDeferBody": "You can finish this lab offline with the local bare-remote steps in the README. Or skip ahead to {title} and come back later for the optional GitHub PR UI.",
     "githubDeferCta": "Continue with {title}"
   },
   "ui": {
@@ -263,13 +263,13 @@
     },
     "09-remote-pr": {
       "title": "Remote & PR",
-      "teaser": "Push and open a PR.",
-      "summary": "Push a branch and open a clean pull request."
+      "teaser": "Push and merge like a PR.",
+      "summary": "Push a branch and land it with a PR-style merge — local bare remote or GitHub."
     },
     "10-team-workflow": {
       "title": "Team workflow",
       "teaser": "Habits that scale.",
-      "summary": "Ignore junk, sync often, write reviewable PRs."
+      "summary": "Ignore junk, rebase onto main, and land work with a PR-style merge — offline or on GitHub."
     },
     "11-stash": {
       "title": "Stash",

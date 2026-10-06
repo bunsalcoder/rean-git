@@ -20,7 +20,7 @@ lab_check "local main matches origin/main" test "$(git_pg rev-parse HEAD)" = "$(
 
 origin_url="$(git_pg remote get-url origin 2>/dev/null || true)"
 if [[ "${origin_url}" == *github.com* ]]; then
-  lab_warn "Remote PR merge on GitHub cannot be verified offline — confirm the PR was merged in the browser."
+  lab_warn "GitHub PR/merge cannot be verified offline — confirm in the browser (or with gh). Offline bare-remote merges are fully checked above."
 fi
 
 lab_finish

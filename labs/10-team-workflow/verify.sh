@@ -26,7 +26,7 @@ lab_check "team checklist commit present" log_matches "Add lightweight team chec
 
 origin_url="$(git_pg remote get-url origin 2>/dev/null || true)"
 if [[ "${origin_url}" == *github.com* ]]; then
-  lab_warn "Rebase onto latest main and PR quality are manual — confirm on GitHub if unsure."
+  lab_warn "GitHub PR quality cannot be verified offline — confirm in the browser if you used GitHub. Offline bare-remote merges are fully checked above."
 fi
 
 lab_finish

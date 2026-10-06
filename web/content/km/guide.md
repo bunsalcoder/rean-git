@@ -607,7 +607,7 @@ git push                  # upload your commits
 ### លំហាត់
 
 អនុវត្តពាក្យបញ្ជាដោយគ្មាន GitHub ជាមុន៖ **[លំហាត់ 08 — Remote ក្នុងស្រុក](./lab.html?id=08-local-remote)**។  
-បន្ទាប់មកប្រើ repo GitHub ពិត៖ **[លំហាត់ 09 — Remote និង PR](./lab.html?id=09-remote-pr)** (ត្រូវការគណនី GitHub)។
+បន្ទាប់មកអនុវត្តការបញ្ចូលបែប PR: **[លំហាត់ 09 — Remote និង PR](./lab.html?id=09-remote-pr)** (bare remote ក្នុងស្រុកដំណើរការ; GitHub ស្រេចចិត្ត)។
 
 ---
 
@@ -649,7 +649,7 @@ git push origin --delete fix/login-redirect   # optional cleanup
 
 ### លំហាត់
 
-បញ្ចប់ការអនុវត្តពីចម្ងាយ៖ **[លំហាត់ 09 — Remote និង PR](./lab.html?id=09-remote-pr)**
+បញ្ចប់ការអនុវត្តពីចម្ងាយ៖ **[លំហាត់ 09 — Remote និង PR](./lab.html?id=09-remote-pr)** (simulation merge offline ឬ PR GitHub ពិត)។
 
 ---
 
@@ -1174,7 +1174,7 @@ Git រក្សាទុកវត្ថុដែលត្រូវបានប�
 |--------|-------|
 | **blob** | មាតិកាឯកសារ |
 | **tree** | បញ្ជីរាយបញ្ជី → blobs/trees |
-| **commit** | ឪពុកម្តាយ + tree + អ្នកនិពន្ធ + សារ |
+| **commit** | ឬពុកម្តាយ + tree + អ្នកនិពន្ធ + សារ |
 | **tag** | វត្ថុ tag កំណត់ចំណាំ |
 
 ```bash
