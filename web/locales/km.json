@@ -151,10 +151,10 @@
     "verifyPassed": "សម្គាល់លំហាត់ថារួចរាល់",
     "verifyDone": "លំហាត់ត្រូវបានសម្គាល់ថារួចរាល់នៅលើឧបករណ៍នេះ។",
     "verifyNext": "បន្តទៀត",
-    "verifyManualNote": "ពិនិត្យតែ local ប៉ុណ្ណោះ។ ជំហាន PR / merge លើ GitHub មិនត្រូវបាន verify ដោយ ./verify.sh ទេ — បញ្ជាក់ក្នុង browser (ឬជាមួយ gh)។",
-    "verifyManualConfirm": "ខ្ញុំបានបញ្ជាក់ជំហាន PR / merge លើ GitHub សម្រាប់លំហាត់នេះ។",
+    "verifyManualNote": "ពិនិត្យតែ local ប៉ុណ្ណោះ។ បញ្ជាក់ថាអ្នកបានបញ្ចប់ការបញ្ចូលបែប PR — offline (merge តាម clone ទីពីរ) ឬលើ GitHub (browser / gh)។",
+    "verifyManualConfirm": "ខ្ញុំបានបញ្ជាក់ការបញ្ចូលបែប PR សម្រាប់លំហាត់នេះ (offline ឬ GitHub)។",
     "verifyScopeLocal": "ពិនិត្យស្វ័យប្រវត្តិ៖ ស្ថានភាព Git local តាម ./verify.sh",
-    "verifyScopeMixed": "ចម្រុះ៖ Git local ពិនិត្យស្វ័យប្រវត្តិ; PR / merge លើ GitHub ជាដៃ",
+    "verifyScopeMixed": "ចម្រុះ៖ Git local ពិនិត្យស្វ័យប្រវត្តិ; ការបញ្ចូលបែប PR អ្នកបញ្ជាក់ដោយខ្លួនឯង",
     "verifyPasteLabel": "បិទភ្ជាប់ output ពី verify",
     "verifyPastePlaceholder": "All 3 checks passed for …",
     "verifyOutputOk": "ហាក់ដូចជា verify ជោគជ័យសម្រាប់លំហាត់នេះ (ប្រព័ន្ធកិត្តិយស)។",
@@ -165,7 +165,7 @@
     "relatedChapterFallback": "បើកជំពូកសៀវភៅណែនាំដែលត្រូវគ្នា",
     "githubRequiredBadge": "ត្រូវការ GitHub",
     "githubDeferTitle": "មិនទាន់មានគណនី GitHub?",
-    "githubDeferBody": "គោលដៅពេញលេញនៃលំហាត់នេះត្រូវការគណនី GitHub។ លំហាត់ 08 បានគ្របដណ្តប់ remote ដោយគ្មាន GitHub រួចហើយ — រំលងទៅ {title} រួចត្រឡប់មកវិញពេលមានគណនី។",
+    "githubDeferBody": "អ្នកអាចបញ្ចប់លំហាត់នេះ offline តាមជំហាន bare remote ក្នុងស្រុកក្នុង README។ ឬរំលងទៅ {title} រួចត្រឡប់មកវិញពេលចង់ហ្វឹកហាត់ UI សំណើទាញលើ GitHub។",
     "githubDeferCta": "បន្តជាមួយ {title}"
   },
   "ui": {
@@ -263,13 +263,13 @@
     },
     "09-remote-pr": {
       "title": "Remote និងសំណើទាញ",
-      "teaser": "Push ហើយបើកសំណើទាញ (PR)។",
-      "summary": "Push branch ហើយបើក pull request ឲ្យស្អាត។"
+      "teaser": "Push ហើយបញ្ចូលបែប PR។",
+      "summary": "Push branch ហើយបញ្ចូលបែប PR — bare remote ក្នុងស្រុក ឬ GitHub។"
     },
     "10-team-workflow": {
       "title": "លំហូរការងារក្រុម",
       "teaser": "ទម្លាប់ដែលអាចពង្រីកបាន។",
-      "summary": "មិនអើពើឯកសារឥតប្រយោជន៍ sync ញឹកញាប់ សរសេរ PR ដែលពិនិត្យបាន។"
+      "summary": "មិនអើពើឯកសារឥតប្រយោជន៍ rebase លើ main ហើយបញ្ចូលបែប PR — offline ឬ GitHub។"
     },
     "11-stash": {
       "title": "Stash — ទុកការងារបណ្តោះអាសន្ន",

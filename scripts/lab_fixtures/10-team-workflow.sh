@@ -18,7 +18,7 @@ git init -b main "${SANDBOX}/seed" >/dev/null
 git -C "${SANDBOX}/seed" config user.name "Lab Learner"
 git -C "${SANDBOX}/seed" config user.email "lab@example.com"
 git -C "${SANDBOX}/seed" config commit.gpgsign false
-printf '# Lab 07\n' > "${SANDBOX}/seed/README.md"
+printf '# Lab 10\n' > "${SANDBOX}/seed/README.md"
 git -C "${SANDBOX}/seed" add README.md
 git -C "${SANDBOX}/seed" commit -m "Initial commit" >/dev/null
 git clone --bare "${SANDBOX}/seed" "${SANDBOX}/origin.git" >/dev/null

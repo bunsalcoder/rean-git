@@ -21,6 +21,7 @@ LAB_SECTION_EN_TO_KM: dict[str, str] = {
     "Setup": "ការរៀបចំ",
     "Prerequisites": "លក្ខខណ្ឌមុន",
     "Steps": "ជំហាន",
+    "Alternative: GitHub (optional)": "ជម្រើសផ្សេង: GitHub (ស្រេចចិត្ត)",
     "Success criteria": "លក្ខខណ្ឌជោគជ័យ",
     "Cleanup (optional)": "សម្អាត (ស្រេចចិត្ត)",
     "Summary": "សង្ខេប",
