@@ -2,14 +2,14 @@
 
 ## Goal
 
-Practice safe undos: restore, unstage, amend, soft reset, and revert.
+Practice safe undos: restore, unstage, amend, soft reset, revert, and recover a “lost” commit with reflog.
 
 ## Setup
 
 ```bash
 cd labs/07-undo
 mkdir -p playground && cd playground
-git init
+git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
 echo "v1" > file.txt
@@ -73,12 +73,37 @@ git log --oneline
 
 → A new commit undoes the previous change; history stays.
 
+### 6. Lose a commit on purpose — recover with reflog
+
+```bash
+echo "keeper" > keep.txt
+git add keep.txt
+git commit -m "Keep this commit"
+
+# Lab only — dangerous in real life if you still need the tip
+git reset --hard HEAD~1
+git log --oneline
+```
+
+→ `keep.txt` is gone from `main`. The commit is not erased yet.
+
+```bash
+git reflog
+# Find the line for "Keep this commit" (often HEAD@{1}) and use its hash
+git switch -c recover HEAD@{1}
+cat keep.txt
+git log --oneline
+```
+
+→ You are on `recover` with `keep.txt` back. `main` still ends at the revert.
+
 ## Success criteria
 
 - [ ] `git restore` discarded a bad edit
 - [ ] You unstaged without losing work
 - [ ] You amended a local commit message
 - [ ] You used `revert` and still have a clean log story
+- [ ] You recovered a reset commit on a `recover` branch via `reflog`
 
 From the lab folder (not inside `playground/`), run `./verify.sh` to self-check.
 

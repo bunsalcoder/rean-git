@@ -1341,6 +1341,7 @@ git show-ref
 
 - [ ] Rebase feature *local* ទៅលើ `main` ចុងក្រោយ
 - [ ] ជ្រើស restore / reset / revert តាមស្ថានការណ៍
+- [ ] ស្តារ commit ដែល «បាត់» ដោយ `reflog`
 - [ ] លំហាត់ rebase និង undo បានបញ្ចប់
 
 ### Remote និងក្រុម
