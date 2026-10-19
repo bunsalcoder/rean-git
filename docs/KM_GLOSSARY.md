@@ -4,6 +4,8 @@ Shared terms for handbook, labs, and UI (`web/locales/km.json`). Prefer these ov
 
 Keep Git command names, branch names, and file paths in English inside code blocks.
 
+Chapter titles that are Git vocabulary (`Branching`, `Stash`, `Bisect`, `Hooks`, …) may stay English in both the TOC and `##` headings so they match command names; translate surrounding prose.
+
 | English | Khmer | Notes |
 | --- | --- | --- |
 | lab | លំហាត់ | Not មន្ទីរពិសោធន៍ (science lab) |

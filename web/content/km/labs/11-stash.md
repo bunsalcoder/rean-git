@@ -35,9 +35,9 @@ git status
 git stash list
 ```
 
-→ Working tree គួរស្គាត។ stash list បង្ខាញ entry របស់អ្នក។
+→ Working tree គួរស្អាត។ stash list បង្ហាញ entry របស់អ្នក។
 
-### 3. ធ្វើ “hotfix” លើ tree ស្គាត
+### 3. ធ្វើ “hotfix” លើ tree ស្អាត
 
 ```bash
 echo "hotfix line" >> notes.txt
@@ -58,7 +58,7 @@ cat notes.txt
 ## លក្ខខណ្ឌជោគជ័យ
 
 - [ ] អ្នក stash tracked + untracked changes ជាមួយសារ
-- [ ] អ្នក commit អ្វីផ្សេងនៅលើ tree ស្គាត
+- [ ] អ្នក commit អ្វីផ្សេងនៅលើ tree ស្អាត
 - [ ] `git stash pop` ស្តារ WIP របស់អ្នក
 
 ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។

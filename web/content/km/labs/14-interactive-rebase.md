@@ -30,7 +30,7 @@ git log --oneline
 
 ### 2. Squash ដោយ interactive rebase ដែលមាន script
 
-នេះជៀសវាងការប្រយុទ្ធជាមួយ vim ក្នុង lab។ វាប្តូរ commit រាល់បន្ទាប់ពីទីមួយទៅ `squash` បន្ទាប់មកដាក់សារស្គាត៖
+នេះជៀសវាងការប្រយុទ្ធជាមួយ vim ក្នុង lab។ វាប្តូរ commit រាល់បន្ទាប់ពីទីមួយទៅ `squash` បន្ទាប់មកដាក់សារស្អាត៖
 
 ```bash
 export GIT_SEQUENCE_EDITOR="sed -i -e '2,\$s/^pick/squash/'"
@@ -40,7 +40,7 @@ unset GIT_SEQUENCE_EDITOR GIT_EDITOR
 git log --oneline
 ```
 
-នៅលើ macOS បើ `sed -i` ត្គូញត្គែរ ប្រើ៖
+នៅលើ macOS បើ `sed -i` ត្អូញត្អែរ ប្រើ៖
 
 ```bash
 export GIT_SEQUENCE_EDITOR="sed -i '' -e '2,\$s/^pick/squash/'"
@@ -49,7 +49,7 @@ git rebase -i HEAD~3
 unset GIT_SEQUENCE_EDITOR GIT_EDITOR
 ```
 
-→ អ្នកគួរឃើញ `Start` បូក commit ស្គាតមួយ ជំនួសបីដែលរំខាន។
+→ អ្នកគួរឃើញ `Start` បូក commit ស្អាតមួយ ជំនួសបីដែលរំខាន។
 
 ### 3. ដឹងថាអ្នកទើបធ្វើអ្វី
 
@@ -62,7 +62,7 @@ unset GIT_SEQUENCE_EDITOR GIT_EDITOR
 
 ## លក្ខខណ្ឌជោគជ័យ
 
-- [ ] បី WIP commits ក្លាយជា commit ស្គាតមួយ (បូក `Start`)
+- [ ] បី WIP commits ក្លាយជា commit ស្អាតមួយ (បូក `Start`)
 - [ ] អ្នកយល់ `pick` vs `squash`
 - [ ] អ្នកសរសេរឡើងវិញតែប្រវត្តិ *local*
 

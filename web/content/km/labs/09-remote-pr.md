@@ -76,8 +76,8 @@ cat README.md
 
 បើអ្នកមានគណនី GitHub រួច ហើយចង់ UI PR ពិត:
 
-1. បង្កើត repository **ទទេហ្មី** ឈ្មោះ `rean-git-lab09` (គ្មាន README)។
-2. ចង `origin` ទៅវា ជំនួស bare remote (ឬចាប្តើម `playground/` ថ្មី):
+1. បង្កើត repository **ទទេថ្មី** ឈ្មោះ `rean-git-lab09` (គ្មាន README)។
+2. ចង `origin` ទៅវា ជំនួស bare remote (ឬចាប់ផ្តើម `playground/` ថ្មី):
 
 ```bash
 git remote remove origin
