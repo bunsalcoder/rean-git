@@ -51,7 +51,7 @@ git switch main
 ## លក្ខខណ្ឌជោគជ័យ
 
 - [ ] អ្នកបង្កើត annotated tags ជាមួយសារ
-- [ ] `git show` បង្ខាញ tag metadata
+- [ ] `git show` បង្ហាញ tag metadata
 - [ ] អ្នកបានទៅមើល tag និង ត្រឡប់ទៅ `main`
 
 ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។

@@ -156,7 +156,7 @@
     "verifyScopeLocal": "ពិនិត្យស្វ័យប្រវត្តិ៖ ស្ថានភាព Git local តាម ./verify.sh",
     "verifyScopeMixed": "ចម្រុះ៖ Git local ពិនិត្យស្វ័យប្រវត្តិ; ការបញ្ចូលបែប PR អ្នកបញ្ជាក់ដោយខ្លួនឯង",
     "verifyPasteLabel": "បិទភ្ជាប់ output ពី verify",
-    "verifyPastePlaceholder": "All 3 checks passed for …",
+    "verifyPastePlaceholder": "ឧទាហរណ៍៖ All 3 checks passed for …",
     "verifyOutputOk": "ហាក់ដូចជា verify ជោគជ័យសម្រាប់លំហាត់នេះ (ប្រព័ន្ធកិត្តិយស)។",
     "verifyOutputBad": "Output នេះមិនមែនជា ./verify.sh ជោគជ័យសម្រាប់លំហាត់នេះទេ។",
     "openCodespaces": "បើកលំហាត់នេះក្នុង Codespaces",

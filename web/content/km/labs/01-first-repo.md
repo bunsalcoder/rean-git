@@ -8,7 +8,7 @@
 
 ```bash
 cd labs/01-first-repo
-# If this folder is inside the rean-git repo already, work in a subfolder:
+# បើថតនេះស្ថិតក្នុង repo rean-git រួចហើយ ធ្វើការក្នុងថតរង៖
 mkdir -p playground && cd playground
 ```
 

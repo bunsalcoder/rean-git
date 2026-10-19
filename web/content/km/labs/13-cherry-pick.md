@@ -50,7 +50,7 @@ ls
 
 - [ ] Feature branch នៅតែមានទាំងពីរ commits
 - [ ] `main` ទទួលបានតែ fix commit តាម cherry-pick
-- [ ] Graph បង្ខាញការរើសយ៉ាងច្បាស់
+- [ ] Graph បង្ហាញការរើសយ៉ាងច្បាស់
 
 ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
 

@@ -47,7 +47,7 @@ BLOB=$(git rev-parse HEAD:hello.txt)
 git cat-file -p "$BLOB"
 ```
 
-→ Tree រាយ `hello.txt` → blob។ blob គីខ្លីមសារ file។
+→ Tree រាយ `hello.txt` → blob។ blob គឺខ្លឹមសារ file។
 
 ### 4. មើល refs
 
@@ -59,8 +59,8 @@ ls .git/objects
 ## លក្ខខណ្ឌជោគជ័យ
 
 - [ ] អ្នកអាចពន្យល់ HEAD → branch → commit → tree → blob
-- [ ] `git cat-file -p` បង្ខាញខ្លីមសារ commit, tree និង blob
-- [ ] អ្នកដឹងថា branch គី pointer file ដែលផ្លាស់ទីបាននៅក្រោម `.git/refs`
+- [ ] `git cat-file -p` បង្ហាញខ្លឹមសារ commit, tree និង blob
+- [ ] អ្នកដឹងថា branch គឺ pointer file ដែលផ្លាស់ទីបាននៅក្រោម `.git/refs`
 
 ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
 
