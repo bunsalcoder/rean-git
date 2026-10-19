@@ -161,6 +161,10 @@ function enhanceCheckboxes(root) {
     const key = String(index);
     input.disabled = false;
     input.removeAttribute("disabled");
+    if (!input.getAttribute("aria-label") && !input.getAttribute("aria-labelledby")) {
+      const labelText = (item?.textContent || "").replace(/\s+/g, " ").trim();
+      if (labelText) input.setAttribute("aria-label", labelText);
+    }
 
     if (Object.prototype.hasOwnProperty.call(saved, key)) {
       input.checked = Boolean(saved[key]);

@@ -59,19 +59,19 @@
   --surface: #ffffff;
   --line: rgba(22, 26, 31, 0.1);
   --line-strong: rgba(22, 26, 31, 0.16);
-  --accent: #e85d04;
-  --accent-deep: #c44d03;
-  --accent-soft: rgba(232, 93, 4, 0.12);
-  --accent-border: rgba(232, 93, 4, 0.45);
-  --accent-glow: rgba(232, 93, 4, 0.28);
-  --side-hover: rgba(232, 93, 4, 0.07);
-  --side-active-hover: rgba(232, 93, 4, 0.18);
+  --accent: #c2410c;
+  --accent-deep: #9a3412;
+  --accent-soft: rgba(194, 65, 12, 0.12);
+  --accent-border: rgba(194, 65, 12, 0.45);
+  --accent-glow: rgba(194, 65, 12, 0.28);
+  --side-hover: rgba(194, 65, 12, 0.07);
+  --side-active-hover: rgba(194, 65, 12, 0.18);
   --code-bg: #1a1f27;
   --code-fg: #d5dde8;
   --code-accent: #ff9f43;
   --page-top: #f7f8fa;
   --page-bottom: #eef1f4;
-  --wash-accent: rgba(232, 93, 4, 0.1);
+  --wash-accent: rgba(194, 65, 12, 0.1);
   --wash-cool: rgba(90, 130, 180, 0.12);
   --header-scrolled: rgba(243, 245, 247, 0.88);
   --shadow: rgba(22, 26, 31, 0.05);
@@ -104,18 +104,18 @@
   --surface: #3a4252;
   --line: rgba(238, 242, 247, 0.12);
   --line-strong: rgba(238, 242, 247, 0.2);
-  --accent: #e85d04;
+  --accent: #c2410c;
   --accent-deep: #ff8a3d;
-  --accent-soft: rgba(232, 93, 4, 0.2);
-  --accent-border: rgba(232, 93, 4, 0.5);
-  --accent-glow: rgba(232, 93, 4, 0.3);
-  --side-hover: rgba(232, 93, 4, 0.12);
-  --side-active-hover: rgba(232, 93, 4, 0.22);
+  --accent-soft: rgba(194, 65, 12, 0.2);
+  --accent-border: rgba(194, 65, 12, 0.5);
+  --accent-glow: rgba(194, 65, 12, 0.3);
+  --side-hover: rgba(194, 65, 12, 0.12);
+  --side-active-hover: rgba(194, 65, 12, 0.22);
   --code-bg: #232936;
   --code-fg: #dfe6f0;
   --page-top: #343b4a;
   --page-bottom: #2a303c;
-  --wash-accent: rgba(232, 93, 4, 0.16);
+  --wash-accent: rgba(194, 65, 12, 0.16);
   --wash-cool: rgba(90, 150, 180, 0.14);
   --header-scrolled: rgba(47, 54, 68, 0.9);
   --shadow: rgba(18, 22, 30, 0.25);
@@ -1021,7 +1021,7 @@ html.theme-animate body *::after {
 
 .term-title {
   margin-left: 0.45rem;
-  color: rgba(213, 221, 232, 0.55);
+  color: #b8c0cc;
   font-size: 0.72rem;
   letter-spacing: 0.02em;
 }
