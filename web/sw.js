@@ -1,4 +1,4 @@
-const CACHE = "rean-git-51d9b41ba1c4";
+const CACHE = "rean-git-6ac8a68c64ab";
 
 const PRECACHE = [
   "./",
@@ -8,6 +8,7 @@ const PRECACHE = [
   "./lab.html",
   "./404.html",
   "./manifest.webmanifest",
+  "./manifest-km.webmanifest",
   "./content-precache.json",
   "./data/labs.json",
   "./locales/en.json",
@@ -31,6 +32,8 @@ const PRECACHE = [
   "./assets/fonts/kantumruy-pro-latin.woff2",
   "./assets/img/icon-192.png",
   "./assets/img/icon-512.png",
+  "./assets/img/icon-maskable-192.png",
+  "./assets/img/icon-maskable-512.png",
 ];
 
 async function precacheContent(cache) {

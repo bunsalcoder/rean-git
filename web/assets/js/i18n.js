@@ -121,6 +121,13 @@
     link.setAttribute("href", href);
   }
 
+  function syncManifestLink() {
+    const link = document.querySelector('link[rel="manifest"]');
+    if (!link) return;
+    const href = locale === "km" ? "./manifest-km.webmanifest" : "./manifest.webmanifest";
+    if (link.getAttribute("href") !== href) link.setAttribute("href", href);
+  }
+
   function syncDocumentSeo() {
     const og = document.querySelector('meta[property="og:locale"]');
     if (og) og.setAttribute("content", OG_LOCALES[locale] || OG_LOCALES.en);
@@ -136,6 +143,7 @@
     upsertHreflang("en", enHref);
     upsertHreflang("km", kmHref);
     upsertHreflang("x-default", enHref);
+    syncManifestLink();
 
     const ld = document.querySelector('script[type="application/ld+json"]');
     if (!ld) return;

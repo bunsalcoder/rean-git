@@ -100,9 +100,31 @@ test("pages advertise a web app manifest", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator('link[rel="manifest"]')).toHaveAttribute(
     "href",
-    /manifest\.webmanifest/
+    /manifest\.webmanifest$/
   );
   await expect(page.locator('meta[name="theme-color"]')).toHaveCount(1);
+
+  const enManifest = await page.evaluate(async () => {
+    const res = await fetch("./manifest.webmanifest");
+    return res.json();
+  });
+  expect(enManifest.lang).toBe("en");
+  expect(enManifest.icons.some((icon) => icon.purpose === "maskable")).toBeTruthy();
+  expect(
+    enManifest.icons.some((icon) => /icon-maskable-512\.png$/.test(icon.src))
+  ).toBeTruthy();
+
+  await page.getByRole("button", { name: "ខ្មែរ" }).click();
+  await expect(page.locator('link[rel="manifest"]')).toHaveAttribute(
+    "href",
+    /manifest-km\.webmanifest$/
+  );
+  const kmManifest = await page.evaluate(async () => {
+    const res = await fetch("./manifest-km.webmanifest");
+    return res.json();
+  });
+  expect(kmManifest.lang).toBe("km");
+  expect(kmManifest.start_url).toMatch(/lang=km/);
 });
 
 test("lab page offers a verify.sh self-check", async ({ page }) => {

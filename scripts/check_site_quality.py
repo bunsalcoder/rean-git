@@ -713,6 +713,7 @@ def check_markdown_hardening() -> int:
 def check_pwa() -> int:
     msgs: list[str] = []
     manifest = WEB / "manifest.webmanifest"
+    manifest_km = WEB / "manifest-km.webmanifest"
     if not manifest.is_file():
         msgs.append("missing web/manifest.webmanifest")
     else:
@@ -723,12 +724,34 @@ def check_pwa() -> int:
             msgs.append("manifest.webmanifest should use display standalone")
         if "icon-192.png" not in text or "icon-512.png" not in text:
             msgs.append("manifest.webmanifest missing 192/512 icons")
-        if "maskable" not in text:
-            msgs.append("manifest.webmanifest missing maskable icons")
+        if "icon-maskable-192.png" not in text or "icon-maskable-512.png" not in text:
+            msgs.append("manifest.webmanifest missing dedicated maskable icons")
+        if '"lang": "en"' not in text or '"dir": "ltr"' not in text:
+            msgs.append("manifest.webmanifest should set lang=en and dir=ltr")
 
-    for name in ("icon-192.png", "icon-512.png"):
+    if not manifest_km.is_file():
+        msgs.append("missing web/manifest-km.webmanifest")
+    else:
+        km_text = manifest_km.read_text(encoding="utf-8")
+        if '"lang": "km"' not in km_text:
+            msgs.append("manifest-km.webmanifest should set lang=km")
+        if "icon-maskable-192.png" not in km_text or "icon-maskable-512.png" not in km_text:
+            msgs.append("manifest-km.webmanifest missing dedicated maskable icons")
+        if "lang=km" not in km_text:
+            msgs.append("manifest-km.webmanifest start_url should keep Khmer locale")
+
+    for name in (
+        "icon-192.png",
+        "icon-512.png",
+        "icon-maskable-192.png",
+        "icon-maskable-512.png",
+    ):
         if not (WEB / "assets" / "img" / name).is_file():
             msgs.append(f"missing web/assets/img/{name}")
+
+    i18n = (WEB / "assets" / "js" / "i18n.js").read_text(encoding="utf-8")
+    if "manifest-km.webmanifest" not in i18n or "syncManifestLink" not in i18n:
+        msgs.append("i18n.js should swap the web app manifest for Khmer")
 
     for name in PAGE_CANONICALS:
         path = WEB / name
@@ -742,6 +765,10 @@ def check_pwa() -> int:
     sw_text = sw.read_text(encoding="utf-8") if sw.is_file() else ""
     if "manifest.webmanifest" not in sw_text:
         msgs.append("sw.js should precache the web app manifest")
+    if "manifest-km.webmanifest" not in sw_text:
+        msgs.append("sw.js should precache the Khmer web app manifest")
+    if "icon-maskable-192.png" not in sw_text or "icon-maskable-512.png" not in sw_text:
+        msgs.append("sw.js should precache maskable icons")
     if "404.html" not in sw_text:
         msgs.append("sw.js should precache 404.html")
 
