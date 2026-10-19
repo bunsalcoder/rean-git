@@ -1,4 +1,4 @@
-const CACHE = "rean-git-cb9862e1a148";
+const CACHE = "rean-git-a6b14ba17793";
 
 const PRECACHE = [
   "./",
@@ -16,6 +16,8 @@ const PRECACHE = [
   "./assets/js/util.js",
   "./assets/js/i18n.js",
   "./assets/js/catalog.js",
+  "./assets/js/a11y.js",
+  "./assets/js/search.js",
   "./assets/js/site.js",
   "./assets/js/main.js",
   "./assets/js/learn.js",

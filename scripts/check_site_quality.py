@@ -553,19 +553,31 @@ def check_local_fonts() -> int:
     return fail(msgs, "self-hosted fonts")
 
 
+def read_js(*names: str) -> str:
+    parts: list[str] = []
+    for name in names:
+        path = WEB / "assets" / "js" / name
+        if path.is_file():
+            parts.append(path.read_text(encoding="utf-8"))
+    return "\n".join(parts)
+
+
 def check_shared_runtime() -> int:
     msgs: list[str] = []
     util = WEB / "assets" / "js" / "util.js"
     site_js = WEB / "assets" / "js" / "site.js"
+    a11y_js = WEB / "assets" / "js" / "a11y.js"
+    search_js = WEB / "assets" / "js" / "search.js"
     sw = WEB / "sw.js"
     entity_map = '"&amp;"'
+    site_runtime = read_js("a11y.js", "search.js", "site.js")
 
     if util.is_file():
         util_text = util.read_text(encoding="utf-8")
         if "function escapeHtml" not in util_text or entity_map not in util_text:
             msgs.append("util.js must own the HTML-escape implementation")
 
-    for name in ("catalog.js", "learn.js", "site.js"):
+    for name in ("catalog.js", "learn.js", "site.js", "search.js"):
         path = WEB / "assets" / "js" / name
         text = path.read_text(encoding="utf-8") if path.is_file() else ""
         if "ReanGitUtil.escapeHtml" not in text:
@@ -621,6 +633,13 @@ def check_shared_runtime() -> int:
         sw_text = sw.read_text(encoding="utf-8")
         if "caches.open" not in sw_text or "addAll" not in sw_text:
             msgs.append("sw.js must precache shell assets")
+        if "./assets/js/a11y.js" not in sw_text or "./assets/js/search.js" not in sw_text:
+            msgs.append("sw.js must precache a11y.js and search.js")
+
+    if not a11y_js.is_file():
+        msgs.append("missing web/assets/js/a11y.js")
+    if not search_js.is_file():
+        msgs.append("missing web/assets/js/search.js")
 
     site_text = site_js.read_text(encoding="utf-8") if site_js.is_file() else ""
     if "serviceWorker.register" not in site_text:
@@ -629,14 +648,19 @@ def check_shared_runtime() -> int:
         msgs.append("site.js must nudge learners to export progress")
     if "UTIL_SRC" not in site_text:
         msgs.append("site.js soft-nav should load util.js")
-    if "parseGuideChapters" not in site_text and "ensureSearchIndex" not in site_text:
-        msgs.append("site.js search should index handbook chapter bodies")
-    if "labs/" not in site_text or "labBodies" not in site_text:
-        msgs.append("site.js search should index lab markdown bodies")
-    if 'role="combobox"' not in site_text or "aria-activedescendant" not in site_text:
-        msgs.append("site.js search should use combobox semantics")
-    if "data-shortcuts-modal" not in site_text or "focusMain" not in site_text:
-        msgs.append("site.js must offer shortcuts help and focusMain")
+    if "parseGuideChapters" not in site_runtime and "ensureSearchIndex" not in site_runtime:
+        msgs.append("search.js should index handbook chapter bodies")
+    if "labs/" not in site_runtime or "labBodies" not in site_runtime:
+        msgs.append("search.js should index lab markdown bodies")
+    if 'role="combobox"' not in site_runtime or "aria-activedescendant" not in site_runtime:
+        msgs.append("search.js should use combobox semantics")
+    if "data-shortcuts-modal" not in site_runtime or "focusMain" not in site_runtime:
+        msgs.append("site chrome must offer shortcuts help and focusMain")
+
+    for name in ("index.html", "learn.html", "labs.html", "lab.html", "404.html"):
+        html = (WEB / name).read_text(encoding="utf-8")
+        if "assets/js/a11y.js" not in html or "assets/js/search.js" not in html:
+            msgs.append(f"{name} must load a11y.js and search.js before site.js")
 
     if "focusMain" not in learn_js:
         msgs.append("learn.js must focus main content after chapter/lab changes")
