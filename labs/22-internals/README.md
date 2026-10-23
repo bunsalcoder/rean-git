@@ -9,7 +9,7 @@ Peek under the hood: commits, trees, blobs, and refs — enough to demystify Git
 ```bash
 cd labs/22-internals
 mkdir -p playground && cd playground
-git init
+git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
 echo "hello" > hello.txt

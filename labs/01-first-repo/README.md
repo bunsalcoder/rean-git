@@ -19,11 +19,11 @@ Use a **fresh folder** so you don’t confuse this practice history with the han
 ### 1. Initialize
 
 ```bash
-git init
+git init -b main
 git status
 ```
 
-→ You should see an empty repo on branch `main` (or `master` if defaults differ).
+→ You should see an empty repo on branch `main`.
 
 ### 2. Create a file and commit
 

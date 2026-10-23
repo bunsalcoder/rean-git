@@ -13,7 +13,7 @@ cd labs/20-forks
 mkdir -p sandbox playground
 
 # Original project (the repo you do not write to)
-git init sandbox/original-work
+git init -b main sandbox/original-work
 cd sandbox/original-work
 git config user.name "Upstream Maintainer"
 git config user.email "upstream@example.com"

@@ -107,6 +107,7 @@
     "intro": "Work through these in order. Each lab lives under labs/ in the repo — open a terminal next to this page.",
     "filterByLevel": "Filter by level",
     "filterAll": "All levels",
+    "filterEmpty": "No labs at this level.",
     "footerLink": "Back to curriculum"
   },
   "learn": {

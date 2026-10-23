@@ -210,7 +210,7 @@ You start a personal notes site (or homework folder). You want history from day 
 
 ```bash
 mkdir my-notes && cd my-notes
-git init
+git init -b main
 ```
 
 → Creates a hidden `.git/` folder. You’re in a repo.
@@ -1246,7 +1246,7 @@ Official deep dive: [Pro Git book](https://git-scm.com/book/en/v2) (free).
 git config --global user.name "Your Name"
 git config --global user.email "you@example.com"
 git config --global init.defaultBranch main
-git init
+git init -b main
 git clone URL
 ```
 

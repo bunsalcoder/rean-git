@@ -154,7 +154,7 @@ EOF
 - [ ] ការងារចូល `main` តាម merge បែប PR (offline ឬ GitHub)
 - [ ] Feature branch ក្នុងស្រុកត្រូវបានសម្បាត; `main` ផ្គូផ្គង `origin/main`
 
-ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីប្ងាផ្ទាត់។
+ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
 
 ## សម្អាត (ស្រេចចិត្ត)
 

@@ -9,7 +9,7 @@ Copy one commit from a feature branch onto `main` without merging the whole bran
 ```bash
 cd labs/13-cherry-pick
 mkdir -p playground && cd playground
-git init
+git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
 git checkout -b main

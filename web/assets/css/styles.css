@@ -57,6 +57,7 @@
   --paper: #f3f5f7;
   --paper-deep: #e6eaef;
   --surface: #ffffff;
+  --bg: var(--paper-deep);
   --line: rgba(22, 26, 31, 0.1);
   --line-strong: rgba(22, 26, 31, 0.16);
   --accent: #c2410c;
@@ -102,6 +103,7 @@
   --paper: #2f3644;
   --paper-deep: #272d39;
   --surface: #3a4252;
+  --bg: var(--paper-deep);
   --line: rgba(238, 242, 247, 0.12);
   --line-strong: rgba(238, 242, 247, 0.2);
   --accent: #c2410c;
@@ -1960,6 +1962,16 @@ html.theme-animate body *::after {
   gap: 0.7rem;
 }
 
+.lab-grid-empty {
+  margin: 0;
+  grid-column: 1 / -1;
+  padding: 1.25rem 1rem;
+  border: 1px dashed var(--line);
+  border-radius: 0.55rem;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
 @media (min-width: 720px) {
   .lab-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -2630,6 +2642,15 @@ html.theme-animate body *::after {
 .clone-box:focus-within .copy-btn {
   opacity: 1;
   transform: none;
+}
+
+/* Touch / coarse pointers: always show copy (no hover). */
+@media (hover: none), (pointer: coarse) {
+  .md-body .copy-btn,
+  .clone-box .copy-btn {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .pager {

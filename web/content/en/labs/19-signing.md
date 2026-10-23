@@ -16,7 +16,7 @@ This lab uses **local** Git config so it will not change your global signing set
 ```bash
 cd labs/19-signing
 mkdir -p playground && cd playground
-git init
+git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
 git checkout -b main

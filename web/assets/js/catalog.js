@@ -6,7 +6,6 @@
   let labIdAliases = {};
   let cheatSheetChapter = "26";
   let filterLevel = "all";
-  let filtersWired = false;
 
   const escapeHtml = (text) => window.ReanGitUtil.escapeHtml(text);
 
@@ -65,6 +64,12 @@
   function renderGrid(root) {
     if (!root) return;
     const list = visibleLabs();
+    if (!list.length) {
+      const empty = window.ReanGitI18n?.t?.("labsPage.filterEmpty") || "No labs at this level.";
+      root.innerHTML = `<p class="lab-grid-empty" role="status">${escapeHtml(empty)}</p>`;
+      window.ReanGitI18n?.apply?.(root);
+      return;
+    }
     root.innerHTML = list
       .map((lab) => {
         const id = escapeHtml(lab.id);
@@ -102,10 +107,11 @@
   }
 
   function wireFilters() {
-    if (filtersWired) return;
     const bar = document.querySelector("[data-lab-filters]");
     if (!bar) return;
-    filtersWired = true;
+    // Soft nav replaces the filter bar DOM — bind per element, not once globally.
+    if (bar.dataset.filtersBound === "1") return;
+    bar.dataset.filtersBound = "1";
     bar.addEventListener("click", (event) => {
       const btn = event.target.closest("[data-lab-filter]");
       if (!btn) return;
@@ -182,6 +188,10 @@
 
   window.addEventListener("rean-git:lab-progress", () => {
     mountLists();
+    // Re-render replaces nodes that `.reveal()` had made visible — restore without remount.
+    document.querySelectorAll(".lab-track li, .lab-grid a").forEach((el) => {
+      el.classList.add("is-visible");
+    });
   });
 
   window.ReanGitI18n?.onChange?.(paintCountTitle);

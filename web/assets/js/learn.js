@@ -834,6 +834,10 @@ async function initLearnPage(signal, { animate = true } = {}) {
     const showChapter = async (id, { push = false, animate = true } = {}) => {
       const index = resolveIndex(id);
       const chapter = chapters[index];
+      // Invalid ?c= falls back to first chapter — keep the address bar honest.
+      if (chapter.id !== id) {
+        history.replaceState({ c: chapter.id }, "", chapterHref(chapter.id));
+      }
 
       if (index === currentIndex) {
         if (push) history.replaceState({ c: chapter.id }, "", chapterHref(chapter.id));
@@ -955,6 +959,9 @@ async function initLearnPage(signal, { animate = true } = {}) {
     window.addEventListener(
       "popstate",
       () => {
+        // Cross-page Back/Forward is owned by site.js soft navigation.
+        const file = (location.pathname.split("/").pop() || "").split("?")[0];
+        if (file !== "learn.html" || document.body.dataset.page !== "learn") return;
         goToChapter(getRouteId("c") || chapters[0].id, { push: false, animate: true });
       },
       { signal }
@@ -1090,6 +1097,11 @@ async function initLabPage(signal, { animate = true } = {}) {
   const showLab = async (id, { push = false, animate = true } = {}) => {
     const index = resolveIndex(id);
     const lab = labs[index];
+    const canonical = window.ReanGitCatalog?.resolveLabId?.(id) || id;
+    // Unknown / aliased ids — keep the address bar on the canonical lab.
+    if (lab.id !== id || lab.id !== canonical) {
+      history.replaceState({ id: lab.id }, "", labHref(lab.id));
+    }
 
     if (index === currentIndex) {
       if (push) history.replaceState({ id: lab.id }, "", labHref(lab.id));
@@ -1186,6 +1198,9 @@ async function initLabPage(signal, { animate = true } = {}) {
   window.addEventListener(
     "popstate",
     () => {
+      // Cross-page Back/Forward is owned by site.js soft navigation.
+      const file = (location.pathname.split("/").pop() || "").split("?")[0];
+      if (file !== "lab.html" || document.body.dataset.page !== "lab") return;
       goToLab(getRouteId("id") || labs[0].id, { push: false, animate: true });
     },
     { signal }

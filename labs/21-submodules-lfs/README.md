@@ -17,7 +17,7 @@ mkdir -p sandbox/design-lib playground
 
 # A small “design system” repo to nest later
 cd sandbox/design-lib
-git init
+git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
 git checkout -b main
@@ -28,7 +28,7 @@ cd ../..
 
 # Parent app
 cd playground
-git init
+git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
 git checkout -b main

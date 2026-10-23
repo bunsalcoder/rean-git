@@ -9,7 +9,7 @@ Create annotated tags for releases and inspect them.
 ```bash
 cd labs/12-tags
 mkdir -p playground && cd playground
-git init
+git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
 git checkout -b main
