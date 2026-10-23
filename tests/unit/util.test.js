@@ -262,3 +262,62 @@ describe("progress backup nudge", () => {
     assert.equal(util.shouldPromptProgressBackup(["01-first-repo"]), false);
   });
 });
+
+describe("loadLocalizedMarkdown", () => {
+  it("caches successful fetches and coalesces in-flight requests", async () => {
+    let calls = 0;
+    const fetch = async (url) => {
+      calls += 1;
+      assert.match(url, /\/content\/en\/guide\.md$/);
+      return {
+        ok: true,
+        async text() {
+          return "# Guide\n";
+        },
+      };
+    };
+    ({ util } = loadUtil({ fetch }));
+
+    const [a, b] = await Promise.all([
+      util.loadLocalizedMarkdown("guide.md"),
+      util.loadLocalizedMarkdown("guide.md"),
+    ]);
+    assert.equal(a, "# Guide\n");
+    assert.equal(b, "# Guide\n");
+    assert.equal(calls, 1);
+    assert.equal(util.peekLocalizedMarkdown("guide.md"), "# Guide\n");
+
+    const again = await util.loadLocalizedMarkdown("guide.md");
+    assert.equal(again, "# Guide\n");
+    assert.equal(calls, 1);
+  });
+
+  it("falls back to English when the locale file is missing", async () => {
+    const fetch = async (url) => {
+      if (url.includes("/content/km/")) {
+        return { ok: false, async text() { return ""; } };
+      }
+      return {
+        ok: true,
+        async text() {
+          return "en body";
+        },
+      };
+    };
+    ({ util } = loadUtil({
+      fetch,
+      i18n: { getLocale: () => "km" },
+    }));
+
+    assert.equal(await util.loadLocalizedMarkdown("labs/01-first-repo.md"), "en body");
+    assert.equal(util.peekLocalizedMarkdown("labs/01-first-repo.md"), "en body");
+  });
+
+  it("returns empty string when optional and nothing loads", async () => {
+    ({ util } = loadUtil({
+      fetch: async () => ({ ok: false, async text() { return ""; } }),
+    }));
+    assert.equal(await util.loadLocalizedMarkdown("missing.md", { optional: true }), "");
+    assert.equal(util.peekLocalizedMarkdown("missing.md"), "");
+  });
+});

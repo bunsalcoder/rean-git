@@ -53,43 +53,20 @@
       return !modal.hidden;
     }
 
-    async function loadFirstOk(urls) {
-      for (const url of urls) {
-        try {
-          const res = await fetch(url, { credentials: "same-origin" });
-          if (!res.ok) continue;
-          return await res.text();
-        } catch {
-          /* try next locale fallback */
-        }
-      }
-      return "";
-    }
-
     async function ensureSearchIndex() {
       const locale = window.ReanGitI18n?.getLocale?.() || "en";
       if (indexLocale === locale && chapterBodies.size) return;
-      const guideUrls =
-        locale === "en"
-          ? ["./content/en/guide.md"]
-          : [`./content/${locale}/guide.md`, "./content/en/guide.md"];
-      const guide = await loadFirstOk(guideUrls);
+      const loadMd = window.ReanGitUtil?.loadLocalizedMarkdown;
+      if (!loadMd) return;
+
+      const guide = await loadMd("guide.md", { optional: true });
       const parsed = window.ReanGitUtil?.parseGuideChapters?.(guide) || [];
       chapterBodies = new Map(parsed.map((chapter) => [chapter.id, chapter.body]));
 
       await window.ReanGitCatalog?.ready;
       const catalog = window.ReanGitCatalog?.getLabs?.() || [];
       const entries = await Promise.all(
-        catalog.map(async (lab) => {
-          const urls =
-            locale === "en"
-              ? [`./content/en/labs/${lab.id}.md`]
-              : [
-                  `./content/${locale}/labs/${lab.id}.md`,
-                  `./content/en/labs/${lab.id}.md`,
-                ];
-          return [lab.id, await loadFirstOk(urls)];
-        })
+        catalog.map(async (lab) => [lab.id, await loadMd(`labs/${lab.id}.md`, { optional: true })])
       );
       labBodies = new Map(entries);
       indexLocale = locale;

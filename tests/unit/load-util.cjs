@@ -39,12 +39,14 @@ function loadUtil(options = {}) {
     CustomEvent,
     dispatchEvent() {},
     ReanGitCatalog: options.catalog || undefined,
+    ReanGitI18n: options.i18n || undefined,
   };
 
   const context = vm.createContext({
     window,
     localStorage,
     CustomEvent,
+    fetch: options.fetch,
   });
 
   const utilPath = path.join(__dirname, "../../web/assets/js/util.js");

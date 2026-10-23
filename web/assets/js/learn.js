@@ -535,54 +535,16 @@ function paintMarkDone(chapterId) {
   btn.textContent = done ? t("learn.markedDone") : t("learn.markDone");
 }
 
-async function loadText(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Could not load ${url}`);
-  return res.text();
-}
-
 async function loadLocalizedContent(relativePath) {
-  const locale = window.ReanGitI18n?.getLocale?.() || "en";
-  const candidates =
-    locale === "en"
-      ? [`./content/en/${relativePath}`]
-      : [`./content/${locale}/${relativePath}`, `./content/en/${relativePath}`];
-
-  let lastError = null;
-  for (const url of candidates) {
-    try {
-      return await loadText(url);
-    } catch (err) {
-      lastError = err;
-    }
-  }
-  throw lastError || new Error(`Could not load ${relativePath}`);
+  return window.ReanGitUtil.loadLocalizedMarkdown(relativePath);
 }
-
-const labMarkdownCache = new Map();
-const labMarkdownPending = new Map();
 
 async function fetchLabMarkdown(id) {
-  if (labMarkdownCache.has(id)) return labMarkdownCache.get(id);
-  if (labMarkdownPending.has(id)) return labMarkdownPending.get(id);
-
-  const promise = loadLocalizedContent(`labs/${id}.md`)
-    .then((md) => {
-      labMarkdownCache.set(id, md);
-      labMarkdownPending.delete(id);
-      return md;
-    })
-    .catch((err) => {
-      labMarkdownPending.delete(id);
-      throw err;
-    });
-
-  labMarkdownPending.set(id, promise);
-  return promise;
+  return window.ReanGitUtil.loadLocalizedMarkdown(`labs/${id}.md`);
 }
 
 function prefetchLabMarkdown(id) {
-  if (!id || labMarkdownCache.has(id)) return;
+  if (!id || window.ReanGitUtil.peekLocalizedMarkdown(`labs/${id}.md`) != null) return;
   fetchLabMarkdown(id).catch(() => {});
 }
 

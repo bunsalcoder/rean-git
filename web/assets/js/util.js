@@ -352,6 +352,62 @@
     markProgressBackupNudge("exported");
   }
 
+  // Shared by learn.js (reader) and search.js so soft-nav / search do not re-fetch the same MD.
+  const markdownCache = new Map();
+  const markdownPending = new Map();
+
+  function markdownCacheKey(locale, relativePath) {
+    return `${locale}:${relativePath}`;
+  }
+
+  function peekLocalizedMarkdown(relativePath) {
+    const locale = window.ReanGitI18n?.getLocale?.() || "en";
+    const key = markdownCacheKey(locale, relativePath);
+    return markdownCache.has(key) ? markdownCache.get(key) : null;
+  }
+
+  async function loadLocalizedMarkdown(relativePath, { optional = false } = {}) {
+    const locale = window.ReanGitI18n?.getLocale?.() || "en";
+    const key = markdownCacheKey(locale, relativePath);
+    if (markdownCache.has(key)) return markdownCache.get(key);
+    if (markdownPending.has(key)) return markdownPending.get(key);
+
+    const candidates =
+      locale === "en"
+        ? [`./content/en/${relativePath}`]
+        : [`./content/${locale}/${relativePath}`, `./content/en/${relativePath}`];
+
+    const promise = (async () => {
+      let lastError = null;
+      for (const url of candidates) {
+        try {
+          const res = await fetch(url, { credentials: "same-origin" });
+          if (!res.ok) {
+            lastError = new Error(`Could not load ${url}`);
+            continue;
+          }
+          const text = await res.text();
+          markdownCache.set(key, text);
+          return text;
+        } catch (err) {
+          lastError = err;
+        }
+      }
+      if (optional) {
+        markdownCache.set(key, "");
+        return "";
+      }
+      throw lastError || new Error(`Could not load ${relativePath}`);
+    })();
+
+    markdownPending.set(key, promise);
+    try {
+      return await promise;
+    } finally {
+      markdownPending.delete(key);
+    }
+  }
+
   window.ReanGitUtil = {
     escapeHtml,
     LAST_CHAPTER_KEY,
@@ -380,5 +436,7 @@
     markProgressBackupNudge,
     shouldPromptProgressBackup,
     downloadProgressExport,
+    loadLocalizedMarkdown,
+    peekLocalizedMarkdown,
   };
 })();
