@@ -97,11 +97,15 @@
   }
 
   function langHref(lang) {
+    // Prefer the live URL so soft-nav pages are not stuck on the first document's canonical.
     const canonical = document.querySelector('link[rel="canonical"]')?.getAttribute("href");
-    const url = new URL(canonical || location.href, location.href);
-    const current = new URL(location.href);
+    const live = new URL(location.href);
+    const url = new URL(canonical || live.href, live.href);
+    // Soft-nav updates the path; keep alternates on the current page, not the entry document.
+    url.pathname = live.pathname;
+    url.hash = "";
     for (const key of ["c", "id"]) {
-      const value = current.searchParams.get(key);
+      const value = live.searchParams.get(key);
       if (value) url.searchParams.set(key, value);
       else url.searchParams.delete(key);
     }
