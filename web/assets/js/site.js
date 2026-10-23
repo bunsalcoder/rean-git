@@ -262,6 +262,8 @@
     themeQuery.addListener(onSystemThemeChange);
   }
 
+  let closeMobileNav = () => {};
+
   if (toggle && nav) {
     let navTrap = null;
 
@@ -279,6 +281,8 @@
         navTrap = null;
       }
     };
+
+    closeMobileNav = () => setNavOpen(false);
 
     toggle.addEventListener("click", () => {
       const open = toggle.getAttribute("aria-expanded") === "true";
@@ -521,6 +525,12 @@
     ].filter(Boolean);
   }
 
+  function restorePageShell() {
+    pageShellNodes().forEach((el) => {
+      el.classList.remove("is-page-leaving", "is-page-pending", "is-page-entering");
+    });
+  }
+
   async function leavePage() {
     if (prefersReducedMotion) return;
     const nodes = pageShellNodes();
@@ -530,14 +540,6 @@
       el.classList.add("is-page-leaving");
     });
     await wait(PAGE_OUT_MS);
-  }
-
-  function holdPage() {
-    if (prefersReducedMotion) return;
-    pageShellNodes().forEach((el) => {
-      el.classList.remove("is-page-leaving", "is-page-entering");
-      el.classList.add("is-page-pending");
-    });
   }
 
   function enterPage() {
@@ -619,8 +621,41 @@
     }
   }
 
-  function replaceShell(doc) {
+  function copyAttr(src, dest, name) {
+    if (!src || !dest) return;
+    if (src.hasAttribute(name)) dest.setAttribute(name, src.getAttribute(name));
+    else dest.removeAttribute(name);
+  }
+
+  function syncHeadFromDoc(doc) {
+    const srcTitle = doc.querySelector("title");
+    const destTitle = document.querySelector("title");
     document.title = doc.title;
+    copyAttr(srcTitle, destTitle, "data-i18n");
+    copyAttr(srcTitle, destTitle, "data-i18n-attr");
+
+    const headPairs = [
+      ['link[rel="canonical"]', "href"],
+      ['meta[name="description"]', "content"],
+      ['meta[property="og:url"]', "content"],
+      ['meta[property="og:title"]', "content"],
+      ['meta[property="og:description"]', "content"],
+      ['meta[name="twitter:title"]', "content"],
+      ['meta[name="twitter:description"]', "content"],
+    ];
+
+    headPairs.forEach(([selector, attr]) => {
+      const src = doc.querySelector(selector);
+      const dest = document.querySelector(selector);
+      if (!src || !dest) return;
+      dest.setAttribute(attr, src.getAttribute(attr) || "");
+      copyAttr(src, dest, "data-i18n");
+      copyAttr(src, dest, "data-i18n-attr");
+    });
+  }
+
+  function replaceShell(doc) {
+    syncHeadFromDoc(doc);
 
     document.body.className = doc.body.className;
     const page = doc.body.getAttribute("data-page");
@@ -668,26 +703,24 @@
 
     replaceShell(doc);
     window.ReanGitI18n?.apply?.();
-    if (animate) holdPage();
     if (push) history.pushState({ soft: true }, "", targetUrl.href);
     lastPageKey = pageKey(targetUrl);
     syncActiveLinks();
     syncIndicator({ animate: false });
 
-    // Mount first (no inner motion), then ease the whole page in once content is ready.
+    // Reveal the new shell immediately so in-page loading UI stays visible during markdown fetch.
     await nextFrame();
+    if (animate) enterPage();
+    else restorePageShell();
+
     await bootPage({ animate: false });
     window.scrollTo(0, 0);
     window.ReanGitI18n?.syncSeo?.();
     window.ReanGitA11y.focusMain({ message: document.title });
-
-    if (animate) {
-      await nextFrame();
-      enterPage();
-    }
   }
 
   async function softNavigate(href, { push = true, animatePill = false, animate = true } = {}) {
+    closeMobileNav();
     const targetUrl = new URL(href, location.href);
     if (targetUrl.origin !== location.origin) {
       location.assign(targetUrl.href);
@@ -728,7 +761,13 @@
   }
 
   async function navigateTo(href, { animatePill = false } = {}) {
-    if (href === location.href) return;
+    closeMobileNav();
+
+    // Mid-flight cancel: clicking the current URL must restore a left/pending shell.
+    if (href === location.href) {
+      restorePageShell();
+      return;
+    }
 
     const token = ++navToken;
     const shouldAnimatePill = animatePill && navMotionQuery.matches && !prefersReducedMotion;
@@ -770,7 +809,10 @@
       if (token !== navToken) return;
       await applyDocument(href, html, { push: true, animate: true });
     } catch {
-      if (token === navToken) location.assign(href);
+      if (token === navToken) {
+        restorePageShell();
+        location.assign(href);
+      }
     }
   }
 
@@ -817,6 +859,8 @@
 
       if (link.href === location.href) {
         event.preventDefault();
+        restorePageShell();
+        closeMobileNav();
         return;
       }
 
@@ -831,6 +875,8 @@
 
     if (link.href === location.href) {
       event.preventDefault();
+      restorePageShell();
+      closeMobileNav();
       return;
     }
 
