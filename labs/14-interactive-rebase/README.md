@@ -9,7 +9,7 @@ Squash messy local commits into one clear commit before “review.”
 ```bash
 cd labs/14-interactive-rebase
 mkdir -p playground && cd playground
-git init
+git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
 echo "start" > file.txt

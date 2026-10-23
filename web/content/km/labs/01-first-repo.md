@@ -19,7 +19,7 @@ mkdir -p playground && cd playground
 ### 1. ចាប់ផ្តើម
 
 ```bash
-git init
+git init -b main
 git status
 ```
 

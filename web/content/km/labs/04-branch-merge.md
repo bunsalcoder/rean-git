@@ -9,7 +9,7 @@
 ```bash
 cd labs/04-branch-merge
 mkdir -p playground && cd playground
-git init
+git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
 echo "# Branch lab" > README.md

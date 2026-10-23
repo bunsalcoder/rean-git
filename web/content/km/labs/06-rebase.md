@@ -9,7 +9,7 @@ Rebase feature branch ទៅលើ `main` ដែលបានធ្វើបច�
 ```bash
 cd labs/06-rebase
 mkdir -p playground && cd playground
-git init
+git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
 echo "base" > app.txt

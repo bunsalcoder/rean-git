@@ -316,6 +316,8 @@
   function syncActiveLinks() {
     if (!nav) return;
     const path = pageKey(location.href);
+    const currentFile = (location.pathname.split("/").pop() || "index.html").split("?")[0];
+    const inLabsArea = currentFile === "labs.html" || currentFile === "lab.html";
     const pageC = new URLSearchParams(location.search).get("c");
     const links = [...nav.querySelectorAll("a")];
     const hasChapterMatch = links.some((a) => {
@@ -332,14 +334,17 @@
       const href = a.getAttribute("href");
       if (!href) return;
       const target = new URL(href, location.href);
-      if (pageKey(target) !== path) return;
+      const targetFile = (target.pathname.split("/").pop() || "index.html").split("?")[0];
+      const samePath =
+        pageKey(target) === path || (targetFile === "labs.html" && inLabsArea);
+      if (!samePath) return;
       const linkC = target.searchParams.get("c");
       if (linkC) {
         if (pageC === linkC) a.setAttribute("aria-current", "page");
         return;
       }
       // Prefer a chapter-specific nav link (e.g. Cheat sheet) over the generic page link (Learn).
-      if (hasChapterMatch) return;
+      if (hasChapterMatch && targetFile === "learn.html") return;
       a.setAttribute("aria-current", "page");
     });
   }

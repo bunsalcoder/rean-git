@@ -97,7 +97,7 @@ git push -u origin main
 - [ ] `main` ក្នុងស្រុកផ្គូផ្គង `origin/main` បន្ទាប់ពី `git pull`
 - [ ] `feat/hello-pr` ត្រូវបានលុបក្នុងស្រុក
 
-ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីប្ងាផ្ទាត់។
+ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
 
 ## សម្អាត (ស្រេចចិត្ត)
 

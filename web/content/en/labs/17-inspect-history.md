@@ -9,7 +9,7 @@ Use `blame`, pickaxe search, and branch ranges to answer “who changed this?”
 ```bash
 cd labs/17-inspect-history
 mkdir -p playground && cd playground
-git init
+git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
 git checkout -b main

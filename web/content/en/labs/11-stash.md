@@ -9,7 +9,7 @@ Shelf unfinished work, switch context, then bring the changes back.
 ```bash
 cd labs/11-stash
 mkdir -p playground && cd playground
-git init
+git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
 echo "v1" > notes.txt

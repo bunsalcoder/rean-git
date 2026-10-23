@@ -9,7 +9,7 @@ Create a merge conflict on purpose, resolve it, and finish the merge.
 ```bash
 cd labs/05-conflict
 mkdir -p playground && cd playground
-git init
+git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
 printf "line one\nshared line\nline three\n" > notes.txt

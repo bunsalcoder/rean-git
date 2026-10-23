@@ -9,7 +9,7 @@ Stage តែការផ្លាស់ប្តូរដែលសមនឹង�
 ```bash
 cd labs/02-staging
 mkdir -p playground && cd playground
-git init
+git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
 printf '%s\n' '<h1>Welcome</h1>' > index.html

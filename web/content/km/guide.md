@@ -550,7 +550,7 @@ git reset --hard HEAD~1
 git revert COMMIT_SHA            # new commit that undoes an old one
 ```
 
-នៅកន្លែងធ្វើការ**ចូលចិត្ត `revert` នៅលើ branch រួម**។ `reset --hard` នៅលើប្រវត្តិពីចម្ងាយធ្វើឲ្យមិត្តរួមក្រុមរងទុក្ខ។
+នៅកន្លែងធ្វើការ**ចូលចិត្ត `revert` នៅលើ branch រួម**។ `reset --hard` នៅលើប្រវត្តិ remote ធ្វើឲ្យមិត្តរួមក្រុមរងទុក្ខ។
 
 ### "ខ្ញុំគិតថាខ្ញុំបាត់បង់ commit"
 
@@ -569,9 +569,9 @@ git switch -c recover HASH       # bring it back on a new branch
 
 ### បញ្ហាពិភពពិត
 
-កុំព្យូទ័រយួរដៃរបស់អ្នកស្លាប់ ឬមិត្តរួមក្រុមត្រូវការលេខកូដ។ Local Git តែម្នាក់ឯងមិនមែនជាការបម្រុងទុកទេ។**ពីចម្ងាយ**(ជាធម្មតា GitHub ដែលមានឈ្មោះថា `origin`) គឺជាច្បាប់ចម្លងដែលបានចែករំលែក។
+កុំព្យូទ័រយួរដៃរបស់អ្នកស្លាប់ ឬមិត្តរួមក្រុមត្រូវការលេខកូដ។ Local Git តែម្នាក់ឯងមិនមែនជាការបម្រុងទុកទេ។ **Remote** (ជាធម្មតា GitHub ដែលមានឈ្មោះថា `origin`) គឺជាច្បាប់ចម្លងដែលបានចែករំលែក។
 
-### មើលពីចម្ងាយ
+### មើល remotes
 
 ```bash
 git remote -v
@@ -599,7 +599,7 @@ git push                  # upload your commits
 
 `origin/main` គឺជា *រូបភាព* របស់កុំព្យូទ័រយួរដៃរបស់អ្នក `main` របស់ GitHub។ `fetch` ធ្វើបច្ចុប្បន្នភាពរូបភាព; `pull` នាំយក commit ទាំងនោះទៅក្នុង branch របស់អ្នក។
 
-### សិទ្ធិ
+### Auth និងការចូល
 
 - HTTPS + personal access token ឬ
 - SSH (`git@github.com:YOU/REPO.git`)
@@ -649,7 +649,7 @@ git push origin --delete fix/login-redirect   # optional cleanup
 
 ### លំហាត់
 
-បញ្ចប់ការអនុវត្តពីចម្ងាយ៖ **[លំហាត់ 09 — Remote និង PR](./lab.html?id=09-remote-pr)** (simulation merge offline ឬ PR GitHub ពិត)។
+បញ្ចប់ការអនុវត្ត remote៖ **[លំហាត់ 09 — Remote និង PR](./lab.html?id=09-remote-pr)** (simulation merge offline ឬ PR GitHub ពិត)។
 
 ---
 
@@ -674,7 +674,7 @@ git push origin --delete fix/login-redirect   # optional cleanup
 - ទាមទារ CI ដើម្បីឆ្លងកាត់
 - រារាំងការ push ដោយផ្ទាល់ទៅ `main`
 
-### អនុវត្តអនាម័យ
+### ទម្លាប់ commit ស្អាត
 
 ```gitignore
 .DS_Store

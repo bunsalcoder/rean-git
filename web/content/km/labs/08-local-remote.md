@@ -64,7 +64,7 @@ git status
 - [ ] Playground `README.md` contains the other clone’s line
 - [ ] Working tree is clean on `main`
 
-ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីប្ងាផ្ទាត់។
+ពីថត lab (មិនមែនក្នុង `playground/`) រត់ `./verify.sh` ដើម្បីផ្ទៀងផ្ទាត់។
 
 ## សម្អាត (ស្រេចចិត្ត)
 

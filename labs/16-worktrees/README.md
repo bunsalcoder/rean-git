@@ -9,7 +9,7 @@ Practice detached HEAD safely, then use a second worktree so you can work on two
 ```bash
 cd labs/16-worktrees
 mkdir -p playground && cd playground
-git init
+git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
 git checkout -b main
