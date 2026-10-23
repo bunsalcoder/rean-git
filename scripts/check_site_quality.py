@@ -608,6 +608,17 @@ def check_shared_runtime() -> int:
     learn_js = LEARN_JS.read_text(encoding="utf-8") if LEARN_JS.is_file() else ""
     if "loadLocalizedMarkdown" not in learn_js:
         msgs.append("learn.js must use the shared markdown cache")
+    if "migrateOrphanChecklist" not in learn_js:
+        msgs.append("learn.js must migrate empty checklist keys after URL canonicalize")
+    learn_init = learn_js
+    if learn_init.find("history.replaceState({ c: start.id }") > learn_init.find(
+        "showChapter(start.id"
+    ):
+        msgs.append("learn.js must canonicalize ?c= before the first chapter paint")
+    if learn_init.find("history.replaceState({ id: start.id }") > learn_init.find(
+        "goToLab(start.id"
+    ):
+        msgs.append("learn.js must canonicalize ?id= before the first lab paint")
     if "parseGuideChapters" not in learn_js:
         msgs.append("learn.js must use ReanGitUtil.parseGuideChapters for handbook chapters")
     if "cheatSheetHref" not in learn_js:

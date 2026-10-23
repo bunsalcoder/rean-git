@@ -84,20 +84,24 @@ function enhanceCodeBlocks(root) {
   });
 }
 
-function checklistStorageKey() {
+function checklistStorageKey(scopeId) {
   const page = document.body.getAttribute("data-page");
   if (page === "lab") {
-    return `rean-git:checklist:lab:${getRouteId("id") || ""}`;
+    const id = scopeId || getRouteId("id") || "";
+    return id ? `rean-git:checklist:lab:${id}` : null;
   }
   if (page === "learn") {
-    return `rean-git:checklist:learn:${getParam("c") || ""}`;
+    const id = scopeId || getParam("c") || "";
+    return id ? `rean-git:checklist:learn:${id}` : null;
   }
   return `rean-git:checklist:${location.pathname}`;
 }
 
-function readChecklistState() {
+function readChecklistState(scopeId) {
   try {
-    const raw = localStorage.getItem(checklistStorageKey());
+    const key = checklistStorageKey(scopeId);
+    if (!key) return {};
+    const raw = localStorage.getItem(key);
     if (!raw) return {};
     const parsed = JSON.parse(raw);
     return parsed && typeof parsed === "object" ? parsed : {};
@@ -106,9 +110,31 @@ function readChecklistState() {
   }
 }
 
-function writeChecklistState(state) {
+function writeChecklistState(state, scopeId) {
   try {
-    localStorage.setItem(checklistStorageKey(), JSON.stringify(state));
+    const key = checklistStorageKey(scopeId);
+    if (!key) return;
+    localStorage.setItem(key, JSON.stringify(state));
+  } catch {
+    /* private mode / quota — ignore */
+  }
+}
+
+/** Move ticks written under the empty-id key (pre-canonicalize) onto the real scope. */
+function migrateOrphanChecklist(scopeId) {
+  if (!scopeId) return;
+  const page = document.body.getAttribute("data-page");
+  if (page !== "lab" && page !== "learn") return;
+  const emptyKey = `rean-git:checklist:${page}:`;
+  const targetKey = checklistStorageKey(scopeId);
+  if (!targetKey) return;
+  try {
+    const orphan = localStorage.getItem(emptyKey);
+    if (!orphan) return;
+    if (!localStorage.getItem(targetKey)) {
+      localStorage.setItem(targetKey, orphan);
+    }
+    localStorage.removeItem(emptyKey);
   } catch {
     /* private mode / quota — ignore */
   }
@@ -145,11 +171,13 @@ function resolveRouteOrResume(queryKey, savedId, fallbackId) {
   return { id: fallbackId, fromRoute: false };
 }
 
-function enhanceCheckboxes(root) {
+function enhanceCheckboxes(root, scopeId) {
   const boxes = root.querySelectorAll('input[type="checkbox"]');
   if (!boxes.length) return;
 
-  const saved = readChecklistState();
+  migrateOrphanChecklist(scopeId);
+  const saved = readChecklistState(scopeId);
+  const page = document.body.getAttribute("data-page");
 
   boxes.forEach((input, index) => {
     const item = input.closest("li") || input.parentElement;
@@ -171,19 +199,19 @@ function enhanceCheckboxes(root) {
     }
 
     input.addEventListener("change", () => {
-      const next = readChecklistState();
+      const next = readChecklistState(scopeId);
       next[key] = input.checked;
-      writeChecklistState(next);
+      writeChecklistState(next, scopeId);
       item?.classList.toggle("is-checked", input.checked);
-      syncLabChecklistProgress();
-      syncChapterChecklistProgress(root);
+      if (page === "lab") syncLabChecklistProgress(scopeId);
+      else if (page === "learn") syncChapterChecklistProgress(root, scopeId);
     });
 
     item?.classList.toggle("is-checked", input.checked);
   });
 
-  syncLabChecklistProgress();
-  syncChapterChecklistProgress(root);
+  if (page === "lab") syncLabChecklistProgress(scopeId);
+  else if (page === "learn") syncChapterChecklistProgress(root, scopeId);
 }
 
 function paintChecklistProgress(root, checked, total) {
@@ -202,18 +230,18 @@ function paintChecklistProgress(root, checked, total) {
   meter.hidden = false;
 }
 
-function syncChapterChecklistProgress(root) {
+function syncChapterChecklistProgress(root, chapterId) {
   if (document.body.getAttribute("data-page") !== "learn") return;
-  const chapterId = getParam("c");
-  if (!chapterId || !root) return;
+  const id = chapterId || getParam("c");
+  if (!id || !root) return;
   const boxes = root.querySelectorAll('input[type="checkbox"]');
   if (!boxes.length) return;
   const checked = [...boxes].filter((el) => el.checked).length;
   const total = boxes.length;
   paintChecklistProgress(root, checked, total);
   if (checked === total) {
-    window.ReanGitUtil?.recordChapterComplete?.(chapterId, true);
-    paintMarkDone(chapterId);
+    window.ReanGitUtil?.recordChapterComplete?.(id, true);
+    paintMarkDone(id);
   }
 }
 
@@ -563,7 +591,7 @@ function sanitizeMarkdownHtml(html) {
   });
 }
 
-function renderMarkdown(target, md) {
+function renderMarkdown(target, md, scopeId) {
   if (!window.marked) {
     target.innerHTML = `<pre>${escapeHtml(md)}</pre>`;
     return;
@@ -582,7 +610,7 @@ function renderMarkdown(target, md) {
 
   target.innerHTML = safe;
   enhanceCodeBlocks(target);
-  enhanceCheckboxes(target);
+  enhanceCheckboxes(target, scopeId);
 }
 
 function padNum(n) {
@@ -784,7 +812,7 @@ async function initLearnPage(signal, { animate = true } = {}) {
         });
       }
       document.title = `${chapter.title} — rean-git`;
-      renderMarkdown(bodyEl, chapter.body);
+      renderMarkdown(bodyEl, chapter.body, chapter.id);
       renderPager(index);
       paintMarkDone(chapter.id);
       paintRelatedLab(chapter.id);
@@ -930,16 +958,19 @@ async function initLearnPage(signal, { animate = true } = {}) {
     );
 
     const start = resolveRouteOrResume("c", readLastChapter(chapters), chapters[0].id);
-    showChapter(start.id, { push: false, animate });
-    if (!start.fromRoute) {
+    // Canonicalize before first paint so checklists never read/write an empty ?c= key.
+    if (!start.fromRoute || getParam("c") !== start.id) {
       history.replaceState({ c: start.id }, "", chapterHref(start.id));
     }
+    showChapter(start.id, { push: false, animate });
 
     return {
       goTo(id, opts) {
         const target = id || readLastChapter(chapters) || chapters[0].id;
+        if (!id || getParam("c") !== target) {
+          history.replaceState({ c: target }, "", chapterHref(target));
+        }
         goToChapter(target, opts);
-        if (!id) history.replaceState({ c: target }, "", chapterHref(target));
       },
     };
   } catch (err) {
@@ -1046,7 +1077,7 @@ async function initLabPage(signal, { animate = true } = {}) {
 
     try {
       const md = await loadLabMarkdown(lab.id);
-      renderMarkdown(bodyEl, md);
+      renderMarkdown(bodyEl, md, lab.id);
       bodyEl.querySelector("h1")?.remove();
       prependGithubDeferNote(bodyEl, lab, labs);
       appendVerifyHint(bodyEl, lab.id);
@@ -1169,16 +1200,19 @@ async function initLabPage(signal, { animate = true } = {}) {
   );
 
   const start = resolveRouteOrResume("id", readLastLab(), labs[0].id);
-  goToLab(start.id, { push: false, animate });
+  // Canonicalize before first paint so checklists never read/write an empty ?id= key.
   if (!start.fromRoute || getParam("id") !== start.id) {
     history.replaceState({ id: start.id }, "", labHref(start.id));
   }
+  goToLab(start.id, { push: false, animate });
 
   return {
     goTo(id, opts) {
       const target = id || readLastLab() || labs[0].id;
+      if (!id || getParam("id") !== target) {
+        history.replaceState({ id: target }, "", labHref(target));
+      }
       goToLab(target, opts);
-      if (!id) history.replaceState({ id: target }, "", labHref(target));
     },
   };
 }
