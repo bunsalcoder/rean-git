@@ -598,12 +598,16 @@ def check_shared_runtime() -> int:
         msgs.append("util.js must validate verify output and build Codespaces lab URLs")
     if "parseGuideChapters" not in util_text:
         msgs.append("util.js must parse handbook chapters for search")
+    if "loadLocalizedMarkdown" not in util_text or "peekLocalizedMarkdown" not in util_text:
+        msgs.append("util.js must cache localized markdown for learn + search")
     if "LAST_CHAPTER_KEY" not in util_text or "CLONE_COMMAND" not in util_text:
         msgs.append("util.js must own progress keys and the clone command")
     if "rean-git:lab-progress" not in util_text:
         msgs.append("util.js must dispatch lab progress updates")
 
     learn_js = LEARN_JS.read_text(encoding="utf-8") if LEARN_JS.is_file() else ""
+    if "loadLocalizedMarkdown" not in learn_js:
+        msgs.append("learn.js must use the shared markdown cache")
     if "parseGuideChapters" not in learn_js:
         msgs.append("learn.js must use ReanGitUtil.parseGuideChapters for handbook chapters")
     if "cheatSheetHref" not in learn_js:
@@ -652,6 +656,9 @@ def check_shared_runtime() -> int:
         msgs.append("search.js should index handbook chapter bodies")
     if "labs/" not in site_runtime or "labBodies" not in site_runtime:
         msgs.append("search.js should index lab markdown bodies")
+    search_text = search_js.read_text(encoding="utf-8") if search_js.is_file() else ""
+    if "loadLocalizedMarkdown" not in search_text:
+        msgs.append("search.js must use the shared markdown cache")
     if 'role="combobox"' not in site_runtime or "aria-activedescendant" not in site_runtime:
         msgs.append("search.js should use combobox semantics")
     if "data-shortcuts-modal" not in site_runtime or "focusMain" not in site_runtime:
