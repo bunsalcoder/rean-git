@@ -62,3 +62,15 @@ test("shortcuts dialog has no serious a11y violations", async ({ page }) => {
   await expect(page.locator("[data-shortcuts-modal] .shortcuts-dialog")).toBeVisible();
   await expectNoA11yViolations(page, "shortcuts dialog");
 });
+
+test("mobile nav open has no serious a11y violations", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page.locator("[data-nav-toggle]").click();
+  await expect(page.locator("[data-nav]")).toHaveClass(/is-open/);
+  const results = await new AxeBuilder({ page })
+    .include("[data-nav]")
+    .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+    .analyze();
+  expect(results.violations, `mobile nav\n${formatViolations(results.violations)}`).toEqual([]);
+});

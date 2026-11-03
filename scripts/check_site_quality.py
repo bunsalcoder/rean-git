@@ -952,6 +952,7 @@ def _nav_current_attr(current: str | None, name: str) -> str:
 
 def render_chrome_region(name: str, page: str, cheat_sheet: str) -> str:
     cfg = CHROME_PAGES[page]
+    cheat_href = f"./learn.html?c={cheat_sheet}"
     if name == "head-assets":
         raw = (CHROME_PARTIALS / "head-assets.html").read_text(encoding="utf-8")
         return _indent_chrome(raw)
@@ -962,11 +963,12 @@ def render_chrome_region(name: str, page: str, cheat_sheet: str) -> str:
             .replace("{{NAV_HOME}}", _nav_current_attr(cfg["nav"], "home"))
             .replace("{{NAV_LEARN}}", _nav_current_attr(cfg["nav"], "learn"))
             .replace("{{NAV_LABS}}", _nav_current_attr(cfg["nav"], "labs"))
-            .replace(
-                "{{CHEAT_SHEET_HREF}}",
-                f"./learn.html?c={cheat_sheet}",
-            )
+            .replace("{{CHEAT_SHEET_HREF}}", cheat_href)
         )
+        return _indent_chrome(rendered)
+    if name == "footer":
+        raw = (CHROME_PARTIALS / "footer.html").read_text(encoding="utf-8")
+        rendered = raw.replace("{{CHEAT_SHEET_HREF}}", cheat_href)
         return _indent_chrome(rendered)
     raise SystemExit(f"unknown chrome region: {name}")
 
@@ -981,7 +983,7 @@ def apply_chrome_regions(html: str, page: str, cheat_sheet: str) -> str:
         return f"{match.group(1)}{body}{match.group(4)}"
 
     updated = CHROME_REGION_RE.sub(repl, html)
-    missing = {"head-assets", "header"} - found
+    missing = {"head-assets", "header", "footer"} - found
     if missing:
         raise SystemExit(f"{page}: missing chrome markers for {', '.join(sorted(missing))}")
     return updated
@@ -1007,7 +1009,7 @@ def check_chrome(cheat_sheet: str) -> int:
     msgs: list[str] = []
     if not CHROME_PARTIALS.is_dir():
         return fail(["missing scripts/chrome_partials/"], "shared HTML chrome")
-    for partial in ("head-assets.html", "header.html"):
+    for partial in ("head-assets.html", "header.html", "footer.html"):
         if not (CHROME_PARTIALS / partial).is_file():
             msgs.append(f"missing scripts/chrome_partials/{partial}")
     if msgs:

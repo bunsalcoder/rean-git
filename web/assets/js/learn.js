@@ -1048,6 +1048,14 @@ async function initLearnPage(signal, { animate = true } = {}) {
       { signal }
     );
 
+    document.querySelector("[data-print-chapter]")?.addEventListener(
+      "click",
+      () => {
+        window.print();
+      },
+      { signal }
+    );
+
     navEl.addEventListener(
       "click",
       (event) => {

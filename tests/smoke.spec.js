@@ -680,6 +680,50 @@ test("question mark opens keyboard shortcuts help", async ({ page }) => {
   await expect(page.locator("[data-shortcuts-modal]")).toBeHidden();
 });
 
+test("shared footer links to learn, labs, and cheat sheet", async ({ page }) => {
+  await page.goto("/");
+  const footer = page.locator(".site-footer");
+  await expect(footer.locator('a[href="./learn.html"]')).toBeVisible();
+  await expect(footer.locator('a[href="./labs.html"]')).toBeVisible();
+  await expect(footer.locator("[data-cheat-sheet]")).toBeVisible();
+});
+
+test("soft navigation moves between home, labs, and learn", async ({ page }) => {
+  await page.goto("/");
+  await page.locator('.nav a[href="./labs.html"]').click();
+  await expect(page).toHaveURL(/labs\.html/);
+  await expect(page.locator("[data-lab-grid] a").first()).toBeVisible();
+  await expect(page.locator("body")).toHaveClass(/page-labs/);
+
+  await page.locator('.nav a[href="./learn.html"]').click();
+  await expect(page).toHaveURL(/learn\.html/);
+  await expect(page.locator("[data-chapter-body]")).toBeVisible();
+  await expect(page.locator("body")).toHaveClass(/page-learn/);
+
+  await page.locator('.nav a[href="./index.html"]').click();
+  await expect(page).toHaveURL(/\/(index\.html)?$/);
+  await expect(page.locator(".headline")).toBeVisible();
+});
+
+test("mobile nav opens the site menu", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  const toggle = page.locator("[data-nav-toggle]");
+  await expect(toggle).toBeVisible();
+  await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  await expect(page.locator("[data-nav]")).toHaveClass(/is-open/);
+  await expect(page.locator('[data-nav] a[href="./labs.html"]')).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+});
+
+test("learn print control is available", async ({ page }) => {
+  await page.goto("/learn.html?c=26");
+  await expect(page.locator("[data-print-chapter]")).toBeVisible();
+  await expect(page.locator("[data-chapter-title]")).not.toHaveText(/Loading/i);
+});
+
 test("changing chapter focuses main content and announces", async ({ page }) => {
   await page.goto("/learn.html?c=how-to-use");
   await expect(page.locator("[data-chapter-title]")).not.toHaveText(/Loading/i);
