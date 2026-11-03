@@ -31,6 +31,7 @@
           />
           <ul id="site-search-results" class="search-results" data-search-results role="listbox"></ul>
           <p class="search-empty" data-search-empty hidden data-i18n="nav.searchEmpty">No matching chapters or labs</p>
+          <p class="search-status" data-search-status hidden role="status"></p>
           <p class="search-hint" data-i18n="nav.searchHint">Type to search · Esc to close</p>
         </div>
       `;
@@ -41,6 +42,7 @@
     const input = modal.querySelector("[data-search-input]");
     const list = modal.querySelector("[data-search-results]");
     const empty = modal.querySelector("[data-search-empty]");
+    const status = modal.querySelector("[data-search-status]");
     if (!dialog || !input || !list) return;
 
     let trap = null;
@@ -48,28 +50,59 @@
     let chapterBodies = new Map();
     let labBodies = new Map();
     let indexLocale = null;
+    let deepIndexReady = false;
+    let indexPromise = null;
+    let debounceTimer = 0;
+    let latestQuery = "";
 
     function isOpen() {
       return !modal.hidden;
     }
 
+    function setStatus(message) {
+      if (!status) return;
+      if (!message) {
+        status.hidden = true;
+        status.textContent = "";
+        return;
+      }
+      status.hidden = false;
+      status.textContent = message;
+    }
+
     async function ensureSearchIndex() {
       const locale = window.ReanGitI18n?.getLocale?.() || "en";
-      if (indexLocale === locale && chapterBodies.size) return;
+      if (indexLocale === locale && deepIndexReady) return;
+      if (indexPromise) return indexPromise;
+
       const loadMd = window.ReanGitUtil?.loadLocalizedMarkdown;
       if (!loadMd) return;
 
-      const guide = await loadMd("guide.md", { optional: true });
-      const parsed = window.ReanGitUtil?.parseGuideChapters?.(guide) || [];
-      chapterBodies = new Map(parsed.map((chapter) => [chapter.id, chapter.body]));
+      const indexingLabel =
+        window.ReanGitI18n?.t?.("nav.searchIndexing") || "Indexing chapters and labs…";
+      setStatus(indexingLabel);
 
-      await window.ReanGitCatalog?.ready;
-      const catalog = window.ReanGitCatalog?.getLabs?.() || [];
-      const entries = await Promise.all(
-        catalog.map(async (lab) => [lab.id, await loadMd(`labs/${lab.id}.md`, { optional: true })])
-      );
-      labBodies = new Map(entries);
-      indexLocale = locale;
+      indexPromise = (async () => {
+        try {
+          const guide = await loadMd("guide.md", { optional: true });
+          const parsed = window.ReanGitUtil?.parseGuideChapters?.(guide) || [];
+          chapterBodies = new Map(parsed.map((chapter) => [chapter.id, chapter.body]));
+
+          await window.ReanGitCatalog?.ready;
+          const catalog = window.ReanGitCatalog?.getLabs?.() || [];
+          const entries = await Promise.all(
+            catalog.map(async (lab) => [lab.id, await loadMd(`labs/${lab.id}.md`, { optional: true })])
+          );
+          labBodies = new Map(entries);
+          indexLocale = locale;
+          deepIndexReady = true;
+        } finally {
+          indexPromise = null;
+          if (isOpen()) setStatus("");
+        }
+      })();
+
+      return indexPromise;
     }
 
     function collectItems() {
@@ -117,7 +150,8 @@
       links[activeIndex].scrollIntoView({ block: "nearest" });
     }
 
-    function render(query) {
+    function render(query = input.value) {
+      latestQuery = query;
       const needle = query.trim().toLowerCase();
       const matches = collectItems().filter((item) => !needle || item.haystack.includes(needle));
       const limited = matches.slice(0, 12);
@@ -150,6 +184,7 @@
       modal.hidden = true;
       input.setAttribute("aria-expanded", "false");
       input.removeAttribute("aria-activedescendant");
+      setStatus("");
       trap?.deactivate();
       trap = null;
       toggle.focus();
@@ -168,7 +203,17 @@
       if (event.target.closest("a")) close();
     });
 
-    input.addEventListener("input", () => render(input.value));
+    input.addEventListener("input", () => {
+      const query = input.value;
+      // Clear stale matches immediately so callers don't read the previous result set.
+      if (query.trim() !== latestQuery.trim()) {
+        list.innerHTML = "";
+        if (empty) empty.hidden = true;
+        input.removeAttribute("aria-activedescendant");
+      }
+      window.clearTimeout(debounceTimer);
+      debounceTimer = window.setTimeout(() => render(query), 80);
+    });
 
     modal.addEventListener("keydown", (event) => {
       if (!isOpen()) return;
@@ -214,7 +259,10 @@
 
     window.ReanGitI18n?.onChange?.(() => {
       chapterBodies = new Map();
+      labBodies = new Map();
       indexLocale = null;
+      deepIndexReady = false;
+      indexPromise = null;
       if (!isOpen()) return;
       window.ReanGitI18n?.apply?.(modal);
       render(input.value);

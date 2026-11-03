@@ -66,6 +66,14 @@
           document.documentElement.setAttribute("lang", l);
           document.documentElement.setAttribute("data-lang", l);
         }
+        try {
+          document.cookie =
+            "rean-git-lang=" +
+            (l === "km" ? "km" : "en") +
+            "; path=/; max-age=31536000; SameSite=Lax";
+        } catch (e) {
+          /* private mode */
+        }
       })();
     </script>
     <link rel="stylesheet" href="./assets/css/styles.css" />
@@ -114,6 +122,40 @@
         </div>
       </div>
     </header>
+    <script>
+      (function () {
+        var lang = document.documentElement.getAttribute("data-lang");
+        if (lang !== "km") {
+          document.documentElement.setAttribute("data-i18n-ready", "");
+          return;
+        }
+        var chrome = {
+          "a11y.skipToContent": "រំលងទៅមាតិកា",
+          "nav.home": "ទំព័រដើម",
+          "nav.learn": "រៀន",
+          "nav.labs": "លំហាត់",
+          "nav.cheatSheet": "តារាងសង្ខេប",
+          "nav.menu": "ម៉ឺនុយ",
+          "nav.language": "ភាសា",
+          "nav.search": "ស្វែងរក",
+          "nav.themeToLight": "ប្តូរទៅរបៀបភ្លឺ",
+          "nav.themeToDark": "ប្តូរទៅរបៀបងងឹត",
+        };
+        document.querySelectorAll(".skip-link[data-i18n], .site-header [data-i18n]").forEach(function (el) {
+          var key = el.getAttribute("data-i18n");
+          var value = chrome[key];
+          if (!value) return;
+          var attr = el.getAttribute("data-i18n-attr");
+          if (attr) el.setAttribute(attr, value);
+          else el.textContent = value;
+        });
+        document.querySelectorAll(".lang-switch [data-set-lang]").forEach(function (btn) {
+          var active = btn.getAttribute("data-set-lang") === "km";
+          btn.setAttribute("aria-pressed", String(active));
+          btn.classList.toggle("is-active", active);
+        });
+      })();
+    </script>
     <!-- /rean:chrome:header -->
 
     <main class="section" id="main-content" tabindex="-1">
@@ -147,7 +189,13 @@ cd rean-git</code></pre>
           <button type="button" class="lab-filter" data-lab-filter="advanced" aria-pressed="false" data-i18n="levels.advanced">Advanced</button>
         </div>
 
-        <div class="lab-grid" data-lab-grid></div>
+        <p class="visually-hidden" role="status" data-i18n="labsPage.labsLoading">Loading labs…</p>
+        <div class="lab-grid" data-lab-grid aria-busy="true">
+          <span class="lab-skel-block" aria-hidden="true"></span>
+          <span class="lab-skel-block" aria-hidden="true"></span>
+          <span class="lab-skel-block" aria-hidden="true"></span>
+          <span class="lab-skel-block" aria-hidden="true"></span>
+        </div>
       </div>
     </main>
 

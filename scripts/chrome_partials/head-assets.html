@@ -15,6 +15,14 @@
       document.documentElement.setAttribute("lang", l);
       document.documentElement.setAttribute("data-lang", l);
     }
+    try {
+      document.cookie =
+        "rean-git-lang=" +
+        (l === "km" ? "km" : "en") +
+        "; path=/; max-age=31536000; SameSite=Lax";
+    } catch (e) {
+      /* private mode */
+    }
   })();
 </script>
 <link rel="stylesheet" href="./assets/css/styles.css" />
