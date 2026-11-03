@@ -433,6 +433,22 @@ html[lang="km"] .nav a {
   transform: scale(0.92);
 }
 
+.theme-toggle[data-theme-pref="system"] {
+  position: relative;
+}
+
+.theme-toggle[data-theme-pref="system"]::after {
+  content: "";
+  position: absolute;
+  right: 0.35rem;
+  bottom: 0.35rem;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 999px;
+  background: var(--accent-deep);
+  box-shadow: 0 0 0 2px var(--surface);
+}
+
 .search-toggle {
   display: inline-flex;
   width: 2.5rem;
@@ -1689,6 +1705,11 @@ html.theme-animate body *::after {
   border-radius: 0.7rem;
   background: var(--surface);
   box-shadow: 0 16px 40px var(--shadow-strong);
+}
+
+.sw-update-soft {
+  border-color: var(--accent-border);
+  background: color-mix(in srgb, var(--accent-soft) 55%, var(--surface));
 }
 
 .sw-update p {

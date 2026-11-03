@@ -102,10 +102,33 @@
     });
   }
 
-  function setFilter(level) {
-    filterLevel = VALID_LEVELS.has(level) || level === "all" ? level : "all";
+  function normalizeLevel(level) {
+    if (level === "all" || VALID_LEVELS.has(level)) return level;
+    return "all";
+  }
+
+  function levelFromUrl() {
+    if (!document.querySelector("[data-lab-grid]")) return null;
+    const level = new URLSearchParams(location.search).get("level");
+    if (level == null || level === "") return null;
+    return normalizeLevel(level);
+  }
+
+  function syncFilterUrl(level) {
+    if (!document.querySelector("[data-lab-grid]")) return;
+    const url = new URL(location.href);
+    if (level === "all") url.searchParams.delete("level");
+    else url.searchParams.set("level", level);
+    const next = `${url.pathname}${url.search}${url.hash}`;
+    const current = `${location.pathname}${location.search}${location.hash}`;
+    if (next !== current) history.replaceState(history.state, "", next);
+  }
+
+  function setFilter(level, { updateUrl = true } = {}) {
+    filterLevel = normalizeLevel(level);
     syncFilterButtons();
     renderGrid(document.querySelector("[data-lab-grid]"));
+    if (updateUrl) syncFilterUrl(filterLevel);
   }
 
   function wireFilters() {
@@ -141,10 +164,13 @@
   function mountLists() {
     const track = document.querySelector("[data-lab-track]");
     const grid = document.querySelector("[data-lab-grid]");
+    const fromUrl = levelFromUrl();
+    if (fromUrl) filterLevel = fromUrl;
     renderTrack(track);
     wireFilters();
     syncFilterButtons();
     renderGrid(grid);
+    if (grid) syncFilterUrl(filterLevel);
     paintCountTitle();
     syncCheatSheetLinks();
     if (track) window.ReanGitI18n?.apply?.(track);

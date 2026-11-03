@@ -86,14 +86,44 @@ test("labs page filter narrows the grid", async ({ page }) => {
   const beginnerCount = await grid.count();
   await expect(beginnerCount).toBeGreaterThan(0);
   await expect(beginnerCount).toBeLessThan(total);
+  await expect(page).toHaveURL(/[?&]level=beginner(?:&|$)/);
 
   await page.locator('[data-lab-filter="intermediate"]').click();
   await expect(page.locator('[data-lab-grid] a[data-lab-id="08-local-remote"]')).toBeVisible();
   await expect(page.locator('[data-lab-grid] a[data-lab-id="10-team-workflow"]')).toBeVisible();
   await expect(page.locator('[data-lab-grid] a[data-lab-id="14-interactive-rebase"]')).toHaveCount(0);
+  await expect(page).toHaveURL(/[?&]level=intermediate(?:&|$)/);
 
   await page.locator('[data-lab-filter="all"]').click();
   await expect(grid).toHaveCount(total);
+  await expect(page).not.toHaveURL(/[?&]level=/);
+});
+
+test("labs page honors level query on load", async ({ page }) => {
+  await page.goto("/labs.html?level=advanced");
+  await expect(page.locator('[data-lab-filter="advanced"]')).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator('[data-lab-grid] a[data-lab-id="14-interactive-rebase"]')).toBeVisible();
+  await expect(page.locator('[data-lab-grid] a[data-lab-id="00-install-config"]')).toHaveCount(0);
+});
+
+test("theme toggle cycles light, dark, and system", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem("rean-git-theme", "light");
+  });
+  await page.goto("/");
+  const toggle = page.locator("[data-theme-toggle]");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await expect(page.locator("html")).toHaveAttribute("data-theme-pref", "light");
+
+  await toggle.click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect(page.locator("html")).toHaveAttribute("data-theme-pref", "dark");
+
+  await toggle.click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme-pref", "system");
+  await expect
+    .poll(async () => page.evaluate(() => localStorage.getItem("rean-git-theme")))
+    .toBe("system");
 });
 
 test("pages advertise a web app manifest", async ({ page }) => {
