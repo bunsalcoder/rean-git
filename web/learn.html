@@ -194,6 +194,7 @@
             Chapters
           </button>
           <div class="toolbar-actions">
+            <button type="button" class="btn btn-ghost" data-print-chapter data-i18n="learn.print">Print</button>
             <button type="button" class="btn btn-ghost" data-mark-done hidden data-i18n="learn.markDone">Mark done</button>
             <p class="progress-pill" data-progress data-i18n="learn.loadingShort">Loading</p>
           </div>
@@ -211,15 +212,19 @@
       </main>
     </div>
 
+    <!-- rean:chrome:footer -->
     <footer class="site-footer">
       <div class="wrap footer-inner">
-        <span>rean-git</span>
+        <p data-i18n="home.footerTagline">rean-git — hands-on Git from zero to hero.</p>
         <div class="footer-links">
-          <a href="./index.html" data-i18n="nav.home">Home</a>
+          <a href="./learn.html" data-i18n="nav.learn">Learn</a>
+          <a href="./labs.html" data-i18n="nav.labs">Labs</a>
+          <a href="./learn.html?c=26" data-cheat-sheet data-i18n="nav.cheatSheet">Cheat sheet</a>
           <a href="https://github.com/bunsalcoder/rean-git" target="_blank" rel="noopener noreferrer" data-i18n="nav.github">GitHub</a>
         </div>
       </div>
     </footer>
+    <!-- /rean:chrome:footer -->
 
     <script defer src="./assets/vendor/marked.min.js" integrity="sha384-948ahk4ZmxYVYOc+rxN1H2gM1EJ2Duhp7uHtZ4WSLkV4Vtx5MUqnV+l7u9B+jFv+" crossorigin="anonymous"></script>
     <script defer src="./assets/vendor/purify.min.js" integrity="sha384-JEyTNhjM6R1ElGoJns4U2Ln4ofPcqzSsynQkmEc/KGy6336qAZl70tDLufbkla+3" crossorigin="anonymous"></script>

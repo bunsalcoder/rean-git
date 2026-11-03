@@ -132,6 +132,7 @@
     "next": "បន្ទាប់",
     "markDone": "សម្គាល់ថារួច",
     "markedDone": "រួចរាល់",
+    "print": "បោះពុម្ព",
     "relatedLab": "អនុវត្ត — {title}",
     "relatedLabFallback": "បើកលំហាត់ដែលត្រូវគ្នា",
     "checklistProgress": "បានធីក {checked} នៃ {total} ធាតុក្នុងបញ្ជី",

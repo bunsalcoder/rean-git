@@ -132,6 +132,7 @@
     "next": "Next",
     "markDone": "Mark done",
     "markedDone": "Done",
+    "print": "Print",
     "relatedLab": "Practice — {title}",
     "relatedLabFallback": "Open the matching lab",
     "checklistProgress": "{checked} of {total} checklist items",
