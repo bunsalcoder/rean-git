@@ -25,6 +25,7 @@
     "searchHint": "Type to search · Esc to close",
     "themeToLight": "Switch to light mode",
     "themeToDark": "Switch to dark mode",
+    "themeUseSystem": "Use system theme",
     "github": "GitHub"
   },
   "a11y": {
@@ -86,6 +87,7 @@
     "nextLab": "Next lab — {title}",
     "startHere": "Start here",
     "updateAvailable": "A newer version of rean-git is ready.",
+    "offlineReady": "Ready offline — chapters and labs will work without a network.",
     "refresh": "Refresh",
     "backupNudge": "Progress stays on this device. Export a backup so you do not lose it — or import one from another browser.",
     "backupExport": "Export backup",

@@ -161,6 +161,44 @@
     }).catch(() => {});
   }
 
+  function showOfflineReadyCue() {
+    if (navigator.webdriver) return;
+    if (document.querySelector("[data-sw-update],[data-progress-backup],[data-offline-ready]")) {
+      return;
+    }
+    try {
+      if (sessionStorage.getItem("rean-git-offline-cue") === "1") return;
+      sessionStorage.setItem("rean-git-offline-cue", "1");
+    } catch {
+      /* private mode — still show once this load */
+    }
+    const toast = document.createElement("div");
+    toast.className = "sw-update sw-update-soft";
+    toast.setAttribute("data-offline-ready", "");
+    toast.setAttribute("role", "status");
+    const i18n = window.ReanGitI18n;
+    toast.innerHTML = `
+      <p>${window.ReanGitUtil.escapeHtml(
+        i18n?.t?.("home.offlineReady") || "Ready offline — chapters and labs will work without a network."
+      )}</p>
+      <button type="button" class="btn btn-ghost" data-offline-dismiss>${window.ReanGitUtil.escapeHtml(
+        i18n?.t?.("ui.dismiss") || "Dismiss"
+      )}</button>
+    `;
+    document.body.appendChild(toast);
+    const remove = () => toast.remove();
+    const unbind = wireToastDismiss(toast, remove);
+    toast.querySelector("[data-offline-dismiss]")?.addEventListener("click", () => {
+      unbind();
+      remove();
+    });
+    window.setTimeout(() => {
+      if (!document.body.contains(toast)) return;
+      unbind();
+      remove();
+    }, 6000);
+  }
+
   function registerServiceWorker() {
     if (!("serviceWorker" in navigator) || navigator.webdriver) return;
     const src = new URL("./sw.js", location.href);
@@ -182,6 +220,9 @@
         });
       });
       window.ReanGitI18n?.ready?.then((locale) => tellServiceWorkerLocale(locale));
+      navigator.serviceWorker.ready.then(() => {
+        if (navigator.serviceWorker.controller) showOfflineReadyCue();
+      });
     }).catch(() => {});
   }
 
@@ -197,6 +238,22 @@
     return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
   }
 
+  function themePreference() {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved === "light" || saved === "dark" || saved === "system") return saved;
+    return "system";
+  }
+
+  function nextThemePreference(pref) {
+    if (pref === "light") return "dark";
+    if (pref === "dark") return "system";
+    return "light";
+  }
+
+  function resolvedTheme(pref = themePreference()) {
+    return pref === "dark" || pref === "light" ? pref : systemTheme();
+  }
+
   let themeBusy = false;
 
   function setThemeRevealOrigin(x, y) {
@@ -210,33 +267,49 @@
     root.style.setProperty("--theme-r", `${radius}px`);
   }
 
-  function paintTheme(theme) {
+  function themeToggleLabel(pref = themePreference()) {
+    const i18n = window.ReanGitI18n;
+    if (pref === "system") {
+      return i18n?.t?.("nav.themeToLight") || "Switch to light mode";
+    }
+    if (pref === "dark") {
+      return i18n?.t?.("nav.themeUseSystem") || "Use system theme";
+    }
+    return i18n?.t?.("nav.themeToDark") || "Switch to dark mode";
+  }
+
+  function paintTheme(theme, pref = themePreference()) {
     const next = theme === "dark" ? "dark" : "light";
+    const preference = pref === "light" || pref === "dark" || pref === "system" ? pref : "system";
     document.documentElement.setAttribute("data-theme", next);
+    document.documentElement.setAttribute("data-theme-pref", preference);
     const themeMeta = document.querySelector('meta[name="theme-color"]');
     if (themeMeta) themeMeta.setAttribute("content", next === "dark" ? "#2f3644" : "#f3f5f7");
     if (themeToggle) {
-      const i18n = window.ReanGitI18n;
-      const label =
-        next === "dark"
-          ? i18n?.t?.("nav.themeToLight") || "Switch to light mode"
-          : i18n?.t?.("nav.themeToDark") || "Switch to dark mode";
-      themeToggle.setAttribute("aria-label", label);
+      themeToggle.setAttribute("aria-label", themeToggleLabel(preference));
+      themeToggle.setAttribute("data-theme-pref", preference);
     }
     return next;
   }
 
-  function applyTheme(theme, { persist = false, animate = false, originX, originY } = {}) {
+  function applyTheme(theme, { preference, persist = false, animate = false, originX, originY } = {}) {
     const next = theme === "dark" ? "dark" : "light";
-    if (next === currentTheme()) {
-      paintTheme(next);
-      if (persist) localStorage.setItem(THEME_KEY, next);
+    const pref =
+      preference === "light" || preference === "dark" || preference === "system"
+        ? preference
+        : persist
+          ? next
+          : themePreference();
+
+    if (next === currentTheme() && document.documentElement.getAttribute("data-theme-pref") === pref) {
+      paintTheme(next, pref);
+      if (persist) localStorage.setItem(THEME_KEY, pref);
       return;
     }
 
     const commit = () => {
-      paintTheme(next);
-      if (persist) localStorage.setItem(THEME_KEY, next);
+      paintTheme(next, pref);
+      if (persist) localStorage.setItem(THEME_KEY, pref);
     };
 
     const canViewTransition =
@@ -287,19 +360,21 @@
     commit();
   }
 
-  applyTheme(localStorage.getItem(THEME_KEY) || systemTheme());
+  applyTheme(resolvedTheme(), { preference: themePreference(), persist: false });
   window.ReanGitI18n?.ready?.then((locale) => {
-    paintTheme(currentTheme());
+    paintTheme(currentTheme(), themePreference());
     tellServiceWorkerLocale(locale);
   });
   window.ReanGitI18n?.onChange?.((locale) => {
-    paintTheme(currentTheme());
+    paintTheme(currentTheme(), themePreference());
     tellServiceWorkerLocale(locale);
   });
 
   if (themeToggle) {
     themeToggle.addEventListener("click", (event) => {
-      applyTheme(currentTheme() === "dark" ? "light" : "dark", {
+      const preference = nextThemePreference(themePreference());
+      applyTheme(resolvedTheme(preference), {
+        preference,
         persist: true,
         animate: true,
         originX: event.clientX,
@@ -309,8 +384,8 @@
   }
 
   const onSystemThemeChange = () => {
-    if (localStorage.getItem(THEME_KEY)) return;
-    applyTheme(systemTheme());
+    if (themePreference() !== "system") return;
+    applyTheme(systemTheme(), { preference: "system", persist: false });
   };
   if (typeof themeQuery.addEventListener === "function") {
     themeQuery.addEventListener("change", onSystemThemeChange);

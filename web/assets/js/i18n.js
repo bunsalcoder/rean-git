@@ -93,11 +93,15 @@
 
     const themeToggle = document.querySelector("[data-theme-toggle]");
     if (themeToggle) {
-      const dark = document.documentElement.getAttribute("data-theme") === "dark";
-      themeToggle.setAttribute(
-        "aria-label",
-        dark ? t("nav.themeToLight") : t("nav.themeToDark")
-      );
+      const pref = document.documentElement.getAttribute("data-theme-pref") || "system";
+      const label =
+        pref === "system"
+          ? t("nav.themeToLight")
+          : pref === "dark"
+            ? t("nav.themeUseSystem")
+            : t("nav.themeToDark");
+      themeToggle.setAttribute("aria-label", label);
+      themeToggle.setAttribute("data-theme-pref", pref);
     }
 
     syncDocumentSeo();
