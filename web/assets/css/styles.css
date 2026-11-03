@@ -2346,11 +2346,79 @@ html.theme-animate body *::after {
 }
 
 .content-pane > h1 {
-  margin: 0 0 1.2rem;
+  margin: 0 0 0.55rem;
   font-size: clamp(1.65rem, 3.2vw, 2.2rem);
   font-weight: 700;
   letter-spacing: -0.035em;
   line-height: 1.15;
+}
+
+.content-meta {
+  margin: 0 0 1rem;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+}
+
+.content-meta[hidden] {
+  display: none;
+}
+
+.chapter-toc {
+  margin: 0 0 1.35rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.65rem;
+  background: var(--paper);
+}
+
+.chapter-toc[hidden] {
+  display: none;
+}
+
+.chapter-toc-label {
+  margin: 0 0 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.chapter-toc ol {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.chapter-toc li + li {
+  margin-top: 0.28rem;
+}
+
+.chapter-toc a {
+  color: var(--accent-deep);
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.chapter-toc a:hover {
+  color: var(--ink);
+}
+
+.missing-route p {
+  margin: 0.65rem 0 0;
+  color: var(--ink-soft);
+}
+
+.missing-route-actions {
+  margin-top: 1rem !important;
+}
+
+.lab-time {
+  display: inline-block;
+  margin-top: 0.35rem;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
 .toolbar {
@@ -2919,6 +2987,8 @@ main.is-page-entering,
 .content-pane.is-chapter-leaving [data-chapter-title],
 .content-pane.is-chapter-leaving [data-lab-title],
 .content-pane.is-chapter-leaving .eyebrow,
+.content-pane.is-chapter-leaving .content-meta,
+.content-pane.is-chapter-leaving .chapter-toc,
 .content-pane.is-chapter-leaving [data-progress],
 .content-pane.is-chapter-leaving [data-pager],
 .page-lab.is-leaving [data-pager],
@@ -2932,6 +3002,8 @@ main.is-page-entering,
 .content-pane.is-chapter-switching [data-chapter-title],
 .content-pane.is-chapter-switching [data-lab-title],
 .content-pane.is-chapter-switching .eyebrow,
+.content-pane.is-chapter-switching .content-meta,
+.content-pane.is-chapter-switching .chapter-toc,
 .content-pane.is-chapter-switching [data-progress],
 .content-pane.is-chapter-switching [data-pager],
 .page-lab.is-switching [data-pager],
@@ -3005,6 +3077,8 @@ main.is-page-entering,
   .content-pane.is-chapter-leaving [data-chapter-title],
   .content-pane.is-chapter-leaving [data-lab-title],
   .content-pane.is-chapter-leaving .eyebrow,
+  .content-pane.is-chapter-leaving .content-meta,
+  .content-pane.is-chapter-leaving .chapter-toc,
   .content-pane.is-chapter-leaving [data-progress],
   .content-pane.is-chapter-leaving [data-pager],
   .page-lab.is-leaving [data-pager],
