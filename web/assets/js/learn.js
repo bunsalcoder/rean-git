@@ -8,14 +8,130 @@ function getLabMeta() {
   return window.ReanGitCatalog?.getLabs?.() || [];
 }
 
+function labMinutesForLevel(level) {
+  if (level === "beginner") return 15;
+  if (level === "intermediate") return 25;
+  if (level === "advanced") return 40;
+  return 20;
+}
+
 function getLabs() {
   return getLabMeta().map((lab) => ({
     id: lab.id,
     title: t(`labs.${lab.id}.title`),
     level: t(`levels.${lab.level}`),
+    levelId: lab.level,
+    minutes: labMinutesForLevel(lab.level),
     chapter: lab.chapter,
     verifyManual: Boolean(lab.verifyManual),
   }));
+}
+
+function readingMinutes(text) {
+  const words = String(text || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean).length;
+  if (!words) return 1;
+  const locale = window.ReanGitI18n?.getLocale?.() || "en";
+  const wpm = locale === "km" ? 140 : 200;
+  return Math.max(1, Math.round(words / wpm));
+}
+
+function slugifyHeading(text) {
+  return String(text || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\u1780-\u17ff\s-]/gi, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "") || "section";
+}
+
+function ensureHeadingIds(root) {
+  const used = new Set(
+    [...root.querySelectorAll("[id]")].map((el) => el.id).filter(Boolean)
+  );
+  root.querySelectorAll("h2, h3").forEach((heading) => {
+    if (heading.id) {
+      used.add(heading.id);
+      return;
+    }
+    const base = slugifyHeading(heading.textContent);
+    let id = base;
+    let n = 2;
+    while (used.has(id)) {
+      id = `${base}-${n}`;
+      n += 1;
+    }
+    used.add(id);
+    heading.id = id;
+  });
+}
+
+function paintContentMeta(text) {
+  const el = document.querySelector("[data-content-meta]");
+  if (!el) return;
+  if (!text) {
+    el.hidden = true;
+    el.textContent = "";
+    return;
+  }
+  el.hidden = false;
+  el.textContent = text;
+}
+
+function paintChapterToc(bodyEl) {
+  const toc = document.querySelector("[data-chapter-toc]");
+  if (!toc || !bodyEl) return;
+  ensureHeadingIds(bodyEl);
+  // Handbook chapters use ### sections (h3); keep h2 for any top-level leftovers.
+  const headings = [...bodyEl.querySelectorAll("h2, h3")].filter((heading) => heading.id);
+  if (headings.length < 2) {
+    toc.hidden = true;
+    toc.replaceChildren();
+    return;
+  }
+  toc.hidden = false;
+  toc.setAttribute("aria-label", t("learn.onThisPage"));
+  toc.innerHTML = `
+    <p class="chapter-toc-label">${escapeHtml(t("learn.onThisPage"))}</p>
+    <ol>
+      ${headings
+        .map(
+          (heading) =>
+            `<li><a href="#${escapeHtml(heading.id)}">${escapeHtml(heading.textContent.trim())}</a></li>`
+        )
+        .join("")}
+    </ol>
+  `;
+}
+
+function paintMissingContent({ title, bodyHtml, clearRelated }) {
+  const titleEl = document.querySelector("[data-chapter-title], [data-lab-title]");
+  const progressEl = document.querySelector("[data-progress]");
+  const pagerEl = document.querySelector("[data-pager]");
+  const bodyEl = document.querySelector("[data-chapter-body], [data-lab-body]");
+  if (titleEl) titleEl.textContent = title;
+  if (progressEl) progressEl.textContent = "";
+  paintContentMeta("");
+  document.querySelector("[data-chapter-toc]")?.replaceChildren();
+  const toc = document.querySelector("[data-chapter-toc]");
+  if (toc) toc.hidden = true;
+  document.title = `${title} — rean-git`;
+  if (clearRelated) {
+    paintRelatedChapter(null);
+    const relatedLab = document.querySelector("[data-related-lab]");
+    if (relatedLab) {
+      relatedLab.hidden = true;
+      relatedLab.replaceChildren();
+    }
+    paintMarkDone(null);
+  }
+  if (pagerEl) pagerEl.innerHTML = "";
+  if (bodyEl) bodyEl.innerHTML = bodyHtml;
 }
 
 function getParam(name) {
@@ -765,15 +881,11 @@ async function initLearnPage(signal, { animate = true } = {}) {
     const prefersReducedMotion = () =>
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const resolveIndex = (id) => {
-      let index = chapters.findIndex((c) => c.id === id);
-      if (index < 0) index = 0;
-      return index;
-    };
+    const findChapterIndex = (id) => chapters.findIndex((c) => c.id === id);
 
     const setActiveNav = (id) => {
       navEl.querySelectorAll("a[data-chapter-id]").forEach((a) => {
-        a.classList.toggle("is-active", a.dataset.chapterId === id);
+        a.classList.toggle("is-active", Boolean(id) && a.dataset.chapterId === id);
       });
     };
 
@@ -811,8 +923,12 @@ async function initLearnPage(signal, { animate = true } = {}) {
           total: chapters.length,
         });
       }
+      paintContentMeta(
+        t("learn.readingTime", { minutes: String(readingMinutes(chapter.body)) })
+      );
       document.title = `${chapter.title} — rean-git`;
       renderMarkdown(bodyEl, chapter.body, chapter.id);
+      paintChapterToc(bodyEl);
       renderPager(index);
       paintMarkDone(chapter.id);
       paintRelatedLab(chapter.id);
@@ -821,13 +937,30 @@ async function initLearnPage(signal, { animate = true } = {}) {
       window.ReanGitI18n?.syncSeo?.();
     };
 
+    const showChapterMissing = (requestedId) => {
+      currentIndex = -1;
+      setActiveNav(null);
+      paintMissingContent({
+        title: t("learn.notFoundTitle"),
+        clearRelated: true,
+        bodyHtml: `<div class="error missing-route" role="status">
+          <strong>${escapeHtml(t("learn.notFoundTitle"))}</strong>
+          <p>${escapeHtml(t("learn.notFoundBody", { id: requestedId || "" }))}</p>
+          <p class="missing-route-actions">
+            <a class="btn btn-primary" href="${chapterHref(chapters[0].id)}" data-chapter-id="${chapters[0].id}">${escapeHtml(t("learn.notFoundCta"))}</a>
+          </p>
+        </div>`,
+      });
+    };
+
     const showChapter = async (id, { push = false, animate = true } = {}) => {
-      const index = resolveIndex(id);
-      const chapter = chapters[index];
-      // Invalid ?c= falls back to first chapter — keep the address bar honest.
-      if (chapter.id !== id) {
-        history.replaceState({ c: chapter.id }, "", chapterHref(chapter.id));
+      const index = findChapterIndex(id);
+      if (index < 0) {
+        if (push) history.pushState({ c: id }, "", chapterHref(id));
+        showChapterMissing(id);
+        return;
       }
+      const chapter = chapters[index];
 
       if (index === currentIndex) {
         if (push) history.replaceState({ c: chapter.id }, "", chapterHref(chapter.id));
@@ -886,7 +1019,7 @@ async function initLearnPage(signal, { animate = true } = {}) {
     const goToChapter = (id, opts) => {
       if (!id) return;
       if (currentIndex >= 0) {
-        const nextIndex = resolveIndex(id);
+        const nextIndex = findChapterIndex(id);
         if (nextIndex === currentIndex + 1) {
           window.ReanGitUtil?.recordChapterComplete?.(chapters[currentIndex].id);
         }
@@ -958,11 +1091,15 @@ async function initLearnPage(signal, { animate = true } = {}) {
     );
 
     const start = resolveRouteOrResume("c", readLastChapter(chapters), chapters[0].id);
+    const startExists = Boolean(start.id && findChapterIndex(start.id) >= 0);
+    const startId = startExists ? start.id : chapters[0].id;
     // Canonicalize before first paint so checklists never read/write an empty ?c= key.
-    if (!start.fromRoute || getParam("c") !== start.id) {
-      history.replaceState({ c: start.id }, "", chapterHref(start.id));
+    // Keep unknown ?c= in the URL so the missing-chapter state can explain it.
+    if (startExists && (!start.fromRoute || getParam("c") !== startId)) {
+      history.replaceState({ c: startId }, "", chapterHref(startId));
     }
-    showChapter(start.id, { push: false, animate });
+    if (startExists) showChapter(startId, { push: false, animate });
+    else showChapterMissing(start.id);
 
     return {
       goTo(id, opts) {
@@ -1006,16 +1143,14 @@ async function initLabPage(signal, { animate = true } = {}) {
   const prefersReducedMotion = () =>
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  const resolveIndex = (id) => {
+  const findLabIndex = (id) => {
     const canonical = window.ReanGitCatalog?.resolveLabId?.(id) || id;
-    let index = labs.findIndex((l) => l.id === canonical);
-    if (index < 0) index = 0;
-    return index;
+    return labs.findIndex((l) => l.id === canonical);
   };
 
   const setActiveNav = (id) => {
     navEl.querySelectorAll("a[data-lab-id]").forEach((a) => {
-      a.classList.toggle("is-active", a.dataset.labId === id);
+      a.classList.toggle("is-active", Boolean(id) && a.dataset.labId === id);
     });
   };
 
@@ -1069,6 +1204,7 @@ async function initLabPage(signal, { animate = true } = {}) {
         level: lab.level,
       });
     }
+    paintContentMeta(t("lab.estimatedTime", { minutes: String(lab.minutes) }));
     document.title = `${lab.title} — rean-git`;
     renderPager(index);
     paintRelatedChapter(lab);
@@ -1087,11 +1223,35 @@ async function initLabPage(signal, { animate = true } = {}) {
     }
   };
 
+  const showLabMissing = (requestedId) => {
+    currentIndex = -1;
+    setActiveNav(null);
+    paintMissingContent({
+      title: t("lab.notFoundTitle"),
+      clearRelated: true,
+      bodyHtml: `<div class="error missing-route" role="status">
+        <strong>${escapeHtml(t("lab.notFoundTitle"))}</strong>
+        <p>${escapeHtml(t("lab.notFoundBody", { id: requestedId || "" }))}</p>
+        <p class="missing-route-actions">
+          <a class="btn btn-primary" href="./labs.html">${escapeHtml(t("lab.notFoundCta"))}</a>
+        </p>
+      </div>`,
+    });
+  };
+
   const showLab = async (id, { push = false, animate = true } = {}) => {
-    const index = resolveIndex(id);
-    const lab = labs[index];
     const canonical = window.ReanGitCatalog?.resolveLabId?.(id) || id;
-    // Unknown / aliased ids — keep the address bar on the canonical lab.
+    const index = findLabIndex(canonical);
+    if (index < 0) {
+      if (push) history.pushState({ id }, "", labHref(id));
+      else if (getParam("id") !== id) {
+        history.replaceState({ id }, "", labHref(id));
+      }
+      showLabMissing(id);
+      return;
+    }
+    const lab = labs[index];
+    // Aliased ids — keep the address bar on the canonical lab.
     if (lab.id !== id || lab.id !== canonical) {
       history.replaceState({ id: lab.id }, "", labHref(lab.id));
     }
@@ -1200,11 +1360,15 @@ async function initLabPage(signal, { animate = true } = {}) {
   );
 
   const start = resolveRouteOrResume("id", readLastLab(), labs[0].id);
+  const startExists = Boolean(start.id && findLabIndex(start.id) >= 0);
+  const startId = startExists ? start.id : labs[0].id;
   // Canonicalize before first paint so checklists never read/write an empty ?id= key.
-  if (!start.fromRoute || getParam("id") !== start.id) {
-    history.replaceState({ id: start.id }, "", labHref(start.id));
+  // Keep unknown ?id= in the URL so the missing-lab state can explain it.
+  if (startExists && (!start.fromRoute || getParam("id") !== startId)) {
+    history.replaceState({ id: startId }, "", labHref(startId));
   }
-  goToLab(start.id, { push: false, animate });
+  if (startExists) goToLab(startId, { push: false, animate });
+  else showLabMissing(start.id);
 
   return {
     goTo(id, opts) {

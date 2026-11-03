@@ -28,6 +28,13 @@
     return `./lab.html?id=${encodeURIComponent(id)}`;
   }
 
+  function labMinutesForLevel(level) {
+    if (level === "beginner") return 15;
+    if (level === "intermediate") return 25;
+    if (level === "advanced") return 40;
+    return 20;
+  }
+
   function visibleLabs() {
     if (filterLevel === "all") return labs;
     return labs.filter((lab) => lab.level === filterLevel);
@@ -45,6 +52,7 @@
         const classes = [done ? "is-complete" : "", isNext ? "is-next" : ""]
           .filter(Boolean)
           .join(" ");
+        const minutes = labMinutesForLevel(lab.level);
         const githubBadge = lab.verifyManual
           ? `<span class="lab-github" data-i18n="lab.githubRequiredBadge"></span>`
           : "";
@@ -53,6 +61,10 @@
             <span class="lab-num">${escapeHtml(labNum(lab, index))}</span>
             <h3 class="lab-title" data-i18n="labs.${id}.title"></h3>
             <p class="lab-desc" data-i18n="labs.${id}.teaser"></p>
+            <span class="lab-time">${escapeHtml(
+              window.ReanGitI18n?.t?.("lab.estimatedTime", { minutes: String(minutes) }) ||
+                `~${minutes} min`
+            )}</span>
             ${githubBadge}
             ${isNext ? `<span class="lab-next" data-i18n="home.startHere"></span>` : ""}
             ${done ? `<span class="lab-done" data-i18n="ui.done"></span>` : ""}
@@ -77,6 +89,7 @@
         const id = escapeHtml(lab.id);
         const index = labs.indexOf(lab);
         const done = window.ReanGitUtil?.isLabComplete?.(lab.id);
+        const minutes = labMinutesForLevel(lab.level);
         const githubBadge = lab.verifyManual
           ? `<span class="lab-github" data-i18n="lab.githubRequiredBadge"></span>`
           : "";
@@ -85,6 +98,10 @@
           <div>
             <h3 data-i18n="labs.${id}.title"></h3>
             <p data-i18n="labs.${id}.summary"></p>
+            <span class="lab-time">${escapeHtml(
+              window.ReanGitI18n?.t?.("lab.estimatedTime", { minutes: String(minutes) }) ||
+                `~${minutes} min`
+            )}</span>
             ${githubBadge}
             ${done ? `<span class="lab-done" data-i18n="ui.done"></span>` : ""}
           </div>

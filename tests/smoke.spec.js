@@ -455,6 +455,34 @@ test("legacy lab ids redirect to canonical ids", async ({ page }) => {
   await expect(page).toHaveURL(/id=22-internals/);
 });
 
+test("unknown lab id shows a recovery state", async ({ page }) => {
+  await page.goto("/lab.html?id=not-a-real-lab");
+  await expect(page).toHaveURL(/id=not-a-real-lab/);
+  await expect(page.locator("[data-lab-title]")).toContainText(/Lab not found|រកមិនឃើញលំហាត់/i);
+  await expect(page.locator(".missing-route a[href='./labs.html']")).toBeVisible();
+});
+
+test("unknown chapter id shows a recovery state", async ({ page }) => {
+  await page.goto("/learn.html?c=not-a-chapter");
+  await expect(page).toHaveURL(/c=not-a-chapter/);
+  await expect(page.locator("[data-chapter-title]")).toContainText(/Chapter not found|រកមិនឃើញជំពូក/i);
+  await expect(page.locator(".missing-route a[data-chapter-id]")).toBeVisible();
+});
+
+test("learn page shows reading time and on-page toc for long chapters", async ({ page }) => {
+  await page.goto("/learn.html?c=1");
+  await expect(page.locator("[data-content-meta]")).toBeVisible();
+  await expect(page.locator("[data-content-meta]")).toContainText(/\d+|នាទី/);
+  await expect(page.locator("[data-chapter-toc]")).toBeVisible();
+  await expect(page.locator("[data-chapter-toc] a").first()).toBeVisible();
+});
+
+test("lab cards show estimated time", async ({ page }) => {
+  await page.goto("/labs.html");
+  await expect(page.locator("[data-lab-grid] a .lab-time").first()).toBeVisible();
+  await expect(page.locator("[data-lab-grid] a .lab-time").first()).toContainText(/\d+/);
+});
+
 test("lab page links to the matching handbook chapter", async ({ page }) => {
   await page.goto("/lab.html?id=11-stash");
   const related = page.locator("[data-related-chapter] a");
