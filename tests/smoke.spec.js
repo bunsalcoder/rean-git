@@ -493,9 +493,9 @@ test("search finds text inside a chapter", async ({ page }) => {
   await expect(input).toBeVisible();
   await input.fill("suitcase");
   const results = page.locator("[data-search-results] [role='option']");
-  await expect(results.first()).toBeVisible({ timeout: 10000 });
-  const titles = await results.allTextContents();
-  expect(titles.some((text) => /mental model/i.test(text))).toBeTruthy();
+  await expect(results.filter({ hasText: /mental model/i }).first()).toBeVisible({
+    timeout: 10000,
+  });
 });
 
 test("search finds text inside a lab", async ({ page }) => {
@@ -505,9 +505,9 @@ test("search finds text inside a lab", async ({ page }) => {
   await expect(input).toBeVisible();
   await input.fill("messy WIP");
   const results = page.locator("[data-search-results] [role='option']");
-  await expect(results.first()).toBeVisible({ timeout: 10000 });
-  const titles = await results.allTextContents();
-  expect(titles.some((text) => /stash/i.test(text))).toBeTruthy();
+  await expect(results.filter({ hasText: /stash/i }).first()).toBeVisible({
+    timeout: 10000,
+  });
 });
 
 test("chapter checklists render on concept chapters", async ({ page }) => {
@@ -556,8 +556,8 @@ test("reset progress clears completed labs on home", async ({ page }) => {
   });
   await page.goto("/");
   await expect(page.locator("[data-home-labs-complete]")).toBeVisible();
-  page.once("dialog", (dialog) => dialog.accept());
   await page.locator("[data-reset-progress]").click();
+  await page.locator("[data-confirm-ok]").click();
   await expect(page.locator("[data-home-progress]")).toBeHidden();
 });
 
@@ -591,7 +591,6 @@ test("home celebrates when every lab is complete", async ({ page }) => {
 test("import progress restores completed labs on home", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("[data-import-progress]").first()).toBeVisible();
-  page.once("dialog", (dialog) => dialog.accept());
   await page.locator("[data-import-progress-file]").setInputFiles({
     name: "rean-git-progress.json",
     mimeType: "application/json",
@@ -607,6 +606,7 @@ test("import progress restores completed labs on home", async ({ page }) => {
       })
     ),
   });
+  await page.locator("[data-confirm-ok]").click();
   await expect(page.locator("[data-home-progress]")).toBeVisible();
   await expect(page.locator("[data-home-labs-complete]")).toContainText("1");
   await expect(page.locator("[data-home-lab-progress]")).toBeVisible();

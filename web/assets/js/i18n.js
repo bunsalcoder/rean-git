@@ -79,6 +79,13 @@
 
     document.documentElement.lang = locale;
     document.documentElement.setAttribute("data-lang", locale);
+    document.documentElement.setAttribute("data-i18n-ready", "");
+    try {
+      document.cookie =
+        `rean-git-lang=${locale === "km" ? "km" : "en"}; path=/; max-age=31536000; SameSite=Lax`;
+    } catch {
+      /* private mode */
+    }
     document.querySelectorAll(".lang-switch").forEach((group) => {
       group.removeAttribute("data-pending");
     });

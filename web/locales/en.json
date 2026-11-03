@@ -21,6 +21,7 @@
     "search": "Search",
     "searchPlaceholder": "Search chapters and labs",
     "searchEmpty": "No matching chapters or labs",
+    "searchIndexing": "Indexing chapters and labs…",
     "searchHint": "Type to search · Esc to close",
     "themeToLight": "Switch to light mode",
     "themeToDark": "Switch to dark mode",
@@ -43,7 +44,10 @@
   "notFound": {
     "headline": "This page is not in the repo.",
     "body": "The link may be old, or the path is wrong. Head home and pick a chapter or lab.",
-    "home": "Back to home"
+    "home": "Back to home",
+    "learn": "Open Learn",
+    "labs": "Open Labs",
+    "searchHint": "Press / or Ctrl+K to search chapters and labs."
   },
   "home": {
     "introLabel": "Introduction",
@@ -98,6 +102,7 @@
     "pathEyebrow": "Practice track",
     "pathTitle": "{count} labs in order",
     "pathBody": "Read a chapter, then practice. Lab folders live under labs/ — keep a terminal open beside this site.",
+    "labsLoading": "Loading labs…",
     "footerTagline": "rean-git — hands-on Git from zero to hero.",
     "footerLink": "Read the handbook"
   },
@@ -108,6 +113,7 @@
     "filterByLevel": "Filter by level",
     "filterAll": "All levels",
     "filterEmpty": "No labs at this level.",
+    "labsLoading": "Loading labs…",
     "footerLink": "Back to curriculum"
   },
   "learn": {
@@ -175,7 +181,11 @@
     "failed": "Failed",
     "progress": "{current} / {total}",
     "progressLab": "{current} / {total} · {level}",
-    "done": "Done"
+    "done": "Done",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "ok": "OK",
+    "dismiss": "Dismiss"
   },
   "levels": {
     "beginner": "Beginner",

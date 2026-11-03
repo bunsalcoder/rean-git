@@ -1,4 +1,4 @@
-const CACHE = "rean-git-71234a175393";
+const CACHE = "rean-git-d6efcea3d307";
 
 const PRECACHE = [
   "./",
@@ -36,41 +36,111 @@ const PRECACHE = [
   "./assets/img/icon-maskable-512.png",
 ];
 
-async function precacheContent(cache) {
+async function cacheUrlsSettled(cache, urls) {
+  await Promise.allSettled(
+    urls.map(async (url) => {
+      try {
+        await cache.add(url);
+      } catch {
+        /* skip missing/optional assets so install can finish */
+      }
+    })
+  );
+}
+
+function splitContentByLocale(urls, preferred) {
+  const primary = [];
+  const secondary = [];
+  for (const url of urls) {
+    if (typeof url !== "string") continue;
+    if (url.includes(`/content/${preferred}/`)) primary.push(url);
+    else secondary.push(url);
+  }
+  return { primary, secondary };
+}
+
+async function loadContentUrls() {
   const res = await fetch("./content-precache.json");
   if (!res.ok) throw new Error("missing content-precache.json");
   const urls = await res.json();
   if (!Array.isArray(urls) || !urls.length) throw new Error("empty content precache list");
-  await cache.addAll(urls);
+  return urls.filter((url) => typeof url === "string");
+}
+
+async function precachePreferredContent(cache, preferred = "en") {
+  try {
+    const urls = await loadContentUrls();
+    const { primary } = splitContentByLocale(urls, preferred);
+    await cacheUrlsSettled(cache, primary.length ? primary : urls);
+  } catch {
+    /* shell still works; content fills via network / SWR */
+  }
+}
+
+async function warmRemainingContent(cache, preferred = "en") {
+  try {
+    const urls = await loadContentUrls();
+    const { secondary } = splitContentByLocale(urls, preferred);
+    await cacheUrlsSettled(cache, secondary);
+  } catch {
+    /* ignore */
+  }
+}
+
+let preferredLocale = "en";
+
+async function detectPreferredLocale() {
+  if (self.cookieStore) {
+    try {
+      const cookie = await self.cookieStore.get("rean-git-lang");
+      if (cookie && (cookie.value === "km" || cookie.value === "en")) return cookie.value;
+    } catch {
+      /* unsupported / blocked */
+    }
+  }
+  return preferredLocale;
 }
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches
-      .open(CACHE)
-      .then(async (cache) => {
-        await cache.addAll(PRECACHE);
-        await precacheContent(cache);
-      })
-      .then(() => {
-        // First visit: activate now. Updates wait so the page can prompt.
-        if (!self.registration.active) return self.skipWaiting();
-      })
+    (async () => {
+      preferredLocale = await detectPreferredLocale();
+      const cache = await caches.open(CACHE);
+      await cache.addAll(PRECACHE);
+      await precachePreferredContent(cache, preferredLocale);
+      // First visit: activate now. Updates wait so the page can prompt.
+      if (!self.registration.active) await self.skipWaiting();
+    })()
   );
 });
 
 self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "skipWaiting") self.skipWaiting();
+  const data = event.data;
+  if (!data || typeof data !== "object") return;
+  if (data.type === "skipWaiting") {
+    self.skipWaiting();
+    return;
+  }
+  if (data.type === "preferLocale" && (data.locale === "en" || data.locale === "km")) {
+    preferredLocale = data.locale;
+    event.waitUntil(
+      caches.open(CACHE).then(async (cache) => {
+        await precachePreferredContent(cache, preferredLocale);
+        await warmRemainingContent(cache, preferredLocale);
+      })
+    );
+  }
 });
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches
-      .keys()
-      .then((keys) =>
-        Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)))
-      )
-      .then(() => self.clients.claim())
+    (async () => {
+      const keys = await caches.keys();
+      await Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)));
+      const cache = await caches.open(CACHE);
+      await warmRemainingContent(cache, preferredLocale);
+      await self.clients.claim();
+    })()
   );
 });
 

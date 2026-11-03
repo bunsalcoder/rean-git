@@ -36,6 +36,7 @@
   function renderTrack(root) {
     if (!root) return;
     const nextLab = labs.find((lab) => !window.ReanGitUtil?.isLabComplete?.(lab.id));
+    root.setAttribute("aria-busy", "false");
     root.innerHTML = labs
       .map((lab, index) => {
         const id = escapeHtml(lab.id);
@@ -64,6 +65,7 @@
   function renderGrid(root) {
     if (!root) return;
     const list = visibleLabs();
+    root.setAttribute("aria-busy", "false");
     if (!list.length) {
       const empty = window.ReanGitI18n?.t?.("labsPage.filterEmpty") || "No labs at this level.";
       root.innerHTML = `<p class="lab-grid-empty" role="status">${escapeHtml(empty)}</p>`;
@@ -78,7 +80,7 @@
         const githubBadge = lab.verifyManual
           ? `<span class="lab-github" data-i18n="lab.githubRequiredBadge"></span>`
           : "";
-        return `<a href="${labHref(lab.id)}" class="is-visible${done ? " is-complete" : ""}" data-lab-id="${id}">
+        return `<a href="${labHref(lab.id)}"${done ? ' class="is-complete"' : ""} data-lab-id="${id}">
           <span class="num">${escapeHtml(labNum(lab, index))}</span>
           <div>
             <h3 data-i18n="labs.${id}.title"></h3>
@@ -188,10 +190,6 @@
 
   window.addEventListener("rean-git:lab-progress", () => {
     mountLists();
-    // Re-render replaces nodes that `.reveal()` had made visible — restore without remount.
-    document.querySelectorAll(".lab-track li, .lab-grid a").forEach((el) => {
-      el.classList.add("is-visible");
-    });
   });
 
   window.ReanGitI18n?.onChange?.(paintCountTitle);

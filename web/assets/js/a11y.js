@@ -77,5 +77,127 @@
     if (message) announce(message);
   }
 
-  window.ReanGitA11y = { getFocusable, createFocusTrap, announce, focusMain };
+  function confirmAction({
+    title,
+    message,
+    confirmLabel = "Confirm",
+    cancelLabel = "Cancel",
+  } = {}) {
+    return new Promise((resolve) => {
+      const existing = document.querySelector("[data-confirm-modal]");
+      existing?.remove();
+
+      const modal = document.createElement("div");
+      modal.className = "confirm-modal";
+      modal.setAttribute("data-confirm-modal", "");
+      modal.innerHTML = `
+        <div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title" tabindex="-1">
+          <h2 id="confirm-title" class="confirm-title"></h2>
+          <p class="confirm-message"></p>
+          <div class="confirm-actions">
+            <button type="button" class="btn btn-ghost" data-confirm-cancel></button>
+            <button type="button" class="btn btn-primary" data-confirm-ok></button>
+          </div>
+        </div>
+      `;
+      const dialog = modal.querySelector(".confirm-dialog");
+      const titleEl = modal.querySelector(".confirm-title");
+      const messageEl = modal.querySelector(".confirm-message");
+      const okBtn = modal.querySelector("[data-confirm-ok]");
+      const cancelBtn = modal.querySelector("[data-confirm-cancel]");
+      titleEl.textContent = title || message || "";
+      messageEl.textContent = title ? message || "" : "";
+      messageEl.hidden = !title || !message;
+      okBtn.textContent = confirmLabel;
+      cancelBtn.textContent = cancelLabel;
+
+      const finish = (value) => {
+        trap.deactivate();
+        modal.remove();
+        document.removeEventListener("keydown", onKey);
+        resolve(value);
+      };
+
+      const onKey = (event) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          finish(false);
+        }
+      };
+
+      okBtn.addEventListener("click", () => finish(true));
+      cancelBtn.addEventListener("click", () => finish(false));
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) finish(false);
+      });
+      document.addEventListener("keydown", onKey);
+
+      document.body.appendChild(modal);
+      const trap = createFocusTrap(dialog);
+      trap.activate();
+      okBtn.focus();
+    });
+  }
+
+  function alertAction({ title, message, okLabel = "OK" } = {}) {
+    return new Promise((resolve) => {
+      const existing = document.querySelector("[data-confirm-modal]");
+      existing?.remove();
+
+      const modal = document.createElement("div");
+      modal.className = "confirm-modal";
+      modal.setAttribute("data-confirm-modal", "");
+      modal.innerHTML = `
+        <div class="confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" tabindex="-1">
+          <h2 id="confirm-title" class="confirm-title"></h2>
+          <p class="confirm-message"></p>
+          <div class="confirm-actions">
+            <button type="button" class="btn btn-primary" data-confirm-ok></button>
+          </div>
+        </div>
+      `;
+      const dialog = modal.querySelector(".confirm-dialog");
+      const titleEl = modal.querySelector(".confirm-title");
+      const messageEl = modal.querySelector(".confirm-message");
+      const okBtn = modal.querySelector("[data-confirm-ok]");
+      titleEl.textContent = title || message || "";
+      messageEl.textContent = title ? message || "" : "";
+      messageEl.hidden = !title || !message;
+      okBtn.textContent = okLabel;
+
+      const finish = () => {
+        trap.deactivate();
+        modal.remove();
+        document.removeEventListener("keydown", onKey);
+        resolve();
+      };
+
+      const onKey = (event) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          finish();
+        }
+      };
+
+      okBtn.addEventListener("click", finish);
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) finish();
+      });
+      document.addEventListener("keydown", onKey);
+
+      document.body.appendChild(modal);
+      const trap = createFocusTrap(dialog);
+      trap.activate();
+      okBtn.focus();
+    });
+  }
+
+  window.ReanGitA11y = {
+    getFocusable,
+    createFocusTrap,
+    announce,
+    focusMain,
+    confirmAction,
+    alertAction,
+  };
 })();

@@ -3,7 +3,8 @@
     const items = document.querySelectorAll(selector);
     if (!items.length) return;
 
-    if (!("IntersectionObserver" in window)) {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || !("IntersectionObserver" in window)) {
       items.forEach((el) => el.classList.add("is-visible"));
       return;
     }
@@ -27,6 +28,28 @@
       observer.observe(el);
     });
   };
+
+  async function askConfirm(message) {
+    if (window.ReanGitA11y?.confirmAction) {
+      return window.ReanGitA11y.confirmAction({
+        message,
+        confirmLabel: window.ReanGitI18n?.t?.("ui.confirm") || "Confirm",
+        cancelLabel: window.ReanGitI18n?.t?.("ui.cancel") || "Cancel",
+      });
+    }
+    return window.confirm(message);
+  }
+
+  async function showAlert(message) {
+    if (window.ReanGitA11y?.alertAction) {
+      await window.ReanGitA11y.alertAction({
+        message,
+        okLabel: window.ReanGitI18n?.t?.("ui.ok") || "OK",
+      });
+      return;
+    }
+    window.alert(message);
+  }
 
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -132,10 +155,19 @@
       labBtn.hidden = false;
       labBtn.href = `./lab.html?id=${encodeURIComponent(sessionLabId)}`;
       labBtn.textContent = i18n.t("home.continueLab", { title: sessionLabName });
+      // One primary CTA when resuming: continue the next lab.
+      labBtn.classList.add("btn-primary");
+      labBtn.classList.remove("btn-ghost");
+      learnBtn.classList.add("btn-ghost");
+      learnBtn.classList.remove("btn-primary");
       if (openLabsBtn) openLabsBtn.hidden = true;
     } else {
       labBtn.hidden = true;
       labBtn.removeAttribute("href");
+      labBtn.classList.add("btn-ghost");
+      labBtn.classList.remove("btn-primary");
+      learnBtn.classList.add("btn-primary");
+      learnBtn.classList.remove("btn-ghost");
       if (openLabsBtn) openLabsBtn.hidden = false;
     }
   }
@@ -378,10 +410,10 @@
     const btn = document.querySelector("[data-reset-progress]");
     if (!btn || btn.dataset.wired === "true") return;
     btn.dataset.wired = "true";
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", async () => {
       const i18n = window.ReanGitI18n;
       const message = i18n?.t?.("home.resetConfirm") || "Clear your learning progress on this device?";
-      if (!window.confirm(message)) return;
+      if (!(await askConfirm(message))) return;
       window.ReanGitUtil?.resetProgress?.();
       paintHomeResume();
       paintHomeProgress();
@@ -430,7 +462,7 @@
       const message =
         i18n?.t?.("home.importConfirm") ||
         "Replace progress on this device with the imported file?";
-      if (!window.confirm(message)) {
+      if (!(await askConfirm(message))) {
         fileInput.value = "";
         return;
       }
@@ -440,7 +472,7 @@
         window.ReanGitUtil?.importProgress?.(payload);
         refreshProgressViews();
       } catch {
-        window.alert(i18n?.t?.("home.importFailed") || "Could not import that progress file.");
+        await showAlert(i18n?.t?.("home.importFailed") || "Could not import that progress file.");
       } finally {
         fileInput.value = "";
       }
@@ -453,10 +485,8 @@
       await window.ReanGitCatalog?.ready;
       window.ReanGitCatalog?.mountLists?.();
     } catch {
-      /* catalog missing — leave empty lists */
+      /* catalog missing — leave skeletons / empty lists */
     }
-    reveal(".lab-track li", { stagger: 45 });
-    reveal(".lab-grid a", { stagger: 50 });
     reveal(".method-step", { stagger: 90 });
     typeTerminal();
     paintHomeResume();

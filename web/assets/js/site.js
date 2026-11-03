@@ -21,6 +21,19 @@
   const PAGE_OUT_MS = 360;
   const PAGE_IN_MS = 720;
 
+  function wireToastDismiss(toast, onDismiss) {
+    const onKey = (event) => {
+      if (event.key !== "Escape") return;
+      if (!document.body.contains(toast)) return;
+      event.preventDefault();
+      document.removeEventListener("keydown", onKey);
+      onDismiss?.();
+      toast.remove();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }
+
   function showUpdateToast(onRefresh) {
     if (document.querySelector("[data-sw-update]")) return;
     const toast = document.createElement("div");
@@ -31,9 +44,15 @@
     toast.innerHTML = `
       <p>${window.ReanGitUtil.escapeHtml(i18n?.t?.("home.updateAvailable") || "A newer version of rean-git is ready.")}</p>
       <button type="button" class="btn btn-primary" data-sw-refresh>${window.ReanGitUtil.escapeHtml(i18n?.t?.("home.refresh") || "Refresh")}</button>
+      <button type="button" class="btn btn-ghost" data-sw-dismiss>${window.ReanGitUtil.escapeHtml(i18n?.t?.("ui.dismiss") || "Dismiss")}</button>
     `;
     document.body.appendChild(toast);
+    const unbind = wireToastDismiss(toast);
     toast.querySelector("[data-sw-refresh]")?.addEventListener("click", onRefresh);
+    toast.querySelector("[data-sw-dismiss]")?.addEventListener("click", () => {
+      unbind();
+      toast.remove();
+    });
   }
 
   function dismissProgressBackupToast() {
@@ -65,8 +84,10 @@
       )}</button>
     `;
     document.body.appendChild(toast);
+    const unbind = wireToastDismiss(toast, () => util.markProgressBackupNudge("dismissed"));
     toast.querySelector("[data-progress-backup-export]")?.addEventListener("click", () => {
       util.downloadProgressExport();
+      unbind();
       dismissProgressBackupToast();
     });
     toast.querySelector("[data-progress-backup-import]")?.addEventListener("click", () => {
@@ -82,21 +103,37 @@
         const message =
           i18n?.t?.("home.importConfirm") ||
           "Replace progress on this device with the imported file?";
-        if (!window.confirm(message)) return;
+        const confirmed = window.ReanGitA11y?.confirmAction
+          ? await window.ReanGitA11y.confirmAction({
+              message,
+              confirmLabel: i18n?.t?.("ui.confirm") || "Confirm",
+              cancelLabel: i18n?.t?.("ui.cancel") || "Cancel",
+            })
+          : window.confirm(message);
+        if (!confirmed) return;
         try {
           const text = await file.text();
           const payload = JSON.parse(text);
           util.importProgress?.(payload);
+          unbind();
           dismissProgressBackupToast();
           window.location.reload();
         } catch {
-          window.alert(i18n?.t?.("home.importFailed") || "Could not import that progress file.");
+          if (window.ReanGitA11y?.alertAction) {
+            await window.ReanGitA11y.alertAction({
+              message: i18n?.t?.("home.importFailed") || "Could not import that progress file.",
+              okLabel: i18n?.t?.("ui.ok") || "OK",
+            });
+          } else {
+            window.alert(i18n?.t?.("home.importFailed") || "Could not import that progress file.");
+          }
         }
       });
       input.click();
     });
     toast.querySelector("[data-progress-backup-dismiss]")?.addEventListener("click", () => {
       util.markProgressBackupNudge("dismissed");
+      unbind();
       dismissProgressBackupToast();
     });
   }
@@ -110,6 +147,18 @@
       return;
     }
     showProgressBackupToast();
+  }
+
+  function tellServiceWorkerLocale(locale) {
+    if (!("serviceWorker" in navigator)) return;
+    const payload = { type: "preferLocale", locale: locale === "km" ? "km" : "en" };
+    const post = (worker) => worker?.postMessage?.(payload);
+    post(navigator.serviceWorker.controller);
+    navigator.serviceWorker.ready.then((reg) => {
+      post(reg.active);
+      post(reg.waiting);
+      post(reg.installing);
+    }).catch(() => {});
   }
 
   function registerServiceWorker() {
@@ -132,6 +181,7 @@
           if (worker.state === "installed") promptIfWaiting(worker);
         });
       });
+      window.ReanGitI18n?.ready?.then((locale) => tellServiceWorkerLocale(locale));
     }).catch(() => {});
   }
 
@@ -238,8 +288,14 @@
   }
 
   applyTheme(localStorage.getItem(THEME_KEY) || systemTheme());
-  window.ReanGitI18n?.ready?.then(() => paintTheme(currentTheme()));
-  window.ReanGitI18n?.onChange?.(() => paintTheme(currentTheme()));
+  window.ReanGitI18n?.ready?.then((locale) => {
+    paintTheme(currentTheme());
+    tellServiceWorkerLocale(locale);
+  });
+  window.ReanGitI18n?.onChange?.((locale) => {
+    paintTheme(currentTheme());
+    tellServiceWorkerLocale(locale);
+  });
 
   if (themeToggle) {
     themeToggle.addEventListener("click", (event) => {

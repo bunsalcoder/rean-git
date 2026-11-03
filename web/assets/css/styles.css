@@ -548,6 +548,7 @@ html[lang="km"] .nav a {
 }
 
 .search-empty,
+.search-status,
 .search-hint {
   margin: 0;
   padding: 0.85rem 1.1rem 1rem;
@@ -555,8 +556,58 @@ html[lang="km"] .nav a {
   font-size: 0.88rem;
 }
 
-.search-empty[hidden] {
+.search-status {
+  padding-top: 0;
+  padding-bottom: 0.35rem;
+}
+
+.search-empty[hidden],
+.search-status[hidden] {
   display: none;
+}
+
+.confirm-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: var(--overlay);
+}
+
+.confirm-dialog {
+  width: min(100%, 24rem);
+  padding: 1.25rem 1.25rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.85rem;
+  background: var(--surface);
+  box-shadow: 0 24px 60px var(--shadow-strong);
+}
+
+.confirm-title {
+  margin: 0 0 0.55rem;
+  font-size: 1.1rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.confirm-message {
+  margin: 0 0 1.1rem;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.confirm-message[hidden] {
+  display: none;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  flex-wrap: wrap;
 }
 
 .theme-icon {
@@ -1432,14 +1483,36 @@ html.theme-animate body *::after {
 }
 
 .lab-track li {
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
-}
-
-.lab-track li.is-visible {
   opacity: 1;
   transform: none;
+}
+
+.lab-track[aria-busy="true"] .lab-skel {
+  pointer-events: none;
+}
+
+.lab-skel-block {
+  display: block;
+  height: 5.6rem;
+  border-radius: 0.65rem;
+  border: 1px solid var(--line);
+  background: linear-gradient(
+    90deg,
+    var(--surface) 0%,
+    var(--surface-hover) 45%,
+    var(--surface) 90%
+  );
+  background-size: 200% 100%;
+  animation: lab-skel-shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes lab-skel-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
 }
 
 .lab-track a {
@@ -1712,6 +1785,19 @@ html.theme-animate body *::after {
   font-size: 0.75rem;
   font-weight: 500;
   text-align: center;
+}
+
+.not-found-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.25rem;
+}
+
+.not-found-hint {
+  margin: 1rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
 }
 
 .page-404 .not-found {
@@ -1988,18 +2074,22 @@ html.theme-animate body *::after {
   border: 1px solid var(--line);
   border-radius: 0.65rem;
   background: var(--surface);
-  opacity: 0;
-  transform: translateY(12px);
+  opacity: 1;
+  transform: none;
   transition:
     border-color 0.22s var(--ease),
     transform 0.28s var(--ease-spring),
-    box-shadow 0.28s var(--ease),
-    opacity 0.5s var(--ease-out);
+    box-shadow 0.28s var(--ease);
 }
 
-.lab-grid a.is-visible {
-  opacity: 1;
-  transform: none;
+.lab-grid[aria-busy="true"] .lab-skel-block {
+  height: 4.8rem;
+}
+
+.lab-grid-empty {
+  margin: 0;
+  grid-column: 1 / -1;
+  color: var(--muted);
 }
 
 .lab-grid a:hover {
@@ -2859,6 +2949,7 @@ main.is-page-entering,
   .commit-ribbon,
   .lab-track li,
   .lab-grid a,
+  .lab-skel-block,
   .method-step,
   .term-caret,
   .branch-line.feat,
