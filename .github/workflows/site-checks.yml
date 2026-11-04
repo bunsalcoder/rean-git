@@ -27,7 +27,7 @@ jobs:
         run: shellcheck -x -e SC1091 scripts/*.sh scripts/lab_fixtures/*.sh labs/*/verify.sh
       - name: Run lab verify.sh against fixture playgrounds
         run: ./scripts/run_lab_verifier_fixtures.sh
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: "20"
           cache: npm
