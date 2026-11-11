@@ -33,7 +33,8 @@
   "a11y": {
     "skipToContent": "Skip to content",
     "chapterLoaded": "Chapter: {title}",
-    "labLoaded": "Lab: {title}"
+    "labLoaded": "Lab: {title}",
+    "copied": "Copied to clipboard"
   },
   "shortcuts": {
     "title": "Keyboard shortcuts",
@@ -137,6 +138,7 @@
     "next": "Next",
     "markDone": "Mark done",
     "markedDone": "Done",
+    "markedUndone": "Marked not done",
     "print": "Print",
     "relatedLab": "Practice — {title}",
     "relatedLabFallback": "Open the matching lab",

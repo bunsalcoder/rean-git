@@ -184,14 +184,17 @@ test("lab page offers a verify.sh self-check", async ({ page }) => {
 
 test("passing verify marks the lab done and offers the next lab", async ({ page }) => {
   await page.goto("/lab.html?id=01-first-repo");
+  await expect(page.locator("[data-verify-status]")).toHaveAttribute("role", "status");
   await page.locator("[data-verify-output]").fill(
     "== Lab verify: 01-first-repo ==\n  ok  playground is a git repo\n\nAll 3 checks passed for 01-first-repo.\n"
   );
+  await expect(page.locator("[data-verify-status]")).toBeVisible();
   await expect(page.locator("[data-verify-passed]")).toBeEnabled();
   await page.locator("[data-verify-passed]").click();
   await expect(page.locator("[data-verify-passed]")).toBeHidden();
   await expect(page.locator("[data-verify-next]")).toBeVisible();
   await expect(page.locator('[data-verify-next] a[href*="id=02-staging"]')).toBeVisible();
+  await expect(page.locator("[data-live-region]")).toContainText(/Lab marked done|marked done|រួចរាល់/i);
 });
 
 test("home progress shows a chapter-then-lab session card", async ({ page }) => {
@@ -342,6 +345,8 @@ test("styles include print rules", async ({ page }) => {
   const text = await css.text();
   expect(text).toContain("@media print");
   expect(text).toContain(".copy-btn");
+  expect(text).toContain("safe-area-inset-bottom");
+  expect(text).toContain("safe-area-inset-top");
 });
 
 test("content precache manifest lists handbook and labs", async ({ page }) => {
@@ -369,6 +374,7 @@ test("copy button copies a code block", async ({ page, context }) => {
   const expected = await block.locator("pre").innerText();
   await block.locator(".copy-btn").click();
   await expect(page.locator("[data-lab-body] .copy-btn").first()).toHaveText(/Copied/i);
+  await expect(page.locator("[data-live-region]")).toContainText(/Copied|ចម្លង/i);
   const copied = await page.evaluate(() => navigator.clipboard.readText());
   expect(copied.trim()).toBe(expected.trim());
 });
@@ -628,6 +634,10 @@ test("learn page can mark a chapter done", async ({ page }) => {
   await expect(
     page.locator('[data-chapter-nav] a[data-chapter-id="1"].is-complete')
   ).toBeVisible();
+  await expect(page.locator("[data-live-region]")).toContainText(/Done|រួចរាល់/i);
+  await button.click();
+  await expect(button).toHaveAttribute("aria-pressed", "false");
+  await expect(page.locator("[data-live-region]")).toContainText(/not done|ដកការសម្គាល់/i);
 });
 
 test("404 page is served for the dedicated not-found document", async ({ page }) => {
