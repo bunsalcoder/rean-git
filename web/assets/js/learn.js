@@ -128,6 +128,7 @@ function paintMissingContent({ title, bodyHtml, clearRelated }) {
       relatedLab.hidden = true;
       relatedLab.replaceChildren();
     }
+    paintUpNext(null);
     paintMarkDone(null);
   }
   if (pagerEl) pagerEl.innerHTML = "";
@@ -666,6 +667,35 @@ function paintRelatedLab(chapterId) {
   el.innerHTML = `<a href="${labHref(lab.id)}" data-lab-id="${escapeHtml(lab.id)}">${escapeHtml(label)}</a>`;
 }
 
+function paintUpNext(chapterId) {
+  const el = document.querySelector("[data-up-next]");
+  if (!el) return;
+  if (!chapterId) {
+    el.hidden = true;
+    el.replaceChildren();
+    return;
+  }
+  const lab = window.ReanGitCatalog?.getLabForChapter?.(chapterId);
+  if (!lab) {
+    el.hidden = true;
+    el.replaceChildren();
+    return;
+  }
+  const titleKey = `labs.${lab.id}.title`;
+  const title = t(titleKey);
+  const displayTitle = title && title !== titleKey ? title : lab.id;
+  el.hidden = false;
+  el.innerHTML = `
+    <div class="up-next-copy">
+      <p class="up-next-label">${escapeHtml(t("learn.upNext"))}</p>
+      <p class="up-next-title">${escapeHtml(displayTitle)}</p>
+    </div>
+    <a class="btn btn-primary" href="${labHref(lab.id)}" data-lab-id="${escapeHtml(lab.id)}">${escapeHtml(
+      t("learn.upNextCta")
+    )}</a>
+  `;
+}
+
 function paintMarkDone(chapterId) {
   const btn = document.querySelector("[data-mark-done]");
   if (!btn) return;
@@ -932,6 +962,7 @@ async function initLearnPage(signal, { animate = true } = {}) {
       renderPager(index);
       paintMarkDone(chapter.id);
       paintRelatedLab(chapter.id);
+      paintUpNext(chapter.id);
       const relatedLab = window.ReanGitCatalog?.getLabForChapter?.(chapter.id);
       if (relatedLab?.id) prefetchLabMarkdown(relatedLab.id);
       window.ReanGitI18n?.syncSeo?.();

@@ -106,11 +106,12 @@
   --bg: var(--paper-deep);
   --line: rgba(238, 242, 247, 0.12);
   --line-strong: rgba(238, 242, 247, 0.2);
-  --accent: #c2410c;
-  --accent-deep: #ff8a3d;
-  --accent-soft: rgba(194, 65, 12, 0.2);
-  --accent-border: rgba(194, 65, 12, 0.5);
-  --accent-glow: rgba(194, 65, 12, 0.3);
+  /* Brighter accent so fills and logo text clear WCAG AA on dark paper */
+  --accent: #ea580c;
+  --accent-deep: #ffb070;
+  --accent-soft: rgba(234, 88, 12, 0.22);
+  --accent-border: rgba(255, 176, 112, 0.55);
+  --accent-glow: rgba(234, 88, 12, 0.35);
   --side-hover: rgba(194, 65, 12, 0.12);
   --side-active-hover: rgba(194, 65, 12, 0.22);
   --code-bg: #232936;
@@ -768,7 +769,7 @@ html.theme-animate body *::after {
 }
 
 .logo span {
-  color: var(--accent);
+  color: var(--accent-deep);
 }
 
 .nav {
@@ -1014,7 +1015,7 @@ html.theme-animate body *::after {
 }
 
 .brand span {
-  color: var(--accent);
+  color: var(--accent-deep);
 }
 
 .headline {
@@ -2320,6 +2321,66 @@ html.theme-animate body *::after {
   color: var(--ink);
 }
 
+.up-next {
+  position: sticky;
+  bottom: 0.85rem;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin: 1.5rem 0 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--accent-border);
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--accent-soft) 70%, var(--surface));
+  box-shadow: 0 10px 28px var(--shadow);
+}
+
+.up-next[hidden] {
+  display: none;
+}
+
+.up-next-copy {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.up-next-label {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.up-next-title {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.98rem;
+  font-weight: 650;
+}
+
+.connectivity-banner {
+  position: sticky;
+  top: 0;
+  z-index: 70;
+  padding: 0.55rem 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--error-fg);
+  background: var(--error-bg);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.connectivity-banner[hidden] {
+  display: none;
+}
+
 .labs-progress {
   margin-top: 1rem;
   max-width: 28rem;
@@ -3115,6 +3176,8 @@ main.is-page-entering,
   .pager,
   .pager-hint,
   .chapter-toc,
+  .up-next,
+  .connectivity-banner,
   .skip-link,
   .copy-btn,
   .lab-verify,
