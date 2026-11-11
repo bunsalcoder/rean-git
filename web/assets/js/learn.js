@@ -190,6 +190,7 @@ function enhanceCodeBlocks(root) {
       try {
         await navigator.clipboard.writeText(text);
         btn.textContent = t("ui.copied");
+        window.ReanGitA11y?.announce?.(t("a11y.copied"));
         setTimeout(() => {
           btn.textContent = t("ui.copy");
         }, 1400);
@@ -572,7 +573,7 @@ function appendVerifyHint(target, labId) {
         autocomplete="off"
         placeholder="${escapeHtml(t("lab.verifyPastePlaceholder"))}"
       ></textarea>
-      <p class="lab-verify-status" data-verify-status hidden></p>
+      <p class="lab-verify-status" data-verify-status hidden role="status" aria-live="polite"></p>
     </div>
     <p class="lab-verify-pass">${escapeHtml(t("lab.verifyPass"))}</p>
     ${manualNote}
@@ -592,6 +593,7 @@ function appendVerifyHint(target, labId) {
     if (!syncVerifyMarkReady(wrap, labId)) return;
     markLabChecklistsDone();
     paintVerifyFollowUp(wrap, labId);
+    window.ReanGitA11y?.announce?.(t("lab.verifyDone"));
   });
   paintVerifyFollowUp(wrap, labId);
 }
@@ -1074,7 +1076,11 @@ async function initLearnPage(signal, { animate = true } = {}) {
         const chapter = chapters[currentIndex];
         if (!chapter) return;
         const done = window.ReanGitUtil?.isChapterComplete?.(chapter.id);
-        window.ReanGitUtil?.recordChapterComplete?.(chapter.id, !done);
+        const nextDone = !done;
+        window.ReanGitUtil?.recordChapterComplete?.(chapter.id, nextDone);
+        window.ReanGitA11y?.announce?.(
+          nextDone ? t("learn.markedDone") : t("learn.markedUndone")
+        );
       },
       { signal }
     );

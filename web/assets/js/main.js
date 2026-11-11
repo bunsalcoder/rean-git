@@ -370,6 +370,7 @@
       try {
         await navigator.clipboard.writeText(snippet);
         copyBtn.textContent = i18n?.t?.("ui.copied") || "Copied";
+        window.ReanGitA11y?.announce?.(i18n?.t?.("a11y.copied") || "Copied");
         window.setTimeout(() => {
           copyBtn.textContent = i18n?.t?.("ui.copy") || "Copy";
         }, 1400);

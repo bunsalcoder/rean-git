@@ -33,7 +33,8 @@
   "a11y": {
     "skipToContent": "រំលងទៅមាតិកា",
     "chapterLoaded": "ជំពូក៖ {title}",
-    "labLoaded": "លំហាត់៖ {title}"
+    "labLoaded": "លំហាត់៖ {title}",
+    "copied": "បានចម្លងទៅ clipboard"
   },
   "shortcuts": {
     "title": "ផ្លូវកាត់ក្តារចុច",
@@ -137,6 +138,7 @@
     "next": "បន្ទាប់",
     "markDone": "សម្គាល់ថារួច",
     "markedDone": "រួចរាល់",
+    "markedUndone": "បានដកការសម្គាល់ថារួច",
     "print": "បោះពុម្ព",
     "relatedLab": "អនុវត្ត — {title}",
     "relatedLabFallback": "បើកលំហាត់ដែលត្រូវគ្នា",
