@@ -150,6 +150,28 @@
       links[activeIndex].scrollIntoView({ block: "nearest" });
     }
 
+    function paintResultStatus(matchCount, shownCount, needle) {
+      if (indexPromise) return;
+      if (!needle || !matchCount) {
+        setStatus("");
+        return;
+      }
+      const i18n = window.ReanGitI18n;
+      if (matchCount > shownCount) {
+        setStatus(
+          i18n?.t?.("nav.searchResultsTruncated", {
+            count: String(matchCount),
+            shown: String(shownCount),
+          }) || `${matchCount} results — showing first ${shownCount}`
+        );
+        return;
+      }
+      setStatus(
+        i18n?.t?.("nav.searchResults", { count: String(matchCount) }) ||
+          `${matchCount} result${matchCount === 1 ? "" : "s"}`
+      );
+    }
+
     function render(query = input.value) {
       latestQuery = query;
       const needle = query.trim().toLowerCase();
@@ -162,6 +184,7 @@
         )
         .join("");
       if (empty) empty.hidden = limited.length > 0;
+      paintResultStatus(matches.length, limited.length, needle);
       setActive(0);
     }
 

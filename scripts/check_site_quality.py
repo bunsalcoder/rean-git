@@ -746,6 +746,8 @@ def check_pwa() -> int:
             msgs.append("manifest.webmanifest missing dedicated maskable icons")
         if '"lang": "en"' not in text or '"dir": "ltr"' not in text:
             msgs.append("manifest.webmanifest should set lang=en and dir=ltr")
+        if '"shortcuts"' not in text or "learn.html" not in text or "labs.html" not in text:
+            msgs.append("manifest.webmanifest should advertise Learn/Labs shortcuts")
 
     if not manifest_km.is_file():
         msgs.append("missing web/manifest-km.webmanifest")
@@ -757,6 +759,8 @@ def check_pwa() -> int:
             msgs.append("manifest-km.webmanifest missing dedicated maskable icons")
         if "lang=km" not in km_text:
             msgs.append("manifest-km.webmanifest start_url should keep Khmer locale")
+        if '"shortcuts"' not in km_text:
+            msgs.append("manifest-km.webmanifest should advertise app shortcuts")
 
     for name in (
         "icon-192.png",

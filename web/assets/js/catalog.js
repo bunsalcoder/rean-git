@@ -141,10 +141,29 @@
     if (next !== current) history.replaceState(history.state, "", next);
   }
 
-  function setFilter(level, { updateUrl = true } = {}) {
+  function paintFilterSummary({ announce = false } = {}) {
+    const el = document.querySelector("[data-lab-filter-summary]");
+    if (!el) return;
+    const count = String(visibleLabs().length);
+    const i18n = window.ReanGitI18n;
+    let message;
+    if (filterLevel === "all") {
+      message = i18n?.t?.("labsPage.filterSummaryAll", { count }) || `${count} labs`;
+    } else {
+      const level = i18n?.t?.(`levels.${filterLevel}`) || filterLevel;
+      message =
+        i18n?.t?.("labsPage.filterSummary", { count, level }) || `${count} labs · ${level}`;
+    }
+    el.hidden = false;
+    el.textContent = message;
+    if (announce) window.ReanGitA11y?.announce?.(message);
+  }
+
+  function setFilter(level, { updateUrl = true, announce = false } = {}) {
     filterLevel = normalizeLevel(level);
     syncFilterButtons();
     renderGrid(document.querySelector("[data-lab-grid]"));
+    paintFilterSummary({ announce });
     if (updateUrl) syncFilterUrl(filterLevel);
   }
 
@@ -157,7 +176,7 @@
     bar.addEventListener("click", (event) => {
       const btn = event.target.closest("[data-lab-filter]");
       if (!btn) return;
-      setFilter(btn.getAttribute("data-lab-filter"));
+      setFilter(btn.getAttribute("data-lab-filter"), { announce: true });
     });
   }
 
@@ -187,7 +206,9 @@
     wireFilters();
     syncFilterButtons();
     renderGrid(grid);
+    paintFilterSummary();
     if (grid) syncFilterUrl(filterLevel);
+    document.querySelector("[data-labs-loading]")?.setAttribute("hidden", "");
     paintCountTitle();
     syncCheatSheetLinks();
     if (track) window.ReanGitI18n?.apply?.(track);
@@ -235,5 +256,8 @@
     mountLists();
   });
 
-  window.ReanGitI18n?.onChange?.(paintCountTitle);
+  window.ReanGitI18n?.onChange?.(() => {
+    paintCountTitle();
+    paintFilterSummary();
+  });
 })();

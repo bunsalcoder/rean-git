@@ -1881,7 +1881,18 @@ html.theme-animate body *::after {
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;
-  margin: 1.25rem 0 1rem;
+  margin: 1.25rem 0 0.55rem;
+}
+
+.lab-filter-summary {
+  margin: 0 0 1rem;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.lab-filter-summary[hidden] {
+  display: none;
 }
 
 .lab-filter {
@@ -3186,6 +3197,7 @@ main.is-page-entering,
   .shortcuts-modal,
   [data-mark-done],
   [data-print-chapter],
+  [data-print-lab],
   [data-reset-progress],
   .side-toggle,
   .search-toggle,
