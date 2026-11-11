@@ -516,6 +516,38 @@ test("learn page links to the matching lab", async ({ page }) => {
   await expect(related).toContainText(/stash/i);
 });
 
+test("learn page shows sticky up-next lab chip", async ({ page }) => {
+  await page.goto("/learn.html?c=14");
+  const upNext = page.locator("[data-up-next]");
+  await expect(upNext).toBeVisible();
+  await expect(upNext.locator(".up-next-label")).toContainText(/up next/i);
+  await expect(upNext.locator("a")).toHaveAttribute("href", /id=11-stash/);
+});
+
+test("offline banner appears when the browser goes offline", async ({ page, context }) => {
+  await page.goto("/");
+  await expect(page.locator("[data-connectivity]")).toBeHidden();
+  await context.setOffline(true);
+  await expect(page.locator("[data-connectivity]")).toBeVisible();
+  await expect(page.locator("[data-connectivity]")).toContainText(/offline/i);
+  await context.setOffline(false);
+  await expect(page.locator("[data-connectivity]")).toBeHidden();
+});
+
+test("dark theme uses a brighter accent for brand text", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem("rean-git-theme", "dark");
+  });
+  await page.goto("/");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  const accentDeep = await page.evaluate(() =>
+    getComputedStyle(document.documentElement).getPropertyValue("--accent-deep").trim()
+  );
+  expect(accentDeep.toLowerCase()).toBe("#ffb070");
+  const brandColor = await page.locator(".logo span").evaluate((el) => getComputedStyle(el).color);
+  expect(brandColor).toMatch(/255,\s*176,\s*112/);
+});
+
 test("unchecking every lab box clears completion", async ({ page }) => {
   await page.addInitScript(() => {
     localStorage.setItem(

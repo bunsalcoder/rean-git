@@ -64,6 +64,20 @@
     <link rel="apple-touch-icon" href="./assets/img/apple-touch-icon.png" />
     <link rel="manifest" href="./manifest.webmanifest" />
     <meta name="theme-color" content="#f3f5f7" />
+    <link
+      rel="preload"
+      href="./assets/fonts/epilogue-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="./assets/fonts/ibm-plex-mono-400-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <script>
       (function () {
         var pref = localStorage.getItem("rean-git-theme");
@@ -82,6 +96,15 @@
         if (l === "km" || l === "en") {
           document.documentElement.setAttribute("lang", l);
           document.documentElement.setAttribute("data-lang", l);
+        }
+        if (l === "km") {
+          var kmFont = document.createElement("link");
+          kmFont.rel = "preload";
+          kmFont.href = "./assets/fonts/kantumruy-pro-khmer.woff2";
+          kmFont.as = "font";
+          kmFont.type = "font/woff2";
+          kmFont.crossOrigin = "anonymous";
+          document.head.appendChild(kmFont);
         }
         try {
           document.cookie =

@@ -161,8 +161,42 @@
     }).catch(() => {});
   }
 
+  function connectivityBannerMessage() {
+    const i18n = window.ReanGitI18n;
+    return (
+      i18n?.t?.("home.offlineBanner") ||
+      "You’re offline. Cached chapters and labs still work; new pages may not load."
+    );
+  }
+
+  function syncConnectivityBanner() {
+    let bar = document.querySelector("[data-connectivity]");
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.className = "connectivity-banner";
+      bar.setAttribute("data-connectivity", "");
+      bar.setAttribute("role", "status");
+      document.body.prepend(bar);
+    }
+    if (navigator.onLine) {
+      bar.hidden = true;
+      bar.textContent = "";
+      return;
+    }
+    bar.hidden = false;
+    bar.textContent = connectivityBannerMessage();
+  }
+
+  function wireConnectivityBanner() {
+    syncConnectivityBanner();
+    window.addEventListener("online", syncConnectivityBanner);
+    window.addEventListener("offline", syncConnectivityBanner);
+    window.ReanGitI18n?.onChange?.(syncConnectivityBanner);
+  }
+
   function showOfflineReadyCue() {
     if (navigator.webdriver) return;
+    if (!navigator.onLine) return;
     if (document.querySelector("[data-sw-update],[data-progress-backup],[data-offline-ready]")) {
       return;
     }
@@ -570,6 +604,7 @@
   }
 
   setupShortcutsHelp();
+  wireConnectivityBanner();
   registerServiceWorker();
 
   const scheduleProgressBackupPrompt = () => {
