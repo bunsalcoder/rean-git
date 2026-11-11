@@ -182,6 +182,21 @@ test("lab page offers a verify.sh self-check", async ({ page }) => {
   );
 });
 
+test("lab verify paste draft persists across reloads", async ({ page }) => {
+  const draft =
+    "== Lab verify: 01-first-repo ==\n  ok  playground is a git repo\n\nAll 3 checks passed for 01-first-repo.\n";
+  await page.goto("/lab.html?id=01-first-repo");
+  await page.locator("[data-verify-output]").fill(draft);
+  await expect
+    .poll(async () =>
+      page.evaluate(() => localStorage.getItem("rean-git:verify-draft:lab:01-first-repo"))
+    )
+    .toContain("All 3 checks passed");
+  await page.reload();
+  await expect(page.locator("[data-verify-output]")).toHaveValue(draft);
+  await expect(page.locator("[data-verify-passed]")).toBeEnabled();
+});
+
 test("passing verify marks the lab done and offers the next lab", async ({ page }) => {
   await page.goto("/lab.html?id=01-first-repo");
   await expect(page.locator("[data-verify-status]")).toHaveAttribute("role", "status");
@@ -195,6 +210,11 @@ test("passing verify marks the lab done and offers the next lab", async ({ page 
   await expect(page.locator("[data-verify-next]")).toBeVisible();
   await expect(page.locator('[data-verify-next] a[href*="id=02-staging"]')).toBeVisible();
   await expect(page.locator("[data-live-region]")).toContainText(/Lab marked done|marked done|រួចរាល់/i);
+  await expect
+    .poll(async () =>
+      page.evaluate(() => localStorage.getItem("rean-git:verify-draft:lab:01-first-repo"))
+    )
+    .toBeNull();
 });
 
 test("home progress shows a chapter-then-lab session card", async ({ page }) => {
@@ -438,6 +458,7 @@ test("footer links to the GitHub repo", async ({ page }) => {
   );
   await expect(link).toBeVisible();
   await expect(link).toHaveAttribute("target", "_blank");
+  await expect(link.locator("[data-external-hint]")).toContainText(/new tab|ផ្ទាំងថ្មី/i);
 });
 
 test("home asks visitors to clone the repo", async ({ page }) => {
@@ -493,6 +514,39 @@ test("learn page shows reading time and on-page toc for long chapters", async ({
   await expect(page.locator("[data-content-meta]")).toContainText(/\d+|នាទី/);
   await expect(page.locator("[data-chapter-toc]")).toBeVisible();
   await expect(page.locator("[data-chapter-toc] a").first()).toBeVisible();
+});
+
+test("learn page honors section hash deep links", async ({ page }) => {
+  await page.goto("/learn.html?c=1#real-world-problem");
+  await expect(page.locator("#real-world-problem")).toBeVisible();
+  await expect
+    .poll(async () =>
+      page.evaluate(() => {
+        const el = document.getElementById("real-world-problem");
+        if (!el) return false;
+        const top = el.getBoundingClientRect().top;
+        return top >= 0 && top < window.innerHeight * 0.55;
+      })
+    )
+    .toBe(true);
+});
+
+test("learn page restores chapter scroll position", async ({ page }) => {
+  await page.goto("/learn.html?c=1");
+  await expect(page.locator("[data-chapter-body]")).toBeVisible();
+  await page.evaluate(() => window.scrollTo(0, 420));
+  await expect
+    .poll(async () =>
+      page.evaluate(() => sessionStorage.getItem("rean-git:scroll:learn:1"))
+    )
+    .toBe("420");
+  await page.locator('[data-chapter-nav] a[data-chapter-id="2"]').click();
+  await expect(page).toHaveURL(/[?&]c=2(?:&|$)/);
+  await page.locator('[data-chapter-nav] a[data-chapter-id="1"]').click();
+  await expect(page).toHaveURL(/[?&]c=1(?:&|$)/);
+  await expect
+    .poll(async () => page.evaluate(() => Math.round(window.scrollY)))
+    .toBeGreaterThan(300);
 });
 
 test("lab cards show estimated time", async ({ page }) => {
