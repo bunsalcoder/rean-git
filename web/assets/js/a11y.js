@@ -64,6 +64,40 @@
     });
   }
 
+  function enhanceExternalLinks(root = document) {
+    if (!root?.querySelectorAll) return;
+    const hint =
+      window.ReanGitI18n?.t?.("a11y.opensInNewTab") || "opens in a new tab";
+    root.querySelectorAll("a[href]").forEach((anchor) => {
+      const href = anchor.getAttribute("href") || "";
+      let external = anchor.getAttribute("target") === "_blank";
+      if (/^https?:\/\//i.test(href)) {
+        try {
+          const url = new URL(href, location.href);
+          if (url.origin !== location.origin) external = true;
+        } catch {
+          /* ignore bad URLs */
+        }
+      }
+      if (!external) return;
+      anchor.setAttribute("target", "_blank");
+      const rel = new Set(
+        String(anchor.getAttribute("rel") || "")
+          .split(/\s+/)
+          .filter(Boolean)
+      );
+      rel.add("noopener");
+      rel.add("noreferrer");
+      anchor.setAttribute("rel", [...rel].join(" "));
+      if (anchor.querySelector("[data-external-hint]")) return;
+      const span = document.createElement("span");
+      span.className = "visually-hidden";
+      span.setAttribute("data-external-hint", "");
+      span.textContent = ` (${hint})`;
+      anchor.appendChild(span);
+    });
+  }
+
   function focusMain({ message } = {}) {
     const main = document.getElementById("main-content");
     if (main) {
@@ -199,5 +233,6 @@
     focusMain,
     confirmAction,
     alertAction,
+    enhanceExternalLinks,
   };
 })();

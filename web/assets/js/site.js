@@ -607,6 +607,16 @@
   wireConnectivityBanner();
   registerServiceWorker();
 
+  const decorateExternalLinks = () => {
+    window.ReanGitA11y?.enhanceExternalLinks?.(document);
+  };
+  // Run after i18n applies chrome strings so data-i18n textContent does not wipe hints.
+  Promise.resolve(window.ReanGitI18n?.ready)
+    .catch(() => {})
+    .then(decorateExternalLinks);
+  window.ReanGitI18n?.onChange?.(decorateExternalLinks);
+
+
   const scheduleProgressBackupPrompt = () => {
     Promise.resolve(window.ReanGitCatalog?.ready)
       .catch(() => {})
@@ -880,7 +890,11 @@
     else restorePageShell();
 
     await bootPage({ animate: false });
-    window.scrollTo(0, 0);
+    window.ReanGitA11y?.enhanceExternalLinks?.(document);
+    const page = document.body.dataset.page;
+    if (page !== "learn" && page !== "lab") {
+      window.scrollTo(0, 0);
+    }
     window.ReanGitI18n?.syncSeo?.();
     window.ReanGitA11y.focusMain({ message: document.title });
   }

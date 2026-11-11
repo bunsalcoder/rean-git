@@ -34,7 +34,8 @@
     "skipToContent": "រំលងទៅមាតិកា",
     "chapterLoaded": "ជំពូក៖ {title}",
     "labLoaded": "លំហាត់៖ {title}",
-    "copied": "បានចម្លងទៅ clipboard"
+    "copied": "បានចម្លងទៅ clipboard",
+    "opensInNewTab": "បើកក្នុងផ្ទាំងថ្មី"
   },
   "shortcuts": {
     "title": "ផ្លូវកាត់ក្តារចុច",

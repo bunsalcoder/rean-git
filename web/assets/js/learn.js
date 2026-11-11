@@ -238,6 +238,105 @@ function writeChecklistState(state, scopeId) {
   }
 }
 
+function scrollStorageKey(kind, id) {
+  if (!id || (kind !== "learn" && kind !== "lab")) return null;
+  return `rean-git:scroll:${kind}:${id}`;
+}
+
+function readScrollY(kind, id) {
+  try {
+    const key = scrollStorageKey(kind, id);
+    if (!key) return null;
+    const raw = sessionStorage.getItem(key);
+    if (raw == null || raw === "") return null;
+    const value = Number(raw);
+    return Number.isFinite(value) && value >= 0 ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeScrollY(kind, id, y) {
+  try {
+    const key = scrollStorageKey(kind, id);
+    if (!key) return;
+    sessionStorage.setItem(key, String(Math.max(0, Math.round(y || 0))));
+  } catch {
+    /* private mode / quota — ignore */
+  }
+}
+
+function saveActiveScroll(kind, id) {
+  if (!id) return;
+  writeScrollY(kind, id, window.scrollY || window.pageYOffset || 0);
+}
+
+function scrollToContentHash() {
+  const raw = String(location.hash || "").replace(/^#/, "");
+  if (!raw) return false;
+  const body = document.querySelector("[data-chapter-body], [data-lab-body]");
+  if (body) ensureHeadingIds(body);
+  let id = raw;
+  try {
+    id = decodeURIComponent(raw);
+  } catch {
+    /* keep raw */
+  }
+  const target = document.getElementById(id);
+  if (!target) return false;
+  target.scrollIntoView({ behavior: "auto", block: "start" });
+  return true;
+}
+
+function restoreScrollPosition(kind, id) {
+  if (scrollToContentHash()) return;
+  const y = readScrollY(kind, id);
+  window.scrollTo({ top: y == null ? 0 : y, behavior: "auto" });
+}
+
+function wireScrollPersistence(kind, getId, signal) {
+  let timer = 0;
+  const onScroll = () => {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => {
+      const id = getId?.();
+      if (id) writeScrollY(kind, id, window.scrollY || window.pageYOffset || 0);
+    }, 120);
+  };
+  window.addEventListener("scroll", onScroll, { passive: true, signal });
+  signal?.addEventListener("abort", () => window.clearTimeout(timer));
+}
+
+function verifyDraftKey(labId) {
+  return labId ? `rean-git:verify-draft:lab:${labId}` : null;
+}
+
+function readVerifyDraft(labId) {
+  const key = verifyDraftKey(labId);
+  if (!key) return "";
+  return window.ReanGitUtil?.readStorageItem?.(key) || "";
+}
+
+function writeVerifyDraft(labId, value) {
+  const key = verifyDraftKey(labId);
+  if (!key) return;
+  if (!String(value || "").trim()) {
+    clearVerifyDraft(labId);
+    return;
+  }
+  window.ReanGitUtil?.writeStorageItem?.(key, value);
+}
+
+function clearVerifyDraft(labId) {
+  const key = verifyDraftKey(labId);
+  if (!key) return;
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    /* private mode / quota — ignore */
+  }
+}
+
 /** Move ticks written under the empty-id key (pre-canonicalize) onto the real scope. */
 function migrateOrphanChecklist(scopeId) {
   if (!scopeId) return;
@@ -585,13 +684,26 @@ function appendVerifyHint(target, labId) {
   `;
   target.appendChild(wrap);
   enhanceCodeBlocks(wrap);
+  window.ReanGitA11y?.enhanceExternalLinks?.(wrap);
 
-  const refresh = () => syncVerifyMarkReady(wrap, labId);
-  wrap.querySelector("[data-verify-output]")?.addEventListener("input", refresh);
-  wrap.querySelector("[data-verify-manual-confirm]")?.addEventListener("change", refresh);
+  const paste = wrap.querySelector("[data-verify-output]");
+  if (paste) {
+    const draft = readVerifyDraft(labId);
+    if (draft) paste.value = draft;
+    let draftTimer = 0;
+    paste.addEventListener("input", () => {
+      window.clearTimeout(draftTimer);
+      draftTimer = window.setTimeout(() => writeVerifyDraft(labId, paste.value), 200);
+      syncVerifyMarkReady(wrap, labId);
+    });
+  }
+  wrap.querySelector("[data-verify-manual-confirm]")?.addEventListener("change", () => {
+    syncVerifyMarkReady(wrap, labId);
+  });
   wrap.querySelector("[data-verify-passed]")?.addEventListener("click", () => {
     if (!syncVerifyMarkReady(wrap, labId)) return;
     markLabChecklistsDone();
+    clearVerifyDraft(labId);
     paintVerifyFollowUp(wrap, labId);
     window.ReanGitA11y?.announce?.(t("lab.verifyDone"));
   });
@@ -759,6 +871,7 @@ function renderMarkdown(target, md, scopeId) {
   target.innerHTML = safe;
   enhanceCodeBlocks(target);
   enhanceCheckboxes(target, scopeId);
+  window.ReanGitA11y?.enhanceExternalLinks?.(target);
 }
 
 function padNum(n) {
@@ -968,6 +1081,7 @@ async function initLearnPage(signal, { animate = true } = {}) {
       const relatedLab = window.ReanGitCatalog?.getLabForChapter?.(chapter.id);
       if (relatedLab?.id) prefetchLabMarkdown(relatedLab.id);
       window.ReanGitI18n?.syncSeo?.();
+      window.requestAnimationFrame(() => restoreScrollPosition("learn", chapter.id));
     };
 
     const showChapterMissing = (requestedId) => {
@@ -1002,13 +1116,12 @@ async function initLearnPage(signal, { animate = true } = {}) {
 
       const token = ++transitionToken;
       const hadChapter = currentIndex >= 0;
+      if (hadChapter) saveActiveScroll("learn", chapters[currentIndex].id);
       currentIndex = index;
 
       if (push) {
         history.pushState({ c: chapter.id }, "", chapterHref(chapter.id));
       }
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
 
       const shouldAnimate = animate && !prefersReducedMotion();
 
@@ -1048,6 +1161,7 @@ async function initLearnPage(signal, { animate = true } = {}) {
       .join("");
 
     setupSideSearch(navEl, signal);
+    wireScrollPersistence("learn", () => chapters[currentIndex]?.id, signal);
 
     const goToChapter = (id, opts) => {
       if (!id) return;
@@ -1263,6 +1377,7 @@ async function initLabPage(signal, { animate = true } = {}) {
       prependGithubDeferNote(bodyEl, lab, labs);
       appendVerifyHint(bodyEl, lab.id);
       syncLabChecklistProgress(lab.id);
+      window.requestAnimationFrame(() => restoreScrollPosition("lab", lab.id));
     } catch (err) {
       bodyEl.innerHTML = `<div class="error"><strong>${escapeHtml(t("lab.loadError"))}</strong><br>${escapeHtml(err.message)}<br><br>${escapeHtml(t("lab.serveHint"))}</div>`;
     }
@@ -1308,13 +1423,12 @@ async function initLabPage(signal, { animate = true } = {}) {
 
     const token = ++transitionToken;
     const hadLab = currentIndex >= 0;
+    if (hadLab) saveActiveScroll("lab", labs[currentIndex].id);
     currentIndex = index;
 
     if (push) {
       history.pushState({ id: lab.id }, "", labHref(lab.id));
     }
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
 
     const shouldAnimate = animate && !prefersReducedMotion();
 
@@ -1346,6 +1460,7 @@ async function initLabPage(signal, { animate = true } = {}) {
   navEl.innerHTML = labs.map((l) => labNavItem(l)).join("");
 
   setupSideSearch(navEl, signal);
+  wireScrollPersistence("lab", () => labs[currentIndex]?.id, signal);
   wireLabPrefetch(navEl);
   wireLabPrefetch(pagerEl);
 

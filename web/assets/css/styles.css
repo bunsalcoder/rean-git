@@ -2590,6 +2590,7 @@ html.theme-animate body *::after {
   font-weight: 700;
   color: var(--ink);
   letter-spacing: -0.025em;
+  scroll-margin-top: calc(var(--header-h) + 0.5rem);
 }
 
 .md-body h3 {
@@ -2597,6 +2598,7 @@ html.theme-animate body *::after {
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--ink);
+  scroll-margin-top: calc(var(--header-h) + 0.5rem);
 }
 
 .md-body p,

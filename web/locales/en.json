@@ -34,7 +34,8 @@
     "skipToContent": "Skip to content",
     "chapterLoaded": "Chapter: {title}",
     "labLoaded": "Lab: {title}",
-    "copied": "Copied to clipboard"
+    "copied": "Copied to clipboard",
+    "opensInNewTab": "opens in a new tab"
   },
   "shortcuts": {
     "title": "Keyboard shortcuts",
