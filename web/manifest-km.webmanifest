@@ -10,6 +10,26 @@
   "theme_color": "#f3f5f7",
   "lang": "km",
   "dir": "ltr",
+  "shortcuts": [
+    {
+      "name": "រៀន",
+      "short_name": "រៀន",
+      "description": "បើកជំពូកក្នុងសៀវភៅណែនាំ",
+      "url": "./learn.html?lang=km"
+    },
+    {
+      "name": "លំហាត់",
+      "short_name": "លំហាត់",
+      "description": "មើលលំហាត់អនុវត្ត",
+      "url": "./labs.html?lang=km"
+    },
+    {
+      "name": "តារាងសង្ខេប",
+      "short_name": "តារាងសង្ខេប",
+      "description": "បើកតារាងពាក្យបញ្ជា Git",
+      "url": "./learn.html?c=26&lang=km"
+    }
+  ],
   "icons": [
     {
       "src": "./assets/img/icon-192.png",

@@ -10,6 +10,26 @@
   "theme_color": "#f3f5f7",
   "lang": "en",
   "dir": "ltr",
+  "shortcuts": [
+    {
+      "name": "Learn",
+      "short_name": "Learn",
+      "description": "Open the handbook chapters",
+      "url": "./learn.html"
+    },
+    {
+      "name": "Labs",
+      "short_name": "Labs",
+      "description": "Browse the practice labs",
+      "url": "./labs.html"
+    },
+    {
+      "name": "Cheat sheet",
+      "short_name": "Cheat sheet",
+      "description": "Open the Git command cheat sheet",
+      "url": "./learn.html?c=26"
+    }
+  ],
   "icons": [
     {
       "src": "./assets/img/icon-192.png",

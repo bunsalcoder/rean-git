@@ -1343,6 +1343,14 @@ async function initLabPage(signal, { animate = true } = {}) {
   wireLabPrefetch(navEl);
   wireLabPrefetch(pagerEl);
 
+  document.querySelector("[data-print-lab]")?.addEventListener(
+    "click",
+    () => {
+      window.print();
+    },
+    { signal }
+  );
+
   window.addEventListener(
     "rean-git:lab-progress",
     () => {

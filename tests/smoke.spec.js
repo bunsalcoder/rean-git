@@ -53,6 +53,8 @@ test("global search finds chapters and labs", async ({ page }) => {
   await expect(results.first()).toBeVisible();
   const titles = await results.allTextContents();
   expect(titles.some((text) => /rebase/i.test(text))).toBeTruthy();
+  await expect(page.locator("[data-search-status]")).toBeVisible();
+  await expect(page.locator("[data-search-status]")).toContainText(/\d+\s+results?/i);
 });
 
 test("learn page loads a chapter", async ({ page }) => {
@@ -87,6 +89,10 @@ test("labs page filter narrows the grid", async ({ page }) => {
   await expect(beginnerCount).toBeGreaterThan(0);
   await expect(beginnerCount).toBeLessThan(total);
   await expect(page).toHaveURL(/[?&]level=beginner(?:&|$)/);
+  await expect(page.locator("[data-lab-filter-summary]")).toBeVisible();
+  await expect(page.locator("[data-lab-filter-summary]")).toContainText(
+    new RegExp(`${beginnerCount}`)
+  );
 
   await page.locator('[data-lab-filter="intermediate"]').click();
   await expect(page.locator('[data-lab-grid] a[data-lab-id="08-local-remote"]')).toBeVisible();
@@ -139,6 +145,10 @@ test("pages advertise a web app manifest", async ({ page }) => {
     return res.json();
   });
   expect(enManifest.lang).toBe("en");
+  expect(Array.isArray(enManifest.shortcuts)).toBeTruthy();
+  expect(enManifest.shortcuts.length).toBeGreaterThanOrEqual(3);
+  expect(enManifest.shortcuts.some((item) => /learn\.html/.test(item.url))).toBeTruthy();
+  expect(enManifest.shortcuts.some((item) => /labs\.html/.test(item.url))).toBeTruthy();
   expect(enManifest.icons.some((icon) => icon.purpose === "maskable")).toBeTruthy();
   expect(
     enManifest.icons.some((icon) => /icon-maskable-512\.png$/.test(icon.src))
@@ -155,6 +165,8 @@ test("pages advertise a web app manifest", async ({ page }) => {
   });
   expect(kmManifest.lang).toBe("km");
   expect(kmManifest.start_url).toMatch(/lang=km/);
+  expect(Array.isArray(kmManifest.shortcuts)).toBeTruthy();
+  expect(kmManifest.shortcuts.length).toBeGreaterThanOrEqual(3);
 });
 
 test("lab page offers a verify.sh self-check", async ({ page }) => {
@@ -754,6 +766,12 @@ test("learn print control is available", async ({ page }) => {
   await page.goto("/learn.html?c=26");
   await expect(page.locator("[data-print-chapter]")).toBeVisible();
   await expect(page.locator("[data-chapter-title]")).not.toHaveText(/Loading/i);
+});
+
+test("lab print control is available", async ({ page }) => {
+  await page.goto("/lab.html?id=01-first-repo");
+  await expect(page.locator("[data-print-lab]")).toBeVisible();
+  await expect(page.locator("[data-lab-title]")).not.toHaveText(/Loading/i);
 });
 
 test("changing chapter focuses main content and announces", async ({ page }) => {
