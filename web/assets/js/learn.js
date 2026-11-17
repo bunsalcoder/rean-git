@@ -172,6 +172,80 @@ function splitGuide(markdown) {
   });
 }
 
+const FIGURES = {
+  trees: `<svg viewBox="0 0 560 112" aria-hidden="true">
+      <g fill="none" stroke="currentColor" stroke-width="1.6">
+        <rect x="16" y="36" width="148" height="52" rx="8"></rect>
+        <rect x="206" y="36" width="148" height="52" rx="8"></rect>
+        <rect class="fig-line" x="396" y="36" width="148" height="52" rx="8"></rect>
+        <path d="M164 62h42M354 62h42"></path>
+      </g>
+      <path fill="currentColor" d="M198 62l-8-5v10zM388 62l-8-5v10z"></path>
+      <text x="90" y="67" text-anchor="middle">working tree</text>
+      <text x="280" y="67" text-anchor="middle">staging</text>
+      <text x="470" y="67" text-anchor="middle">commit</text>
+    </svg>`,
+  history: `<svg viewBox="0 0 560 168" aria-hidden="true">
+      <text x="8" y="18">merge</text>
+      <text x="8" y="102">rebase</text>
+      <g fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M78 36h250"></path>
+        <path class="fig-line" d="M168 36c28 0 36-22 64-22h70"></path>
+        <path d="M302 14c28 0 36 22 58 22h40"></path>
+      </g>
+      <g fill="currentColor">
+        <circle cx="110" cy="36" r="5"></circle>
+        <circle cx="168" cy="36" r="5"></circle>
+        <circle cx="232" cy="14" r="5"></circle>
+        <circle cx="302" cy="14" r="5"></circle>
+        <circle cx="400" cy="36" r="5"></circle>
+      </g>
+      <text x="392" y="58">M</text>
+      <g fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M78 120h360"></path>
+      </g>
+      <g fill="currentColor">
+        <circle cx="110" cy="120" r="5"></circle>
+        <circle cx="180" cy="120" r="5"></circle>
+        <circle cx="250" cy="120" r="5"></circle>
+      </g>
+      <g class="fig-dot">
+        <circle cx="330" cy="120" r="5"></circle>
+        <circle cx="410" cy="120" r="5"></circle>
+      </g>
+      <text x="242" y="142">main</text>
+      <text x="318" y="142">yours</text>
+    </svg>`,
+  detached: `<svg viewBox="0 0 560 120" aria-hidden="true">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" d="M48 64h360"></path>
+      <g fill="currentColor">
+        <circle cx="80" cy="64" r="5"></circle>
+        <circle cx="200" cy="64" r="5"></circle>
+      </g>
+      <circle class="fig-line" cx="360" cy="64" r="8" fill="none" stroke-width="1.6" stroke-dasharray="3 3"></circle>
+      <circle class="fig-dot" cx="360" cy="64" r="5"></circle>
+      <text x="200" y="96" text-anchor="middle">main</text>
+      <text x="360" y="28" text-anchor="middle">HEAD</text>
+      <text x="360" y="96" text-anchor="middle">no branch</text>
+    </svg>`,
+};
+
+function enhanceFigures(root) {
+  root.querySelectorAll("pre code").forEach((code) => {
+    const match = /(?:^|\s)language-figure-([a-z]+)(?:\s|$)/.exec(code.className || "");
+    if (!match || !FIGURES[match[1]]) return;
+    const pre = code.closest("pre");
+    if (!pre) return;
+    const figure = document.createElement("figure");
+    figure.className = "git-figure";
+    figure.innerHTML = FIGURES[match[1]];
+    const caption = document.createElement("figcaption");
+    caption.textContent = t(`figures.${match[1]}`);
+    figure.appendChild(caption);
+    pre.replaceWith(figure);
+  });
+}
+
 function enhanceCodeBlocks(root) {
   root.querySelectorAll("pre").forEach((pre) => {
     if (pre.closest(".code-block")) return;
@@ -869,6 +943,7 @@ function renderMarkdown(target, md, scopeId) {
   }
 
   target.innerHTML = safe;
+  enhanceFigures(target);
   enhanceCodeBlocks(target);
   enhanceCheckboxes(target, scopeId);
   window.ReanGitA11y?.enhanceExternalLinks?.(target);

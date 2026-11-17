@@ -17,7 +17,6 @@ git init -b main sandbox/original-work
 cd sandbox/original-work
 git config user.name "Upstream Maintainer"
 git config user.email "upstream@example.com"
-git checkout -b main
 echo "# Shared project" > README.md
 git add README.md
 git commit -m "Initial project"

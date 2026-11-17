@@ -1504,6 +1504,54 @@ html.theme-animate body *::after {
   transform: none;
 }
 
+.lab-track > li.lab-stage,
+.lab-grid > .lab-stage {
+  grid-column: 1 / -1;
+  margin: 0.55rem 0 0;
+  padding: 0;
+}
+
+.lab-track > li.lab-stage:first-child,
+.lab-grid > .lab-stage:first-child {
+  margin-top: 0;
+}
+
+.lab-stage-kicker {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+}
+
+html[data-lang="km"] .lab-stage-kicker,
+html[lang="km"] .lab-stage-kicker {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.lab-stage-title {
+  margin: 0.12rem 0 0;
+  font-size: 1.05rem;
+  font-weight: 650;
+}
+
+.lab-stage-range {
+  margin: 0.1rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+}
+
+.lab-level {
+  display: inline-block;
+  margin-top: 0.35rem;
+  margin-right: 0.55rem;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
 .lab-track[aria-busy="true"] .lab-skel {
   pointer-events: none;
 }
@@ -2494,6 +2542,45 @@ html.theme-animate body *::after {
   color: var(--ink-soft);
   font-size: 0.75rem;
   font-weight: 600;
+}
+
+.git-figure {
+  margin: 1.15rem 0 1.4rem;
+  padding: 0.85rem 1rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: var(--surface);
+}
+
+.git-figure svg {
+  display: block;
+  width: 100%;
+  max-width: 36rem;
+  height: auto;
+  color: var(--ink);
+}
+
+.git-figure text {
+  fill: currentColor;
+  font-size: 13px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+.git-figure .fig-line {
+  stroke: var(--accent);
+  fill: none;
+}
+
+.git-figure .fig-dot {
+  fill: var(--accent);
+  stroke: none;
+}
+
+.git-figure figcaption {
+  margin: 0.65rem 0 0;
+  max-width: 38rem;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
 }
 
 .toolbar {

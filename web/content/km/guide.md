@@ -22,7 +22,7 @@ cd path/to/rean-git
 | ដំណាក់កាល | ជំពូក | គោលដៅ |
 |-------|----------|------|
 | មូលដ្ឋាន | 1–5 | គិតជា commits |
-| ការសហការ | 6–13 | Branch, merge, ដឹកជញ្ជូនជាមួយក្រុម |
+| ការសហការ | 6–13 | Branch, merge, undo, បន្ទាប់មកដឹកជញ្ជូនជាមួយក្រុម |
 | ឧបករណ៍ខ្លាំង | 14–20 | Stash, tags, rewrite, debug ប្រវត្តិ |
 | អាជីព | 21–24 | Hooks, signing, forks, ទ្រព្យធំៗ |
 | ជំនាញខ្ពស់ | 25–27 | ផ្នែកខាងក្នុង, តារាងសង្ខេប, បញ្ជីពិនិត្យ |
@@ -53,8 +53,8 @@ cd path/to/rean-git
 6. [Branching](#6-branching)
 7. [Merging](#7-merging)
 8. [Conflicts](#8-conflicts)
-9. [Rebase (ប្រើដោយប្រុងប្រយ័ត្ន)](#9-rebase-carefully)
-10. [ត្រឡប់កំហុស](#10-undoing-mistakes)
+9. [ត្រឡប់កំហុស](#9-undoing-mistakes)
+10. [Rebase (ប្រើដោយប្រុងប្រយ័ត្ន)](#10-rebase-carefully)
 11. [Remotes និង GitHub](#11-remotes--github)
 12. [Pull requests](#12-pull-requests)
 13. [លំហូរការងារក្រុម](#13-team-workflows)
@@ -144,6 +144,11 @@ Git ដំណើរការដោយគ្មានអ៊ីនធឺណិត�
 edit files  →  git add  →  staging  →  git commit  →  history
                                               ↓
                                         git push → remote (GitHub)
+```
+
+```figure-trees
+working tree  →  staging  →  commit
+files you edit   next save    saved snapshot
 ```
 
 ### ហេតុអ្វីវាសំខាន់នៅការងារ
@@ -362,6 +367,11 @@ feat/contact-page:           D---E
 - ដាក់ឈ្មោះ branches តាមការងារ: `fix/login-crash`, `feat/signup-form`
 - មួយគោលបំណងក្នុងមួយ branch
 
+### ពិនិត្យការយល់ដឹង
+
+- [ ] ខ្ញុំអាចនិយាយថាហេតុអ្វីការងារមិនទាន់រួចមិនគួរកែផ្ទាល់លើ `main`
+- [ ] ខ្ញុំអាចបង្កើត branch ដោយ `git switch -c` ហើយឃើញវាដោយ `git branch`
+
 ### លំហាត់
 
 អនុវត្តភាពដាច់ដោយឡែកជាមុន៖ **[លំហាត់ 03 — ការបង្កើត branch](./lab.html?id=03-branching)**។  
@@ -399,6 +409,11 @@ git branch -d feat/contact-page
 ```
 
 ប្រើ `-D` តែពេលអ្នកចង់ថា “បោះបង់ branch នេះ។”
+
+### ពិនិត្យការយល់ដឹង
+
+- [ ] ខ្ញុំអាចបែងចែក fast-forward ពី merge commit
+- [ ] ខ្ញុំដឹងថា `git branch -d` សម្រាប់ branch ដែលការងារបាន merge រួច
 
 ### លំហាត់
 
@@ -450,59 +465,24 @@ git merge --abort
 - និយាយនៅពេលដែលមនុស្សពីរនាក់ជាម្ចាស់ឯកសារក្តៅដូចគ្នា។
 - `git status` បញ្ជីឯកសារនៅតែមិនត្រូវបានបញ្ចូល
 
+### ពិនិត្យការយល់ដឹង
+
+- [ ] ខ្ញុំអាចហៅឈ្មោះសញ្ញា conflict ហើយដឹងថាត្រូវលុបវា
+- [ ] ខ្ញុំដឹងថា `git merge --abort` ត្រឡប់ branch ទៅមុនពេល merge
+
 ### លំហាត់
 
 **[លំហាត់ 05 — Conflict](./lab.html?id=05-conflict)**
 
 ---
 
-## 9. Rebase (ប្រើដោយប្រុងប្រយ័ត្ន)
-
-### បញ្ហាពិភពពិត
-
-Branch feature របស់អ្នកមាន commit ចំនួនបី។ ទន្ទឹមនឹងនេះ `main` បានទទួលការជួសជុលសុវត្ថិភាព។ មុនពេលអ្នកបើក PR អ្នកចង់ឲ្យការងាររបស់អ្នកអង្គុយ **នៅលើ** `main` ចុងក្រោយ — ប្រវត្តិស្អាត ការភ្ញាក់ផ្អើលតិចជាងនៅក្នុងការពិនិត្យ។
-
-**Rebase** = ចាក់ឡើងវិញ *commits របស់អ្នក* នៅលើ branch មួយទៀត។
-
-```bash
-git switch feat/contact-page
-git fetch origin
-git rebase main
-```
-
-### Merge vs rebase (ពេលណាត្រូវប្រើមួយណា)
-
-| | Merge | Rebase |
-|--|-------|--------|
-| ប្រវត្តិ | រក្សា branch ពិតចូលរួម | មើលទៅដូចជាបន្ទាត់ត្រង់ |
-| branch ចែករំលែក | សុវត្ថិភាពជាងមុន | ប្រថុយប្រសិនបើអ្នកផ្សេងទាញ commit របស់អ្នករួចហើយ |
-| ការប្រើប្រាស់ធម្មតា | feature merge → `main` | ធ្វើបច្ចុប្បន្នភាពលក្ខណៈពិសេស *របស់អ្នក* ទៅកាន់ `main` |
-
-### ច្បាប់មាស (ចងចាំនេះ)
-
-**កុំធ្វើបាបអ្នកដ៏ទៃដែលបានបង្កើតរួចហើយ** — ជាពិសេសចែករំលែក `main`។
-
-បង្កើត branch feature *local* របស់អ្នកឡើងវិញ។ ចូលចិត្តការ merge (ឬត្រឡប់) សម្រាប់ប្រវត្តិដែលមនុស្សគ្រប់គ្នាចែករំលែក។
-
-### មើលជាមុន៖ commits ស្អាតមុនបើក PR
-
-```bash
-git rebase -i HEAD~3
-```
-
-Squash "oops" ចូលទៅក្នុងរឿងច្បាស់លាស់មួយ។ អ្នកនឹងកាន់តែស៊ីជម្រៅនៅក្នុង**ជំពូកទី 17**។ អនុវត្តលើ branch បោះចោលជាមុនសិន។
-
-### លំហាត់
-
-**[លំហាត់ 06 — Rebase](./lab.html?id=06-rebase)**
-
----
-
-## 10. ត្រឡប់កំហុស
+## 9. ត្រឡប់កំហុស
 
 ### បញ្ហាពិភពពិត
 
 អ្នកប្រព្រឹត្តឯកសារខុស វាយបញ្ចូលសារ ឬលុបកូដល្អដោយចៃដន្យ។ ការភ័យស្លន់ស្លោគឺស្រេចចិត្ត — ជ្រើសរើសឧបករណ៍ដោយ**អ្វីដែលអ្នកនៅតែចង់រក្សា**។
+
+រៀនរឿងនេះមុន rebase។ ការសរសេរប្រវត្តិឡើងវិញគឺជំពូកបន្ទាប់ ហើយឧបករណ៍ទាំងនេះជាវិធីត្រឡប់មកវិញ។
 
 ### "ខ្ញុំបានកែសម្រួលឯកសារខុស បោះចោលការកែសម្រួលរបស់ខ្ញុំ"
 
@@ -559,9 +539,70 @@ git reflog
 git switch -c recover HASH       # bring it back on a new branch
 ```
 
+### ពិនិត្យការយល់ដឹង
+
+- [ ] ខ្ញុំអាចជ្រើស restore, reset, ឬ revert ទៅតាមការងារនៅមិនទាន់ commit, មានតែ local, ឬបាន push រួច
+- [ ] ខ្ញុំដឹងថា `git reflog` អាចរក commit ដែលលែងបង្ហាញលើ branch
+
 ### លំហាត់
 
 **[លំហាត់ 07 — ត្រឡប់វិញ](./lab.html?id=07-undo)**
+
+---
+
+## 10. Rebase (ប្រើដោយប្រុងប្រយ័ត្ន)
+
+### បញ្ហាពិភពពិត
+
+Branch feature របស់អ្នកមាន commit ចំនួនបី។ ទន្ទឹមនឹងនេះ `main` បានទទួលការជួសជុលសុវត្ថិភាព។ មុនពេលអ្នកបើក PR អ្នកចង់ឲ្យការងាររបស់អ្នកអង្គុយ **នៅលើ** `main` ចុងក្រោយ — ប្រវត្តិស្អាត ការភ្ញាក់ផ្អើលតិចជាងនៅក្នុងការពិនិត្យ។
+
+**Rebase** = ចាក់ឡើងវិញ *commits របស់អ្នក* នៅលើ branch មួយទៀត។
+
+```bash
+git switch feat/contact-page
+git fetch origin
+git rebase origin/main
+```
+
+`git fetch` រំកិល `origin/main`។ វាមិនរំកិល `main` ក្នុងមូលដ្ឋានទេ។ Rebase ទៅលើ `origin/main` ដែលជា commits ដែលអ្នកទើបទាញ។ បើ rebase ខុស `git rebase --abort` ឬ reflog ពីជំពូកទី ៩ នាំអ្នកត្រឡប់។
+
+ក្នុងលំហាត់គ្មាន remote៖ អ្នកបន្ថែម commit លើ `main` ក្នុងមូលដ្ឋាន បន្ទាប់មក `git rebase main`។ គំនិតដូចគ្នា — rebase ទៅលើ branch ដែលមាន commits ថ្មីពិត។
+
+```figure-history
+merge:   main A—B—C, feature D—E, joined by merge commit M
+rebase:  main A—B—C—D'—E' as one straight line
+```
+
+### Merge vs rebase (ពេលណាត្រូវប្រើមួយណា)
+
+| | Merge | Rebase |
+|--|-------|--------|
+| ប្រវត្តិ | រក្សា branch ពិតចូលរួម | មើលទៅដូចជាបន្ទាត់ត្រង់ |
+| branch ចែករំលែក | សុវត្ថិភាពជាងមុន | ប្រថុយប្រសិនបើអ្នកផ្សេងទាញ commit របស់អ្នករួចហើយ |
+| ការប្រើប្រាស់ធម្មតា | feature merge → `main` | ធ្វើបច្ចុប្បន្នភាព feature *របស់អ្នក* ទៅ `main` ចុងក្រោយ |
+
+### ច្បាប់មាស (ចងចាំនេះ)
+
+**កុំ rebase commits ដែលអ្នកដទៃបានសង់លើរួច** — ជាពិសេស `main` ដែលចែកគ្នា។
+
+Rebase branch feature *local* របស់អ្នក។ ប្រើ merge (ឬ revert) សម្រាប់ប្រវត្តិដែលមនុស្សគ្រប់គ្នាចែករំលែក។
+
+### មើលជាមុន៖ commits ស្អាតមុនបើក PR
+
+```bash
+git rebase -i HEAD~3
+```
+
+Squash "oops" ចូលទៅក្នុងរឿងច្បាស់លាស់មួយ។ អ្នកនឹងចូលជម្រៅនៅ **ជំពូកទី 17**។ អនុវត្តលើ branch បោះចោលជាមុនសិន។ បើវង្វេង ជំពូកទី ៩ ជាវិធីស្តារ។
+
+### ពិនិត្យការយល់ដឹង
+
+- [ ] ក្រោយ `git fetch` ខ្ញុំ rebase ទៅលើ `origin/main` មិនមែន `main` ក្នុងមូលដ្ឋានដែលមិនបានរំកិល
+- [ ] ខ្ញុំនឹងមិន rebase commits ដែលអ្នកដទៃបានសង់លើរួច
+
+### លំហាត់
+
+**[លំហាត់ 06 — Rebase](./lab.html?id=06-rebase)**
 
 ---
 
@@ -690,7 +731,7 @@ node_modules/
 ```bash
 git switch main && git pull
 git switch feat/your-branch
-git merge main                 # or: git rebase main (local only)
+git merge main                 # or: git rebase main — local main is current because you just pulled
 ```
 
 ធ្វើបច្ចុប្បន្នភាព branch របស់អ្នកជាមួយនឹង `main` ចុងក្រោយបំផុតជាមុនសិន — អ្នកត្រួតពិនិត្យមិនគួរជួសជុល conflict merge របស់អ្នកសម្រាប់អ្នកទេ។
@@ -854,11 +895,16 @@ pick c333 typo
 
 រក្សាទុក និងបិទ → ការចាក់ឡើងវិញ Git។ ដោះស្រាយជម្លោះជាមួយ `--continue` / `--abort` ដូចជា rebase ធម្មតា។
 
-### ច្បាប់មាស (ដូចគ្នានឹងជំពូកទី ៩)
+### ច្បាប់មាស (ដូចគ្នានឹងជំពូកទី ១០)
 
 - សរសេរឡើងវិញ **local** commits (ឬ branch គ្មាននរណាម្នាក់ផ្សេងទៀតប្រើ)
 - បន្ទាប់ពីសរសេរ branch ដែលបានរុញឡើងវិញ៖ `git push --force-with-lease` (មានសុវត្ថិភាពជាង `--force`)
 - មិនដែល force-push `main`
+
+### ពិនិត្យការយល់ដឹង
+
+- [ ] ខ្ញុំអាចនិយាយថា `squash` និង `drop` ធ្វើអ្វីក្នុងបញ្ជី rebase
+- [ ] ខ្ញុំប្រើ `--force-with-lease` តែលើ branch ដែលគ្មានអ្នកដទៃចែករំលែក
 
 ### លំហាត់
 
@@ -920,6 +966,12 @@ git switch -c hotfix/from-tag
 
 `git status` នឹងព្រមានអ្នកនៅពេលអ្នកត្រូវបានផ្ដាច់។ សូមអានការព្រមាននោះ។
 
+```figure-detached
+A—B—C
+main points at B
+HEAD points at C, and no branch name points there
+```
+
 ### Worktrees (ថតការងារបន្ថែម)
 
 ```bash
@@ -940,6 +992,11 @@ worktree នីមួយៗមានឯកសារផ្ទាល់ខ្ល�
 | Stash | ការផ្លាស់ប្តូរបរិបទរហ័ស មានរយៈពេលខ្លី |
 | Worktree | ការងារស្របគ្នាសម្រាប់ម៉ោង/ថ្ងៃ |
 | New clone | ភាពឯកោខ្លាំង (remotes/config ផ្សេងគ្នា) |
+
+### ពិនិត្យការយល់ដឹង
+
+- [ ] ខ្ញុំអាចពន្យល់ detached HEAD៖ HEAD ចង្អុលទៅ commit មិនមែនឈ្មោះ branch
+- [ ] ខ្ញុំដឹងថា worktree សម្រាប់ការងារស្របគ្នាដែលយូរជាង stash
 
 ### លំហាត់
 
@@ -1202,6 +1259,11 @@ A **branch** គឺជាឯកសារយោងដែលអាចចល័ត�
 
 `git status` ប្រៀបធៀបទាំងបីនេះ។
 
+### ពិនិត្យការយល់ដឹង
+
+- [ ] ខ្ញុំអាចហៅឈ្មោះ blob, tree, commit, និង ref ជាភាសាសាមញ្ញ
+- [ ] ខ្ញុំអាចនិយាយថា `git status` ប្រៀបធៀប working tree, index, និង `HEAD`
+
 ### Packfiles (ឯកសារខ្ចប់)
 
 វត្ថុរលុងនៅទីបំផុតខ្ចប់ទៅជាឯកសារ `.git/objects/pack/` ប្រកបដោយប្រសិទ្ធភាព។ `git gc` សម្អាត។ អ្នកកម្រត្រូវការប៉ះនេះណាស់។
@@ -1267,7 +1329,8 @@ git switch -c branch-name
 git switch main
 git branch -d branch-name
 git merge branch-name
-git rebase main
+git fetch
+git rebase origin/main          # fetch does not move local main
 git rebase -i HEAD~3
 git cherry-pick HASH
 ```
@@ -1339,10 +1402,10 @@ git show-ref
 
 ### ជំនាញប្រវត្តិ
 
-- [ ] Rebase feature *local* ទៅលើ `main` ចុងក្រោយ
 - [ ] ជ្រើស restore / reset / revert តាមស្ថានការណ៍
 - [ ] ស្តារ commit ដែល «បាត់» ដោយ `reflog`
-- [ ] លំហាត់ rebase និង undo បានបញ្ចប់
+- [ ] Rebase feature *local* ទៅលើ `origin/main` ក្រោយ `git fetch`
+- [ ] លំហាត់ undo និង rebase បានបញ្ចប់
 
 ### Remote និងក្រុម
 
