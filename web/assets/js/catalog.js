@@ -1,10 +1,12 @@
 (() => {
   const DATA_URL = new URL("./data/labs.json", location.href).href;
   const VALID_LEVELS = new Set(["beginner", "intermediate", "advanced"]);
+  const VALID_STAGES = new Set(["foundations", "collaboration", "power", "professional", "mastery"]);
 
   let labs = [];
   let labIdAliases = {};
   let cheatSheetChapter = "26";
+  let filterStage = "all";
   let filterLevel = "all";
 
   const escapeHtml = (text) => window.ReanGitUtil.escapeHtml(text);
@@ -58,8 +60,11 @@
   }
 
   function visibleLabs() {
-    if (filterLevel === "all") return labs;
-    return labs.filter((lab) => lab.level === filterLevel);
+    if (filterStage !== "all") {
+      return labs.filter((lab) => stageIdForLab(lab) === filterStage);
+    }
+    if (filterLevel !== "all") return labs.filter((lab) => lab.level === filterLevel);
+    return labs;
   }
 
   function renderTrack(root) {
@@ -112,6 +117,7 @@
       return;
     }
     let lastStage = "";
+    const showStageHeadings = filterStage === "all";
     root.innerHTML = list
       .map((lab) => {
         const id = escapeHtml(lab.id);
@@ -122,7 +128,7 @@
           ? `<span class="lab-github" data-i18n="lab.githubRequiredBadge"></span>`
           : "";
         const stage = stageIdForLab(lab);
-        const heading = stage === lastStage ? "" : stageHeading(stage, "div");
+        const heading = !showStageHeadings || stage === lastStage ? "" : stageHeading(stage, "div");
         lastStage = stage;
         return `${heading}<a href="${labHref(lab.id)}"${done ? ' class="is-complete"' : ""} data-lab-id="${id}">
           <span class="num">${escapeHtml(labNum(lab, index))}</span>
@@ -144,10 +150,11 @@
   }
 
   function syncFilterButtons() {
+    const active = filterStage !== "all" ? filterStage : filterLevel === "all" ? "all" : "";
     document.querySelectorAll("[data-lab-filter]").forEach((btn) => {
-      const active = btn.getAttribute("data-lab-filter") === filterLevel;
-      btn.setAttribute("aria-pressed", String(active));
-      btn.classList.toggle("is-active", active);
+      const pressed = btn.getAttribute("data-lab-filter") === active;
+      btn.setAttribute("aria-pressed", String(pressed));
+      btn.classList.toggle("is-active", pressed);
     });
   }
 
@@ -156,18 +163,25 @@
     return "all";
   }
 
-  function levelFromUrl() {
-    if (!document.querySelector("[data-lab-grid]")) return null;
-    const level = new URLSearchParams(location.search).get("level");
-    if (level == null || level === "") return null;
-    return normalizeLevel(level);
+  function normalizeStage(stage) {
+    if (stage === "all" || VALID_STAGES.has(stage)) return stage;
+    return "all";
   }
 
-  function syncFilterUrl(level) {
+  function queryParam(name) {
+    if (!document.querySelector("[data-lab-grid]")) return null;
+    const value = new URLSearchParams(location.search).get(name);
+    if (value == null || value === "") return null;
+    return value;
+  }
+
+  function syncFilterUrl() {
     if (!document.querySelector("[data-lab-grid]")) return;
     const url = new URL(location.href);
-    if (level === "all") url.searchParams.delete("level");
-    else url.searchParams.set("level", level);
+    url.searchParams.delete("stage");
+    url.searchParams.delete("level");
+    if (filterStage !== "all") url.searchParams.set("stage", filterStage);
+    else if (filterLevel !== "all") url.searchParams.set("level", filterLevel);
     const next = `${url.pathname}${url.search}${url.hash}`;
     const current = `${location.pathname}${location.search}${location.hash}`;
     if (next !== current) history.replaceState(history.state, "", next);
@@ -179,24 +193,26 @@
     const count = String(visibleLabs().length);
     const i18n = window.ReanGitI18n;
     let message;
-    if (filterLevel === "all") {
+    let label = "";
+    if (filterStage !== "all") label = i18n?.t?.(`stages.${filterStage}`) || filterStage;
+    else if (filterLevel !== "all") label = i18n?.t?.(`levels.${filterLevel}`) || filterLevel;
+    if (!label) {
       message = i18n?.t?.("labsPage.filterSummaryAll", { count }) || `${count} labs`;
     } else {
-      const level = i18n?.t?.(`levels.${filterLevel}`) || filterLevel;
-      message =
-        i18n?.t?.("labsPage.filterSummary", { count, level }) || `${count} labs · ${level}`;
+      message = i18n?.t?.("labsPage.filterSummary", { count, label }) || `${count} labs · ${label}`;
     }
     el.hidden = false;
     el.textContent = message;
     if (announce) window.ReanGitA11y?.announce?.(message);
   }
 
-  function setFilter(level, { updateUrl = true, announce = false } = {}) {
-    filterLevel = normalizeLevel(level);
+  function setFilter(stage, { updateUrl = true, announce = false } = {}) {
+    filterStage = normalizeStage(stage);
+    filterLevel = "all";
     syncFilterButtons();
     renderGrid(document.querySelector("[data-lab-grid]"));
     paintFilterSummary({ announce });
-    if (updateUrl) syncFilterUrl(filterLevel);
+    if (updateUrl) syncFilterUrl();
   }
 
   function wireFilters() {
@@ -232,14 +248,21 @@
   function mountLists() {
     const track = document.querySelector("[data-lab-track]");
     const grid = document.querySelector("[data-lab-grid]");
-    const fromUrl = levelFromUrl();
-    if (fromUrl) filterLevel = fromUrl;
+    const stageFromUrl = queryParam("stage");
+    const levelFromUrl = queryParam("level");
+    if (stageFromUrl) {
+      filterStage = normalizeStage(stageFromUrl);
+      filterLevel = "all";
+    } else if (levelFromUrl) {
+      filterStage = "all";
+      filterLevel = normalizeLevel(levelFromUrl);
+    }
     renderTrack(track);
     wireFilters();
     syncFilterButtons();
     renderGrid(grid);
     paintFilterSummary();
-    if (grid) syncFilterUrl(filterLevel);
+    if (grid) syncFilterUrl();
     document.querySelector("[data-labs-loading]")?.setAttribute("hidden", "");
     paintCountTitle();
     syncCheatSheetLinks();

@@ -84,32 +84,43 @@ test("labs page filter narrows the grid", async ({ page }) => {
   const total = await grid.count();
   await expect(total).toBeGreaterThan(0);
 
-  await page.locator('[data-lab-filter="beginner"]').click();
-  const beginnerCount = await grid.count();
-  await expect(beginnerCount).toBeGreaterThan(0);
-  await expect(beginnerCount).toBeLessThan(total);
-  await expect(page).toHaveURL(/[?&]level=beginner(?:&|$)/);
+  await page.locator('[data-lab-filter="foundations"]').click();
+  const foundationsCount = await grid.count();
+  await expect(foundationsCount).toBeGreaterThan(0);
+  await expect(foundationsCount).toBeLessThan(total);
+  await expect(page.locator('[data-lab-grid] a[data-lab-id="00-install-config"]')).toBeVisible();
+  await expect(page.locator('[data-lab-grid] a[data-lab-id="11-stash"]')).toHaveCount(0);
+  await expect(page).toHaveURL(/[?&]stage=foundations(?:&|$)/);
   await expect(page.locator("[data-lab-filter-summary]")).toBeVisible();
   await expect(page.locator("[data-lab-filter-summary]")).toContainText(
-    new RegExp(`${beginnerCount}`)
+    new RegExp(`${foundationsCount}`)
   );
 
-  await page.locator('[data-lab-filter="intermediate"]').click();
+  await page.locator('[data-lab-filter="collaboration"]').click();
+  await expect(page.locator('[data-lab-grid] a[data-lab-id="07-undo"]')).toBeVisible();
   await expect(page.locator('[data-lab-grid] a[data-lab-id="08-local-remote"]')).toBeVisible();
-  await expect(page.locator('[data-lab-grid] a[data-lab-id="10-team-workflow"]')).toBeVisible();
   await expect(page.locator('[data-lab-grid] a[data-lab-id="14-interactive-rebase"]')).toHaveCount(0);
-  await expect(page).toHaveURL(/[?&]level=intermediate(?:&|$)/);
+  await expect(page).toHaveURL(/[?&]stage=collaboration(?:&|$)/);
+  await expect(page).not.toHaveURL(/[?&]level=/);
 
   await page.locator('[data-lab-filter="all"]').click();
   await expect(grid).toHaveCount(total);
-  await expect(page).not.toHaveURL(/[?&]level=/);
+  await expect(page).not.toHaveURL(/[?&]stage=/);
 });
 
-test("labs page honors level query on load", async ({ page }) => {
+test("labs page honors stage query on load", async ({ page }) => {
+  await page.goto("/labs.html?stage=professional");
+  await expect(page.locator('[data-lab-filter="professional"]')).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator('[data-lab-grid] a[data-lab-id="18-hooks"]')).toBeVisible();
+  await expect(page.locator('[data-lab-grid] a[data-lab-id="00-install-config"]')).toHaveCount(0);
+});
+
+test("labs page still honors a legacy level query", async ({ page }) => {
   await page.goto("/labs.html?level=advanced");
-  await expect(page.locator('[data-lab-filter="advanced"]')).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator('[data-lab-filter="all"]')).toHaveAttribute("aria-pressed", "false");
   await expect(page.locator('[data-lab-grid] a[data-lab-id="14-interactive-rebase"]')).toBeVisible();
   await expect(page.locator('[data-lab-grid] a[data-lab-id="00-install-config"]')).toHaveCount(0);
+  await expect(page.locator('[data-lab-grid] a[data-lab-id="11-stash"]')).toHaveCount(0);
 });
 
 test("theme toggle cycles light, dark, and system", async ({ page }) => {

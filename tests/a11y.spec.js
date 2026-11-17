@@ -67,7 +67,10 @@ test("mobile nav open has no serious a11y violations", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   await page.locator("[data-nav-toggle]").click();
-  await expect(page.locator("[data-nav]")).toHaveClass(/is-open/);
+  const nav = page.locator("[data-nav]");
+  await expect(nav).toHaveClass(/is-open/);
+  await expect(nav).toHaveCSS("opacity", "1");
+  await expect(nav).toHaveCSS("visibility", "visible");
   const results = await new AxeBuilder({ page })
     .include("[data-nav]")
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
