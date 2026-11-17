@@ -920,6 +920,12 @@ html.theme-animate body *::after {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .nav {
+    transition: none;
+  }
+}
+
 /* —— Buttons —— */
 .btn {
   display: inline-flex;
