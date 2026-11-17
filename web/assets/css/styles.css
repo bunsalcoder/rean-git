@@ -1943,6 +1943,13 @@ html[lang="km"] .lab-stage-kicker {
   display: none;
 }
 
+html[data-lang="km"] .lab-filter,
+html[lang="km"] .lab-filter {
+  line-height: 1.35;
+  padding-top: 0.35rem;
+  padding-bottom: 0.5rem;
+}
+
 .lab-filter {
   appearance: none;
   border: 1px solid var(--line);
