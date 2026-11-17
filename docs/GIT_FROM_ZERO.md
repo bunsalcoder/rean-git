@@ -105,12 +105,6 @@ Without Git, people invent `project-v2-FINAL-really.zip`. That doesn’t scale.
 
 Git works offline. GitHub is where you share and collaborate.
 
-### Lab link
-
-After chapter 3 → [Lab 00 — Install & config](../labs/00-install-config/)  
-After chapter 4 → [Lab 01 — First repo](../labs/01-first-repo/)  
-After chapter 5 → [Lab 02 — Staging](../labs/02-staging/)
-
 ### Check your understanding
 
 - [ ] I can name a real mess that version control prevents (zips, “final-final”, lost changes)
