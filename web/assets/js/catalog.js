@@ -35,6 +35,28 @@
     return 20;
   }
 
+  const STAGES = [
+    { id: "foundations", max: 5 },
+    { id: "collaboration", max: 13 },
+    { id: "power", max: 20 },
+    { id: "professional", max: 24 },
+    { id: "mastery", max: Infinity },
+  ];
+
+  function stageIdForLab(lab) {
+    const n = Number(lab && lab.chapter);
+    const stage = STAGES.find((item) => Number.isFinite(n) && n <= item.max);
+    return stage ? stage.id : "mastery";
+  }
+
+  function stageHeading(stageId, tag) {
+    return `<${tag} class="lab-stage">
+      <p class="lab-stage-kicker" data-i18n="stages.kicker"></p>
+      <p class="lab-stage-title" data-i18n="stages.${stageId}"></p>
+      <p class="lab-stage-range" data-i18n="stages.${stageId}Range"></p>
+    </${tag}>`;
+  }
+
   function visibleLabs() {
     if (filterLevel === "all") return labs;
     return labs.filter((lab) => lab.level === filterLevel);
@@ -44,6 +66,7 @@
     if (!root) return;
     const nextLab = labs.find((lab) => !window.ReanGitUtil?.isLabComplete?.(lab.id));
     root.setAttribute("aria-busy", "false");
+    let lastStage = "";
     root.innerHTML = labs
       .map((lab, index) => {
         const id = escapeHtml(lab.id);
@@ -56,11 +79,15 @@
         const githubBadge = lab.verifyManual
           ? `<span class="lab-github" data-i18n="lab.githubRequiredBadge"></span>`
           : "";
-        return `<li${classes ? ` class="${classes}"` : ""}>
+        const stage = stageIdForLab(lab);
+        const heading = stage === lastStage ? "" : stageHeading(stage, "li");
+        lastStage = stage;
+        return `${heading}<li${classes ? ` class="${classes}"` : ""}>
           <a href="${labHref(lab.id)}" data-lab-id="${id}">
             <span class="lab-num">${escapeHtml(labNum(lab, index))}</span>
             <h3 class="lab-title" data-i18n="labs.${id}.title"></h3>
             <p class="lab-desc" data-i18n="labs.${id}.teaser"></p>
+            <span class="lab-level" data-i18n="levels.${escapeHtml(lab.level)}"></span>
             <span class="lab-time">${escapeHtml(
               window.ReanGitI18n?.t?.("lab.estimatedTime", { minutes: String(minutes) }) ||
                 `~${minutes} min`
@@ -84,6 +111,7 @@
       window.ReanGitI18n?.apply?.(root);
       return;
     }
+    let lastStage = "";
     root.innerHTML = list
       .map((lab) => {
         const id = escapeHtml(lab.id);
@@ -93,11 +121,15 @@
         const githubBadge = lab.verifyManual
           ? `<span class="lab-github" data-i18n="lab.githubRequiredBadge"></span>`
           : "";
-        return `<a href="${labHref(lab.id)}"${done ? ' class="is-complete"' : ""} data-lab-id="${id}">
+        const stage = stageIdForLab(lab);
+        const heading = stage === lastStage ? "" : stageHeading(stage, "div");
+        lastStage = stage;
+        return `${heading}<a href="${labHref(lab.id)}"${done ? ' class="is-complete"' : ""} data-lab-id="${id}">
           <span class="num">${escapeHtml(labNum(lab, index))}</span>
           <div>
             <h3 data-i18n="labs.${id}.title"></h3>
             <p data-i18n="labs.${id}.summary"></p>
+            <span class="lab-level" data-i18n="levels.${escapeHtml(lab.level)}"></span>
             <span class="lab-time">${escapeHtml(
               window.ReanGitI18n?.t?.("lab.estimatedTime", { minutes: String(minutes) }) ||
                 `~${minutes} min`
@@ -228,9 +260,13 @@
           ? data.labIdAliases
           : {};
       const list = Array.isArray(data?.labs) ? data.labs : [];
-      labs = list.filter(
-        (lab) => lab && typeof lab.id === "string" && VALID_LEVELS.has(lab.level)
-      );
+      labs = list
+        .filter((lab) => lab && typeof lab.id === "string" && VALID_LEVELS.has(lab.level))
+        .sort((a, b) => {
+          const chapterDelta = Number(a.chapter) - Number(b.chapter);
+          if (chapterDelta) return chapterDelta;
+          return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
+        });
       window.ReanGitUtil?.migrateLabIds?.(resolveLabId);
       syncCheatSheetLinks();
       return labs;

@@ -19,7 +19,6 @@ mkdir -p playground && cd playground
 git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
-git checkout -b main
 echo "# Signed notes" > README.md
 git add README.md
 git commit -m "Start unsigned"

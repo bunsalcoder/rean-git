@@ -22,7 +22,7 @@ cd path/to/rean-git
 | Stage | Chapters | Goal |
 |-------|----------|------|
 | Foundations | 1–5 | Think in commits |
-| Collaboration | 6–13 | Branch, merge, ship with a team |
+| Collaboration | 6–13 | Branch, merge, undo, then ship with a team |
 | Power tools | 14–20 | Stash, tags, rewrite, debug history |
 | Professional | 21–24 | Hooks, signing, forks, large assets |
 | Mastery | 25–27 | Internals, cheat sheet, checklist |
@@ -53,8 +53,8 @@ cd path/to/rean-git
 6. [Branching](#6-branching)
 7. [Merging](#7-merging)
 8. [Conflicts](#8-conflicts)
-9. [Rebase (carefully)](#9-rebase-carefully)
-10. [Undoing mistakes](#10-undoing-mistakes)
+9. [Undoing mistakes](#9-undoing-mistakes)
+10. [Rebase (carefully)](#10-rebase-carefully)
 11. [Remotes & GitHub](#11-remotes--github)
 12. [Pull requests](#12-pull-requests)
 13. [Team workflows](#13-team-workflows)
@@ -144,6 +144,11 @@ You don’t shove the whole room into every suitcase — you pick what belongs i
 edit files  →  git add  →  staging  →  git commit  →  history
                                               ↓
                                         git push → remote (GitHub)
+```
+
+```figure-trees
+working tree  →  staging  →  commit
+files you edit   next save    saved snapshot
 ```
 
 ### Why this matters at work
@@ -362,6 +367,11 @@ Each letter is a commit. A branch is just a pointer with a name.
 - Name branches for the job: `fix/login-crash`, `feat/signup-form`
 - One purpose per branch
 
+### Check your understanding
+
+- [ ] I can say why unfinished work should not be edited directly on `main`
+- [ ] I can create a branch with `git switch -c` and see it with `git branch`
+
 ### Lab
 
 Practice isolation first: **[Lab 03 — Branching](../labs/03-branching/)**.  
@@ -399,6 +409,11 @@ git branch -d feat/contact-page
 ```
 
 Use `-D` only when you mean “throw this branch away.”
+
+### Check your understanding
+
+- [ ] I can tell a fast-forward from a merge commit
+- [ ] I know `git branch -d` is for a branch whose work is already merged
 
 ### Lab
 
@@ -450,59 +465,24 @@ git merge --abort
 - Talk when two people own the same hot file
 - `git status` lists files still unmerged
 
+### Check your understanding
+
+- [ ] I can name the conflict markers and know they must be deleted
+- [ ] I know `git merge --abort` returns the branch to where it was before the merge
+
 ### Lab
 
 **[Lab 05 — Conflict](../labs/05-conflict/)**
 
 ---
 
-## 9. Rebase (carefully)
-
-### Real-world problem
-
-Your feature branch has three commits. Meanwhile `main` got a security fix. Before you open a PR, you want your work to sit **on top of** the latest `main` — clean history, fewer surprises in review.
-
-**Rebase** = replay *your* commits on top of another branch.
-
-```bash
-git switch feat/contact-page
-git fetch origin
-git rebase main
-```
-
-### Merge vs rebase (when to use which)
-
-| | Merge | Rebase |
-|--|-------|--------|
-| History | Keeps the real branch join | Looks like a straight line |
-| Shared branches | Safer | Risky if others already pulled your commits |
-| Typical use | Merge feature → `main` | Update *your* feature onto latest `main` |
-
-### Golden rule (memorize this)
-
-**Do not rebase commits other people already built on** — especially shared `main`.
-
-Rebase your *local* feature branch. Prefer merge (or revert) for history everyone shares.
-
-### Preview: clean commits before a PR
-
-```bash
-git rebase -i HEAD~3
-```
-
-Squash “oops” commits into one clear story. You’ll go deeper in **chapter 17**. Practice on a throwaway branch first.
-
-### Lab
-
-**[Lab 06 — Rebase](../labs/06-rebase/)**
-
----
-
-## 10. Undoing mistakes
+## 9. Undoing mistakes
 
 ### Real-world problem
 
 You commit the wrong file, typo a message, or wipe good code by accident. Panic is optional — pick the tool by **what you still want to keep**.
+
+Learn this before rebase. Rewriting history is the next chapter, and these are the tools that get you back.
 
 ### “I edited the wrong file — throw my edits away”
 
@@ -559,9 +539,70 @@ git reflog
 git switch -c recover HASH       # bring it back on a new branch
 ```
 
+### Check your understanding
+
+- [ ] I can pick restore, reset, or revert from whether the work is uncommitted, only local, or already pushed
+- [ ] I know `git reflog` can find a commit that no longer shows on the branch
+
 ### Lab
 
 **[Lab 07 — Undo](../labs/07-undo/)**
+
+---
+
+## 10. Rebase (carefully)
+
+### Real-world problem
+
+Your feature branch has three commits. Meanwhile `main` got a security fix. Before you open a PR, you want your work to sit **on top of** the latest `main` — clean history, fewer surprises in review.
+
+**Rebase** = replay *your* commits on top of another branch.
+
+```bash
+git switch feat/contact-page
+git fetch origin
+git rebase origin/main
+```
+
+`git fetch` moves `origin/main`. It does not move your local `main`. Rebase onto `origin/main`, the commits you just downloaded. If a rebase goes wrong, `git rebase --abort` or the reflog from chapter 9 puts you back.
+
+In the lab there is no remote: you add a commit on local `main`, then `git rebase main`. Same idea — rebase onto the branch that actually has the new commits.
+
+```figure-history
+merge:   main A—B—C, feature D—E, joined by merge commit M
+rebase:  main A—B—C—D'—E' as one straight line
+```
+
+### Merge vs rebase (when to use which)
+
+| | Merge | Rebase |
+|--|-------|--------|
+| History | Keeps the real branch join | Looks like a straight line |
+| Shared branches | Safer | Risky if others already pulled your commits |
+| Typical use | Merge feature → `main` | Update *your* feature onto latest `main` |
+
+### Golden rule (memorize this)
+
+**Do not rebase commits other people already built on** — especially shared `main`.
+
+Rebase your *local* feature branch. Prefer merge (or revert) for history everyone shares.
+
+### Preview: clean commits before a PR
+
+```bash
+git rebase -i HEAD~3
+```
+
+Squash “oops” commits into one clear story. You’ll go deeper in **chapter 17**. Practice on a throwaway branch first. If you get lost, chapter 9 is how you recover.
+
+### Check your understanding
+
+- [ ] After `git fetch`, I rebase onto `origin/main`, not a local `main` that did not move
+- [ ] I will not rebase commits other people already built on
+
+### Lab
+
+**[Lab 06 — Rebase](../labs/06-rebase/)**
 
 ---
 
@@ -690,7 +731,7 @@ Don’t commit secrets or `node_modules/`. One logical change per commit when yo
 ```bash
 git switch main && git pull
 git switch feat/your-branch
-git merge main                 # or: git rebase main (local only)
+git merge main                 # or: git rebase main — local main is current because you just pulled
 ```
 
 Update your branch with latest `main` first — reviewers shouldn’t fix your merge conflicts for you.
@@ -856,11 +897,16 @@ pick c333 typo
 
 Save & close → Git replays. Resolve conflicts with `--continue` / `--abort` like a normal rebase.
 
-### Golden rules (same as chapter 9)
+### Golden rules (same as chapter 10)
 
 - Only rewrite **local** commits (or a branch nobody else uses)
 - After rewriting a pushed branch: `git push --force-with-lease` (safer than `--force`)
 - Never force-push `main`
+
+### Check your understanding
+
+- [ ] I can say what `squash` and `drop` do in the rebase todo list
+- [ ] I use `--force-with-lease` only on a branch nobody else shares
 
 ### Lab
 
@@ -922,6 +968,12 @@ git switch -c hotfix/from-tag
 
 `git status` will warn you when you’re detached. Read that warning.
 
+```figure-detached
+A—B—C
+main points at B
+HEAD points at C, and no branch name points there
+```
+
 ### Worktrees
 
 ```bash
@@ -942,6 +994,11 @@ Each worktree has its own files; they share the same `.git` object database.
 | Stash | Quick context switch, short-lived |
 | Worktree | Parallel work for hours/days |
 | New clone | Heavy isolation (different remotes/config) |
+
+### Check your understanding
+
+- [ ] I can explain detached HEAD: HEAD points at a commit, not a branch name
+- [ ] I know a worktree is for parallel work that will last longer than a stash
 
 ### Lab
 
@@ -1204,6 +1261,11 @@ A **branch** is a movable ref. A **tag** is usually immovable. **Remote-tracking
 
 `git status` compares these three.
 
+### Check your understanding
+
+- [ ] I can name blob, tree, commit, and ref in plain words
+- [ ] I can say that `git status` compares the working tree, the index, and `HEAD`
+
 ### Packfiles
 
 Loose objects eventually pack into efficient `.git/objects/pack/` files. `git gc` cleans up. You rarely need to touch this.
@@ -1269,7 +1331,8 @@ git switch -c branch-name
 git switch main
 git branch -d branch-name
 git merge branch-name
-git rebase main
+git fetch
+git rebase origin/main          # fetch does not move local main
 git rebase -i HEAD~3
 git cherry-pick HASH
 ```
@@ -1341,10 +1404,10 @@ Use this as your progress board — foundations first, then hero skills. Check i
 
 ### History skills
 
-- [ ] Rebase a *local* feature onto latest `main`
 - [ ] Choose restore / reset / revert for the situation
 - [ ] Recover a “lost” commit with `reflog`
-- [ ] Rebase and undo labs complete
+- [ ] Rebase a *local* feature onto `origin/main` after `git fetch`
+- [ ] Undo and rebase labs complete
 
 ### Remote & team
 

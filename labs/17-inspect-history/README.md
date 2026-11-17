@@ -12,7 +12,6 @@ mkdir -p playground && cd playground
 git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
-git checkout -b main
 
 mkdir -p auth
 printf 'def login():\n    return "ok"\n' > auth/login.py

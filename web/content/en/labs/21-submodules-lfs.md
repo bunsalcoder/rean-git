@@ -20,7 +20,6 @@ cd sandbox/design-lib
 git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
-git checkout -b main
 echo "button { color: blue; }" > tokens.css
 git add tokens.css
 git commit -m "Add design tokens"
@@ -31,7 +30,6 @@ cd playground
 git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
-git checkout -b main
 echo "# App" > README.md
 git add README.md
 git commit -m "Start app"

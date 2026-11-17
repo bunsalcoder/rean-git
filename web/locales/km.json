@@ -215,6 +215,24 @@
     "intermediate": "មធ្យម",
     "advanced": "កម្រិតខ្ពស់"
   },
+  "stages": {
+    "kicker": "ដំណាក់កាល",
+    "foundations": "មូលដ្ឋាន",
+    "collaboration": "ការសហការ",
+    "power": "ឧបករណ៍ខ្លាំង",
+    "professional": "អាជីព",
+    "mastery": "ជំនាញខ្ពស់",
+    "foundationsRange": "ជំពូក 1–5",
+    "collaborationRange": "ជំពូក 6–13",
+    "powerRange": "ជំពូក 14–20",
+    "professionalRange": "ជំពូក 21–24",
+    "masteryRange": "ជំពូក 25–27"
+  },
+  "figures": {
+    "trees": "Working tree, staging, និង commit។ អ្នកជ្រើសអ្វីដែលចូលក្នុង snapshot បន្ទាប់។",
+    "history": "Merge រក្សាចំណុចជួប។ Rebase ចាក់ commits របស់អ្នកឡើងវិញលើ main ចុងក្រោយ។",
+    "detached": "Detached HEAD ចង្អុលទៅ commit មួយ។ គ្មានឈ្មោះ branch ចង្អុលទៅទីនោះទេ។"
+  },
   "chapterMatch": {
     "howToUse": "^## របៀបប្រើមគ្គុទ្ទេសក៍នេះ$",
     "toc": "^## មាតិកា$"
@@ -229,8 +247,8 @@
     "6": "សាខា",
     "7": "ការបញ្ចូលសាខា",
     "8": "ទំនាស់",
-    "9": "Rebase (ប្រើដោយប្រុងប្រយ័ត្ន)",
-    "10": "ត្រឡប់កំហុស",
+    "9": "ត្រឡប់កំហុស",
+    "10": "Rebase (ប្រើដោយប្រុងប្រយ័ត្ន)",
     "11": "Remote និង GitHub",
     "12": "សំណើទាញ (pull requests)",
     "13": "លំហូរការងារក្រុម",

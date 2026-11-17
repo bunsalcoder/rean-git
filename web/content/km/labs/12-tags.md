@@ -12,7 +12,6 @@ mkdir -p playground && cd playground
 git init -b main
 git config user.name "Lab Learner"
 git config user.email "lab@example.com"
-git checkout -b main
 echo "app v1" > app.txt
 git add app.txt
 git commit -m "App v1 content"

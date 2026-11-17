@@ -215,6 +215,24 @@
     "intermediate": "Intermediate",
     "advanced": "Advanced"
   },
+  "stages": {
+    "kicker": "Stage",
+    "foundations": "Foundations",
+    "collaboration": "Collaboration",
+    "power": "Power tools",
+    "professional": "Professional",
+    "mastery": "Mastery",
+    "foundationsRange": "Chapters 1–5",
+    "collaborationRange": "Chapters 6–13",
+    "powerRange": "Chapters 14–20",
+    "professionalRange": "Chapters 21–24",
+    "masteryRange": "Chapters 25–27"
+  },
+  "figures": {
+    "trees": "Working tree, staging, and commit. You choose what goes into the next snapshot.",
+    "history": "Merge keeps the join. Rebase replays your commits on top of the latest main.",
+    "detached": "Detached HEAD points at a commit. No branch name points there."
+  },
   "chapterMatch": {
     "howToUse": "^## How to use this guide$",
     "toc": "^## Table of contents$"
@@ -229,8 +247,8 @@
     "6": "Branching",
     "7": "Merging",
     "8": "Conflicts",
-    "9": "Rebase (carefully)",
-    "10": "Undoing mistakes",
+    "9": "Undoing mistakes",
+    "10": "Rebase (carefully)",
     "11": "Remotes & GitHub",
     "12": "Pull requests",
     "13": "Team workflows",
