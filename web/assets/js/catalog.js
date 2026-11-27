@@ -263,7 +263,9 @@
     renderGrid(grid);
     paintFilterSummary();
     if (grid) syncFilterUrl();
-    document.querySelector("[data-labs-loading]")?.setAttribute("hidden", "");
+    document.querySelectorAll("[data-labs-loading]").forEach((el) => {
+      el.setAttribute("hidden", "");
+    });
     paintCountTitle();
     syncCheatSheetLinks();
     if (track) window.ReanGitI18n?.apply?.(track);
