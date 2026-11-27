@@ -12,6 +12,31 @@ test("home page loads", async ({ page }) => {
   expect(escaped).toBe("&lt;hi&gt;");
 });
 
+test("chapter numbers match the handbook", async ({ page }) => {
+  await page.goto("/learn.html?c=1");
+  await expect(page.locator("[data-chapter-title]")).not.toHaveText(/Loading/i);
+  await expect(page.locator('[data-chapter-nav] a[data-chapter-id="how-to-use"] .side-num')).toHaveCount(0);
+  await expect(page.locator('[data-chapter-nav] a[data-chapter-id="1"] .side-num')).toHaveText("01");
+  await expect(page.locator('[data-chapter-nav] a[data-chapter-id="9"] .side-num')).toHaveText("09");
+  await expect(page.locator('[data-chapter-nav] a[data-chapter-id="10"] .side-num')).toHaveText("10");
+  await expect(page.locator("[data-progress]")).toHaveText("1 / 27");
+
+  await page.goto("/learn.html?c=how-to-use");
+  await expect(page.locator("[data-chapter-title]")).toContainText(/How to use/i);
+  await expect(page.locator("[data-progress]")).toBeHidden();
+});
+
+test("home chapter progress uses the handbook number", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem("rean-git:last-chapter", "10");
+    localStorage.setItem("rean-git:progress-backup-nudge", "dismissed");
+  });
+  await page.goto("/");
+  await expect(page.locator("[data-home-chapter-progress]")).toHaveText(
+    "Chapter 10 of 27 — Rebase (carefully)"
+  );
+});
+
 test("language switch updates html lang", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "ខ្មែរ" }).click();
