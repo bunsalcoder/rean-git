@@ -1446,8 +1446,7 @@ async function initLabPage(signal, { animate = true } = {}) {
     if (progressEl) {
       progressEl.hidden = false;
       progressEl.textContent = t("ui.progressLab", {
-        current: index + 1,
-        total: labs.length,
+        current: window.ReanGitUtil?.labFolderNum?.(lab.id) || String(index + 1),
         level: lab.level,
       });
     }
