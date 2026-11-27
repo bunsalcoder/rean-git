@@ -37,6 +37,29 @@ test("home chapter progress uses the handbook number", async ({ page }) => {
   );
 });
 
+test("lab progress uses the folder number", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem("rean-git:last-lab", "06-rebase");
+    localStorage.setItem("rean-git:progress-backup-nudge", "dismissed");
+  });
+  await page.goto("/");
+  await expect(page.locator("[data-home-lab-progress]")).toHaveText("Lab 06 — Rebase");
+
+  await page.goto("/lab.html?id=06-rebase");
+  await expect(page.locator("[data-lab-title]")).toContainText("Rebase");
+  await expect(page.locator("[data-progress]")).toHaveText("06 · Intermediate");
+
+  await page.goto("/lab.html?id=07-undo");
+  await expect(page.locator("[data-progress]")).toHaveText("07 · Beginner");
+  await page.getByRole("button", { name: "ខ្មែរ" }).click();
+  await expect(page.locator("html")).toHaveAttribute("lang", "km");
+  await expect(page.locator("[data-progress]")).toHaveText("07 · ដំបូង");
+  await page.goto("/");
+  await expect(page.locator("[data-home-lab-progress]")).toHaveText(
+    "លំហាត់ 06 — Rebase (ប្រើដោយប្រុងប្រយ័ត្ន)"
+  );
+});
+
 test("language switch updates html lang", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "ខ្មែរ" }).click();

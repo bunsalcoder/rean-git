@@ -293,10 +293,10 @@
       }
 
       if (labIndex > 0) {
+        const folderNum = window.ReanGitUtil?.labFolderNum?.(labId) || "";
         labEl.hidden = false;
         labEl.textContent = i18n.t("home.labProgress", {
-          current: String(labIndex),
-          total: String(catalogLabs.length),
+          current: folderNum || String(labIndex),
           title: i18n.t(`labs.${labId}.title`),
         });
       } else {

@@ -160,6 +160,9 @@ describe("handbook chapter numbers", () => {
     assert.equal(util.handbookChapterNum("09"), "9");
     assert.equal(util.handbookChapterNum("how-to-use"), "");
     assert.equal(util.handbookChapterNum(""), "");
+    assert.equal(util.labFolderNum("06-rebase"), "06");
+    assert.equal(util.labFolderNum("00-install-config"), "00");
+    assert.equal(util.labFolderNum("how-to-use"), "");
   });
 });
 

@@ -23,8 +23,7 @@
   }
 
   function labNum(lab) {
-    const match = /^(\d{2})/.exec(lab && lab.id);
-    return match ? match[1] : "";
+    return window.ReanGitUtil?.labFolderNum?.(lab && lab.id) || "";
   }
 
   function labHref(id) {

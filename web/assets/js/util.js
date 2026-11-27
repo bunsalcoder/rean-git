@@ -312,6 +312,12 @@
     return match ? String(Number(match[1])) : "";
   }
 
+  /** Lab folder prefix, the number printed on the card and in the handbook. */
+  function labFolderNum(id) {
+    const match = /^(\d{2})/.exec(String(id || ""));
+    return match ? match[1] : "";
+  }
+
   /** Map GitHub-style handbook heading anchors to the Learn reader. */
   function rewriteChapterAnchors(markdown) {
     return String(markdown || "").replace(
@@ -437,6 +443,7 @@
     importProgress,
     parseGuideChapters,
     handbookChapterNum,
+    labFolderNum,
     rewriteChapterAnchors,
     resolveRouteOrResume,
     progressBackupNudgeState,
