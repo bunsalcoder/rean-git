@@ -4,6 +4,7 @@ test("home page loads", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator(".headline")).toBeVisible();
   await expect(page.locator("[data-lab-track] li")).not.toHaveCount(0);
+  await expect(page.locator("[data-labs-loading]")).toBeHidden();
   const escaped = await page.evaluate(() => window.ReanGitUtil.escapeHtml("<hi>"));
   expect(escaped).toBe("&lt;hi&gt;");
 });
