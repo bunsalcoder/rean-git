@@ -306,6 +306,12 @@
     });
   }
 
+  /** Handbook chapter number, without the leading "How to use" section. */
+  function handbookChapterNum(id) {
+    const match = /^(\d+)$/.exec(String(id || ""));
+    return match ? String(Number(match[1])) : "";
+  }
+
   /** Map GitHub-style handbook heading anchors to the Learn reader. */
   function rewriteChapterAnchors(markdown) {
     return String(markdown || "").replace(
@@ -430,6 +436,7 @@
     exportProgress,
     importProgress,
     parseGuideChapters,
+    handbookChapterNum,
     rewriteChapterAnchors,
     resolveRouteOrResume,
     progressBackupNudgeState,

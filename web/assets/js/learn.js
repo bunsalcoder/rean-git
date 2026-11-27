@@ -115,7 +115,10 @@ function paintMissingContent({ title, bodyHtml, clearRelated }) {
   const pagerEl = document.querySelector("[data-pager]");
   const bodyEl = document.querySelector("[data-chapter-body], [data-lab-body]");
   if (titleEl) titleEl.textContent = title;
-  if (progressEl) progressEl.textContent = "";
+  if (progressEl) {
+    progressEl.hidden = true;
+    progressEl.textContent = "";
+  }
   paintContentMeta("");
   document.querySelector("[data-chapter-toc]")?.replaceChildren();
   const toc = document.querySelector("[data-chapter-toc]");
@@ -949,10 +952,6 @@ function renderMarkdown(target, md, scopeId) {
   window.ReanGitA11y?.enhanceExternalLinks?.(target);
 }
 
-function padNum(n) {
-  return String(n).padStart(2, "0");
-}
-
 function escapeHtml(text) {
   return window.ReanGitUtil.escapeHtml(text);
 }
@@ -1138,10 +1137,20 @@ async function initLearnPage(signal, { animate = true } = {}) {
       writeLastChapter(chapter.id);
       if (titleEl) titleEl.textContent = chapter.title;
       if (progressEl) {
-        progressEl.textContent = t("ui.progress", {
-          current: index + 1,
-          total: chapters.length,
-        });
+        const current = window.ReanGitUtil?.handbookChapterNum?.(chapter.id) || "";
+        const total = chapters.filter((item) =>
+          window.ReanGitUtil?.handbookChapterNum?.(item.id)
+        ).length;
+        if (current) {
+          progressEl.hidden = false;
+          progressEl.textContent = t("ui.progress", {
+            current,
+            total: String(total),
+          });
+        } else {
+          progressEl.hidden = true;
+          progressEl.textContent = "";
+        }
       }
       paintContentMeta(
         t("learn.readingTime", { minutes: String(readingMinutes(chapter.body)) })
@@ -1225,13 +1234,16 @@ async function initLearnPage(signal, { animate = true } = {}) {
     };
 
     navEl.innerHTML = chapters
-      .map((c, i) => {
-        const n = padNum(i + 1);
+      .map((c) => {
+        const n = window.ReanGitUtil?.handbookChapterNum?.(c.id) || "";
         const done = window.ReanGitUtil?.isChapterComplete?.(c.id);
         const doneBadge = done
           ? `<span class="side-done">${escapeHtml(t("ui.done"))}</span>`
           : "";
-        return `<li${done ? ' class="is-complete"' : ""}><a href="${chapterHref(c.id)}" data-chapter-id="${c.id}"${done ? ' class="is-complete"' : ""}>${doneBadge}<small class="side-num">${n}</small>${escapeHtml(c.title)}</a></li>`;
+        const num = n
+          ? `<small class="side-num">${escapeHtml(n.padStart(2, "0"))}</small>`
+          : "";
+        return `<li${done ? ' class="is-complete"' : ""}><a href="${chapterHref(c.id)}" data-chapter-id="${c.id}"${done ? ' class="is-complete"' : ""}>${doneBadge}${num}${escapeHtml(c.title)}</a></li>`;
       })
       .join("");
 
@@ -1432,6 +1444,7 @@ async function initLabPage(signal, { animate = true } = {}) {
     writeLastLab(lab.id);
     if (titleEl) titleEl.textContent = lab.title;
     if (progressEl) {
+      progressEl.hidden = false;
       progressEl.textContent = t("ui.progressLab", {
         current: index + 1,
         total: labs.length,

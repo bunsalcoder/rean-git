@@ -153,6 +153,16 @@ describe("resolveRouteOrResume", () => {
   });
 });
 
+describe("handbook chapter numbers", () => {
+  it("uses the handbook number and skips the unnumbered intro", () => {
+    assert.equal(util.handbookChapterNum("1"), "1");
+    assert.equal(util.handbookChapterNum("10"), "10");
+    assert.equal(util.handbookChapterNum("09"), "9");
+    assert.equal(util.handbookChapterNum("how-to-use"), "");
+    assert.equal(util.handbookChapterNum(""), "");
+  });
+});
+
 describe("lab progress", () => {
   it("records checklist completion and counts finished labs", () => {
     util.recordLabChecklist("01-first-repo", 2, 2);

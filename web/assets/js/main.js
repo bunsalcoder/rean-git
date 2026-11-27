@@ -277,11 +277,15 @@
       }
       if (completeActions) completeActions.hidden = true;
 
-      if (chapterIndex > 0) {
+      const handbookNum = window.ReanGitUtil?.handbookChapterNum?.(chapterId) || "";
+      const handbookTotal = chapters.filter((id) =>
+        window.ReanGitUtil?.handbookChapterNum?.(id)
+      ).length;
+      if (handbookNum) {
         chapterEl.hidden = false;
         chapterEl.textContent = i18n.t("home.chapterProgress", {
-          current: String(chapterIndex),
-          total: String(chapters.length),
+          current: handbookNum,
+          total: String(handbookTotal),
           title: i18n.t(`chapters.${chapterId}`),
         });
       } else {
