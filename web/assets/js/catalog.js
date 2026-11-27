@@ -22,8 +22,9 @@
     return current;
   }
 
-  function labNum(_lab, index) {
-    return String(index + 1).padStart(2, "0");
+  function labNum(lab) {
+    const match = /^(\d{2})/.exec(lab && lab.id);
+    return match ? match[1] : "";
   }
 
   function labHref(id) {
@@ -73,7 +74,7 @@
     root.setAttribute("aria-busy", "false");
     let lastStage = "";
     root.innerHTML = labs
-      .map((lab, index) => {
+      .map((lab) => {
         const id = escapeHtml(lab.id);
         const done = window.ReanGitUtil?.isLabComplete?.(lab.id);
         const isNext = Boolean(nextLab && nextLab.id === lab.id && !done);
@@ -89,7 +90,7 @@
         lastStage = stage;
         return `${heading}<li${classes ? ` class="${classes}"` : ""}>
           <a href="${labHref(lab.id)}" data-lab-id="${id}">
-            <span class="lab-num">${escapeHtml(labNum(lab, index))}</span>
+            <span class="lab-num">${escapeHtml(labNum(lab))}</span>
             <h3 class="lab-title" data-i18n="labs.${id}.title"></h3>
             <p class="lab-desc" data-i18n="labs.${id}.teaser"></p>
             <span class="lab-level" data-i18n="levels.${escapeHtml(lab.level)}"></span>
@@ -121,7 +122,6 @@
     root.innerHTML = list
       .map((lab) => {
         const id = escapeHtml(lab.id);
-        const index = labs.indexOf(lab);
         const done = window.ReanGitUtil?.isLabComplete?.(lab.id);
         const minutes = labMinutesForLevel(lab.level);
         const githubBadge = lab.verifyManual
@@ -131,7 +131,7 @@
         const heading = !showStageHeadings || stage === lastStage ? "" : stageHeading(stage, "div");
         lastStage = stage;
         return `${heading}<a href="${labHref(lab.id)}"${done ? ' class="is-complete"' : ""} data-lab-id="${id}">
-          <span class="num">${escapeHtml(labNum(lab, index))}</span>
+          <span class="num">${escapeHtml(labNum(lab))}</span>
           <div>
             <h3 data-i18n="labs.${id}.title"></h3>
             <p data-i18n="labs.${id}.summary"></p>
